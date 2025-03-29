@@ -10,7 +10,7 @@ const Home = () => {
 
   return (
     <div className="p-10">
-      <div className="flex items-center justify-center border border-gray-200 rounded-2xl bg-white shadow-lg">
+      {/* <div className="flex items-center justify-center border border-gray-200 rounded-2xl bg-white shadow-lg"> */}
         <div className="h-full overflow-y-auto p-5 bg-gradient-to-br to-gray-100 flex flex-col items-center space-y-2">
           {[
             { title: "My NFTs", nfts: myNFTs, own: true },
@@ -29,7 +29,7 @@ const Home = () => {
           ))}
         </div>
       </div>
-    </div>
+    // </div>
   );
 };
 
