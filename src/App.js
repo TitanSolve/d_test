@@ -7,7 +7,6 @@ function App() {
 
   return (
     <MatrixClientProvider> {/* Wrap Home with MatrixClientProvider */}
-      <h1 className="text-2xl font-bold text-center my-4">NFT Marketplace</h1>
       <Home />
     </MatrixClientProvider>
   );
