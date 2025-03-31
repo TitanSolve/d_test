@@ -1,7 +1,7 @@
 import React from "react";
-import ParticipantCard from "../../components/participant-card";
+import ParticipantCard from "../../components/ParticipantCard";
 
-const Home = () => {
+const NFTs = () => {
   const generateNFTs = (count) => Array.from({ length: count }, (_, i) => ({ id: i + 1 }));
 
   const myNFTs = generateNFTs(8);
@@ -33,4 +33,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default NFTs;
