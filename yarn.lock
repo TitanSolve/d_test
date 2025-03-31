@@ -6813,9 +6813,17 @@ matrix-js-sdk@^37.2.0:
     unhomoglyph "^1.0.6"
     uuid "11"
 
-matrix-widget-api@1.13.1, matrix-widget-api@^1.10.0, matrix-widget-api@^1.13.1:
+matrix-widget-api@1.13.1, matrix-widget-api@^1.10.0:
   version "1.13.1"
   resolved "https://registry.npmjs.org/matrix-widget-api/-/matrix-widget-api-1.13.1.tgz"
+  integrity sha512-mkOHUVzaN018TCbObfGOSaMW2GoUxOfcxNNlTVx5/HeMk3OSQPQM0C9oEME5Liiv/dBUoSrEB64V8wF7e/gb1w==
+  dependencies:
+    "@types/events" "^3.0.0"
+    events "^3.2.0"
+
+matrix-widget-api@^1.13.1:
+  version "1.13.1"
+  resolved "https://registry.yarnpkg.com/matrix-widget-api/-/matrix-widget-api-1.13.1.tgz#5b1caeed2fc58148bcd2984e0546d2d06a1713ad"
   integrity sha512-mkOHUVzaN018TCbObfGOSaMW2GoUxOfcxNNlTVx5/HeMk3OSQPQM0C9oEME5Liiv/dBUoSrEB64V8wF7e/gb1w==
   dependencies:
     "@types/events" "^3.0.0"

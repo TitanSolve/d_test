@@ -2,10 +2,49 @@ import React, { useEffect, useState } from "react";
 import { createClient } from "matrix-js-sdk";
 import API_URLS from "../config";
 
+
+import { WidgetApi, createWidgetApi } from "matrix-widget-api"; 1
+
+
+
 const MatrixClientProvider = ({ children }) => {
   const [client, setClient] = useState(null);
   const [roomInfo, setRoomInfo] = useState({ members: [] });
   const [userInfo, setUserInfo] = useState(null);
+
+  // const widgetApi = createWidgetApi({
+  //   postMessage: window.parent.postMessage.bind(window.parent),
+  //   receiveMessage: window.addEventListener.bind(window, "message"),
+  // });
+  // widgetApi.start();
+  // // Fetch the Matrix client's theme
+  // useEffect(() => {
+  //   const fetchTheme = async () => {
+  //     try {
+  //       // Request permission to read room state
+  //       await widgetApi.requestCapabilities(["org.matrix.msc2762.receive_state"]);
+
+  //       const roomId = new URLSearchParams(window.location.search).get("room_id");
+  //       console.log("Room ID from URL:", roomId);
+  //       if (roomId) {
+  //         const themeEvent = await widgetApi.getRoomStateEvent(roomId, "org.matrix.theme");
+  //       } else {
+  //         // Handle the case where room_id is null
+  //         console.error('Room ID is missing from URL parameters.');
+  //       }
+
+  //       const currentTheme = themeEvent?.theme || "light"; // Default to light mode
+  //       console.log("Current theme:", currentTheme);
+  //       setTheme(currentTheme);
+  //     } catch (error) {
+  //       console.error("Failed to fetch theme:", error);
+  //     }
+  //   };
+
+  //   fetchTheme();
+  // }, []);
+
+
 
   useEffect(() => {
     const initMatrix = async () => {

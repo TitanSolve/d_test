@@ -88,7 +88,7 @@ const ParticipantCard = ({ title, nfts, index, own }) => {
           >
             {sortedNFTs.map((nft) => (
               <SwiperSlide key={nft.id}>
-                <div className="transform hover:scale-105 transition-transform duration-300 border p-2 rounded-lg shadow-md bg-gradient-to-r from-blue-200 to-purple-300 text-gray-800 font-semibold text-center cursor-pointer">
+                <div className="transform hover:scale-105 transition-transform duration-300 border p-2 rounded-lg shadow-md dark:bg-gray-700 bg-gradient-to-r from-blue-200 to-purple-300 text-gray-800 font-semibold text-center cursor-pointer">
                   <img src={nft_pic} alt="nft" className="rounded-t-lg" onClick={toggleModal} />
                 </div>
               </SwiperSlide>
