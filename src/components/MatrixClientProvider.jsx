@@ -3,7 +3,7 @@ import { createClient } from "matrix-js-sdk";
 import API_URLS from "../config";
 
 
-import { WidgetApi, createWidgetApi } from "matrix-widget-api"; 1
+import { WidgetApi, createWidgetApi } from "matrix-widget-api";
 
 
 
