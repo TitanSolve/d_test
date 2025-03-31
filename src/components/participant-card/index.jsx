@@ -75,7 +75,7 @@ const ParticipantCard = ({ title, nfts, index, own }) => {
         </div>
 
         <div className="flex items-center justify-between mt-4 space-x-4">
-          <button className={`swiper-button-prev-${index} bg-gray-800 hover:bg-gray-700 text-white p-1 rounded-full shadow-lg transform transition-all duration-300 ease-in-out hover:scale-110 focus:outline-none`}>
+          <button className={`swiper-button-prev-${index} bg-gray-800 hover:bg-gray-700 text-white p-1 rounded-full shadow-lg transform transition-all duration-300 ease-in-out hover:scale-110 focus:outline-none focus:ring-4 focus:ring-purple-500`}>
             <ChevronLeft size={30} />
           </button>
           <Swiper
@@ -94,7 +94,7 @@ const ParticipantCard = ({ title, nfts, index, own }) => {
               </SwiperSlide>
             ))}
           </Swiper>
-          <button className={`swiper-button-next-${index} bg-gray-800 hover:bg-gray-700 text-white p-1 rounded-full shadow-lg transform transition-all duration-300 ease-in-out hover:scale-110 focus:outline-none`}>
+          <button className={`swiper-button-next-${index} bg-gray-800 hover:bg-gray-700 text-white p-1 rounded-full shadow-lg transform transition-all duration-300 ease-in-out hover:scale-110 focus:outline-none focus:ring-4 focus:ring-purple-500`}>
             <ChevronRight size={30} />
           </button>
         </div>
