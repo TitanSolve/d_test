@@ -28,14 +28,13 @@ const MatrixClientProvider = ({ children }) => {
   //       console.log("Room ID from URL:", roomId);
   //       if (roomId) {
   //         const themeEvent = await widgetApi.getRoomStateEvent(roomId, "org.matrix.theme");
+  //         const currentTheme = themeEvent?.theme || "light"; // Default to light mode
+  //         console.log("Current theme:", currentTheme);
+  //         // setTheme(currentTheme);
   //       } else {
   //         // Handle the case where room_id is null
   //         console.error('Room ID is missing from URL parameters.');
   //       }
-
-  //       const currentTheme = themeEvent?.theme || "light"; // Default to light mode
-  //       console.log("Current theme:", currentTheme);
-  //       setTheme(currentTheme);
   //     } catch (error) {
   //       console.error("Failed to fetch theme:", error);
   //     }

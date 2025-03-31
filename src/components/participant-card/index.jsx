@@ -52,9 +52,9 @@ const ParticipantCard = ({ title, nfts, index, own }) => {
     <>
       <div className="p-4 border border-gray-200 rounded-2xl bg-white shadow-lg w-full max-w-5xl">
         <div className="flex items-center justify-between">
-          <h2 className="text-1xl font-bold text-gray-900">{title}</h2>
+          <h2 className="text-lg md:text-xl font-bold text-gray-900">{title}</h2>
           <Select
-            className="w-24"
+            className="w-24 md:w-32"
             value={state.token}
             onChange={(value) => updateField('token', value)}
             size="large"
@@ -75,12 +75,17 @@ const ParticipantCard = ({ title, nfts, index, own }) => {
         </div>
 
         <div className="flex items-center justify-between mt-4 space-x-4">
-          <button className={`swiper-button-prev-${index} bg-gray-800 hover:bg-gray-700 text-white p-1 rounded-full shadow-lg transform transition-all duration-300 ease-in-out hover:scale-110 focus:outline-none focus:ring-4 focus:ring-purple-500`}>
-            <ChevronLeft size={30} />
+          <button className={`swiper-button-prev-${index} bg-gray-800 hover:bg-gray-700 text-white p-2 md:p-3 rounded-full shadow-lg transition-transform transform hover:scale-110 focus:ring-4 focus:ring-purple-500`}>
+            <ChevronLeft size={24} />
           </button>
           <Swiper
             spaceBetween={10}
-            slidesPerView={4}
+            slidesPerView={1}
+            breakpoints={{
+              640: { slidesPerView: 2 }, // Tablets
+              768: { slidesPerView: 3 }, // Small desktops
+              1024: { slidesPerView: 4 } // Large screens
+            }}
             navigation={{ nextEl: `.swiper-button-next-${index}`, prevEl: `.swiper-button-prev-${index}` }}
             pagination={{ clickable: true }}
             modules={[Navigation, Pagination]}
@@ -88,14 +93,14 @@ const ParticipantCard = ({ title, nfts, index, own }) => {
           >
             {sortedNFTs.map((nft) => (
               <SwiperSlide key={nft.id}>
-                <div className="transform hover:scale-105 transition-transform duration-300 border p-2 rounded-lg shadow-md dark:bg-gray-700 bg-gradient-to-r from-blue-200 to-purple-300 text-gray-800 font-semibold text-center cursor-pointer">
-                  <img src={nft_pic} alt="nft" className="rounded-t-lg" onClick={toggleModal} />
+                <div className="transform hover:scale-105 transition-transform duration-300 border p-2 rounded-lg shadow-md bg-gradient-to-br from-blue-200 to-purple-300 text-gray-800 font-semibold text-center cursor-pointer">
+                  <img src={nft_pic} alt="NFT" className="w-full max-w-xs md:max-w-sm h-auto rounded-lg mx-auto" onClick={toggleModal} />
                 </div>
               </SwiperSlide>
             ))}
           </Swiper>
-          <button className={`swiper-button-next-${index} bg-gray-800 hover:bg-gray-700 text-white p-1 rounded-full shadow-lg transform transition-all duration-300 ease-in-out hover:scale-110 focus:outline-none focus:ring-4 focus:ring-purple-500`}>
-            <ChevronRight size={30} />
+          <button className={`swiper-button-next-${index} bg-gray-800 hover:bg-gray-700 text-white p-2 md:p-3 rounded-full shadow-lg transition-transform transform hover:scale-110 focus:ring-4 focus:ring-purple-500`}>
+            <ChevronRight size={24} />
           </button>
         </div>
       </div>
@@ -109,8 +114,9 @@ const ParticipantCard = ({ title, nfts, index, own }) => {
         maskClosable={true}
         bodyStyle={{
           borderRadius: '10px',
+          padding: "16px"
         }}
-        style={{ maxWidth: '400px' }}
+        style={{ width: "90%", maxWidth: '400px' }}
       >
         <div>
           <img
@@ -150,7 +156,7 @@ const ParticipantCard = ({ title, nfts, index, own }) => {
           )}
 
           {state.isSell && (
-            <div className="flex gap-2 w-full mb-4">
+            <div className="flex flex-col md:flex-row gap-2 w-full mb-4">
               <Input
                 type="number"
                 placeholder="Amount"
@@ -160,7 +166,7 @@ const ParticipantCard = ({ title, nfts, index, own }) => {
                 className="border rounded"
               />
               <Select
-                className="w-24"
+                className="w-full md:w-24"
                 value={state.token}
                 onChange={(value) => updateField('token', value)}
                 size="large"
