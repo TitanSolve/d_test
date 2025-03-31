@@ -3,7 +3,7 @@ import nft_pic from "../../assets/small-nft.png";
 import { motion } from "framer-motion";
 import { Button } from "antd";
 
-const SellOfferCard = () => {
+const IncomingOfferCard = () => {
   return (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
@@ -25,16 +25,26 @@ const SellOfferCard = () => {
         <span className="text-lg sm:text-xl font-bold text-gray-900 sm:whitespace-nowrap">12.0 XRP</span>
         <span className="text-gray-500 text-sm sm:text-base sm:whitespace-nowrap">Sell Offer</span>
       </div>
-      <Button
-        type="primary"
-        block
-        style={{ borderRadius: "6px", width: "30%", alignItems: "center" }}
-      // className="w-full sm:w-auto bg-red-500 text-white px-4 sm:px-5 py-2 rounded-lg hover:bg-red-600 transition shadow-md text-center">
-      >
-        Cancel
-      </Button>
+      <div className="flex flex-col sm:flex-row items-center justify-between w-full sm:w-auto space-y-4 sm:space-y-0 sm:space-x-4">
+        <Button
+          type="primary"
+          block
+          style={{ borderRadius: "6px", alignItems: "center" }}
+        // className="w-full sm:w-auto bg-red-500 text-white px-4 sm:px-5 py-2 rounded-lg hover:bg-red-600 transition shadow-md text-center">
+        >
+          Accept
+        </Button>
+        <Button
+          type="primary"
+          block
+          style={{ borderRadius: "6px", alignItems: "center" }}
+        // className="w-full sm:w-auto bg-red-500 text-white px-4 sm:px-5 py-2 rounded-lg hover:bg-red-600 transition shadow-md text-center">
+        >
+          Deny
+        </Button>
+      </div>
     </motion.div>
   );
 };
 
-export default SellOfferCard;
+export default IncomingOfferCard;

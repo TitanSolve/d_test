@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import SellOfferCard from "../SellOfferCard";
+import OutgoingOfferCard from "../OutgoingOfferCard";
 import { ChevronDownIcon, XIcon } from "@heroicons/react/solid";
 import { Button } from "antd";
 
-const OfferListToggle = ({ title, count }) => {
+const OutgoingTransferToggle = ({ title, count }) => {
     const [isVisible, setIsVisible] = useState(false);
   
     return (
@@ -25,8 +25,8 @@ const OfferListToggle = ({ title, count }) => {
             exit={{ opacity: 0, height: 0 }}
             className="mt-4 bg-white p-5 rounded-xl shadow-lg border border-gray-200"
           >
-            <div className="flex justify-between items-center mb-4">
-              <span className="text-lg font-semibold text-gray-900">Listed Items</span>
+            <div className="flex justify-end sm:justify-between items-center mb-4">
+              <span className="text-lg font-semibold text-gray-900  hidden sm:block">Listed Items</span>
               {count > 0 ? (
                 <Button 
                     type="primary"
@@ -43,7 +43,7 @@ const OfferListToggle = ({ title, count }) => {
             {count > 0 && (
               <div className="space-y-4">
                 {[...Array(count)].map((_, index) => (
-                  <SellOfferCard key={index} />
+                  <OutgoingOfferCard key={index} />
                 ))}
               </div>
             )}
@@ -54,4 +54,4 @@ const OfferListToggle = ({ title, count }) => {
   };
   
 
-export default OfferListToggle;
+export default OutgoingTransferToggle;
