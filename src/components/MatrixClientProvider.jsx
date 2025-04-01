@@ -2,14 +2,8 @@ import React, { useEffect, useState } from "react";
 import { createClient } from "matrix-js-sdk";
 import API_URLS from "../config";
 
-
-import { WidgetApi, createWidgetApi } from "matrix-widget-api";
-
-
-
 const MatrixClientProvider = ({ children }) => {
   const [client, setClient] = useState(null);
-  const [theme, setTheme] = useState("light");
   const [roomInfo, setRoomInfo] = useState({ members: [] });
   const [userInfo, setUserInfo] = useState(null);
 
@@ -30,20 +24,10 @@ const MatrixClientProvider = ({ children }) => {
         const themeEvent = await matrixClient.getAccountData('m.settings');
         const theme = themeEvent?.theme || 'light'; // Default to light if not found
         console.log("------------------------------------")
+        console.log("matrixClient:", matrixClient);
+        console.log("themeEvent:", themeEvent);
         console.log("Current Theme:", theme);
         console.log("------------------------------------")
-
-        // Function to fetch and apply theme
-        const fetchTheme = async () => {
-          try {
-            const themeEvent = await matrixClient.getAccountData('m.settings');
-            const userTheme = themeEvent?.theme || "light"; // Default to light mode
-            setTheme(userTheme); // Update the state
-          } catch (error) {
-            console.error("Error fetching theme:", error);
-          }
-        };
-
 
       } catch (error) {
         console.error("Error initializing Matrix client:", error);
@@ -107,7 +91,7 @@ const MatrixClientProvider = ({ children }) => {
   useEffect(() => {
     const fetchRoomsInfo = async () => {
       if (client) {
-        console.log("Fetching rooms info...");
+        console.log("Fetching rooms info...", client);
         try {
           const rooms = client.getRooms();
           const roomsDetails = rooms.map((room) => ({
