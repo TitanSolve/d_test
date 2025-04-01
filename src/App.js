@@ -36,7 +36,7 @@ function App() {
             Offers
           </Tab>
         </TabList>
-        <div className="mt-4 relative overflow-hidden">
+        <div className="relative overflow-hidden">
           <AnimatePresence mode="wait">
             <motion.div
               key={selectedIndex}
@@ -45,7 +45,7 @@ function App() {
               animate="visible"
               exit="exit"
               transition={{ duration: 0.4, ease: "easeInOut" }}
-              className="p-4 bg-white rounded-lg shadow"
+              className="bg-white rounded-lg shadow"
             >
               {selectedIndex === 0 ? <NFTs /> : <Offers />}
             </motion.div>

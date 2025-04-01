@@ -50,7 +50,7 @@ const ParticipantCard = ({ title, nfts, index, own }) => {
 
   return (
     <>
-      <div className="p-4 border border-gray-200 rounded-2xl bg-white shadow-lg w-full max-w-5xl">
+      <div className="p-2 border border-gray-200 rounded-2xl bg-white shadow-lg w-full max-w-5xl">
         <div className="flex items-center justify-between">
           <h2 className="text-lg md:text-xl font-bold text-gray-900">{title}</h2>
           <Select
@@ -62,7 +62,7 @@ const ParticipantCard = ({ title, nfts, index, own }) => {
             <Select.Option value="issuer">issuer</Select.Option>
           </Select>
           <div className="flex items-center gap-4">
-            <Text strong className={state.isOldest ? "text-black" : "text-gray-400"}>Oldest</Text>
+            <Text strong className={state.isOldest ? "text-black hidden sm:block " : "text-gray-400 hidden sm:block"}>Oldest</Text>
             <Switch
               checked={!state.isOldest}
               onChange={toggleSortOrder}
@@ -70,7 +70,7 @@ const ParticipantCard = ({ title, nfts, index, own }) => {
               unCheckedChildren="Oldest"
               className="bg-gray-300"
             />
-            <Text strong className={!state.isOldest ? "text-black" : "text-gray-400"}>Newest</Text>
+            <Text strong className={!state.isOldest ? "text-black hidden sm:block" : "text-gray-400 hidden sm:block"}>Newest</Text>
           </div>
         </div>
 

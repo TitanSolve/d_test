@@ -30,7 +30,6 @@ const OutgoingTransferToggle = ({ title, count }) => {
               {count > 0 ? (
                 <Button 
                     type="primary"
-                    block
                     // className="flex items-center gap-2 bg-red-500 text-white hover:bg-red-400 px-4 py-2 rounded-lg  transition"
                     style={{ borderRadius: "6px", width: "30%", alignItems: "center" }}
                 >
