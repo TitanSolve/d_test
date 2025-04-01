@@ -2,9 +2,14 @@ import React, { useEffect, useState } from "react";
 import { createClient } from "matrix-js-sdk";
 import API_URLS from "../config";
 
+
+import { WidgetApi, createWidgetApi } from "matrix-widget-api";
+
+
+
 const MatrixClientProvider = ({ children }) => {
   const [client, setClient] = useState(null);
-  const [theme, setTheme] = useState("light"); // Step 1: Theme state
+  const [theme, setTheme] = useState("light");
   const [roomInfo, setRoomInfo] = useState({ members: [] });
   const [userInfo, setUserInfo] = useState(null);
 
@@ -16,14 +21,30 @@ const MatrixClientProvider = ({ children }) => {
           accessToken: API_URLS.accesstoken,
           userId: "@aman:synapse.textrp.io",
         });
-
         matrixClient.on("sync", async (state) => {
           if (state === "SYNCING") {
             setClient((prevClient) => prevClient || matrixClient);
           }
         });
-
         await matrixClient.startClient({ initialSyncLimit: 10 });
+        const themeEvent = await matrixClient.getAccountData('m.settings');
+        const theme = themeEvent?.theme || 'light'; // Default to light if not found
+        console.log("------------------------------------")
+        console.log("Current Theme:", theme);
+        console.log("------------------------------------")
+
+        // Function to fetch and apply theme
+        const fetchTheme = async () => {
+          try {
+            const themeEvent = await matrixClient.getAccountData('m.settings');
+            const userTheme = themeEvent?.theme || "light"; // Default to light mode
+            setTheme(userTheme); // Update the state
+          } catch (error) {
+            console.error("Error fetching theme:", error);
+          }
+        };
+
+
       } catch (error) {
         console.error("Error initializing Matrix client:", error);
       }
@@ -34,50 +55,59 @@ const MatrixClientProvider = ({ children }) => {
 
   useEffect(() => {
     const handleEvent = (event) => {
+      //  console.log("event aman all events", event);
       if (event.origin === `${API_URLS.elementsUrl}`) {
+        console.log("event aman", event);
         console.log("Received message:", event.data);
 
         const message = event.data;
         if (message.api === "toWidget") {
           switch (message.action) {
             case "capabilities":
-              // handleCapabilitiesRequest(message);
-              break;
-            case "update_theme":
-              // Step 4: Receive theme updates
-              if (message.data?.theme) {
-                setTheme(message.data.theme);
-                console.log("Theme updated to:", message.data.theme);
-              }
+              handleCapabilitiesRequest(message);
               break;
             default:
               console.log("Received unknown action:", message.action);
           }
 
-          if (message.data?.userInfo) {
+          if (message.data && message.data.userInfo) {
             setUserInfo(message.data.userInfo);
+            console.log("User Info received:", message.data.userInfo);
+          } else {
+            console.log("User Info not found in the message");
           }
         }
       }
     };
 
-    // Step 2: Listen for theme changes
     window.addEventListener("message", handleEvent);
+    return () => window.removeEventListener("message", handleEvent);
+  }, []);
 
-    // Step 3: Request theme on load
+  const handleCapabilitiesRequest = (message) => {
+    // console.log("Capabilities request received:", message);
     window.parent.postMessage(
       {
-        action: "get_theme",
+        response: {
+          requestId: message.requestId,
+        },
       },
       `${API_URLS.elementsUrl}`
     );
-
-    return () => window.removeEventListener("message", handleEvent);
+  };
+  useEffect(() => {
+    window.parent.postMessage(
+      {
+        action: "get_room_info",
+      },
+      `${API_URLS.elementsUrl}`
+    );
   }, []);
 
   useEffect(() => {
     const fetchRoomsInfo = async () => {
       if (client) {
+        console.log("Fetching rooms info...");
         try {
           const rooms = client.getRooms();
           const roomsDetails = rooms.map((room) => ({
@@ -89,7 +119,9 @@ const MatrixClientProvider = ({ children }) => {
             })),
           }));
 
-          setRoomInfo(roomsDetails);
+          // console.log(roomsDetails, "roomsDetails");
+          setRoomInfo(roomsDetails); // This should be setRoomsInfo if handling multiple rooms
+          // console.log("Rooms fetched:", roomsDetails);
         } catch (error) {
           console.error("Error fetching rooms:", error);
         }
@@ -100,7 +132,7 @@ const MatrixClientProvider = ({ children }) => {
   }, [client]);
 
   return (
-    <div className={theme === "dark" ? "theme-dark" : "theme-light"}>
+    <div>
       {roomInfo && roomInfo.members && roomInfo.members.length > 0 ? (
         <div key={roomInfo.id}>
           <h3>{roomInfo.name}</h3>
