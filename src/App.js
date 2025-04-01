@@ -1,15 +1,22 @@
 import { useState } from "react";
 import { Tab, TabGroup, TabList, TabPanels, TabPanel } from "@headlessui/react";
+import { motion, AnimatePresence } from "framer-motion";
 import './App.css';
 import NFTs from './pages/NFTs';
 import Offers from "./pages/Offers";
-import MatrixClientProvider from './components/MatrixClientProvider'; // Import the MatrixClientProvider
-
+import MatrixClientProvider from './components/MatrixClientProvider';
 
 function App() {
   const [selectedIndex, setSelectedIndex] = useState(0);
+
+  const panelVariants = {
+    hidden: { opacity: 0, x: 50 },
+    visible: { opacity: 1, x: 0 },
+    exit: { opacity: 0, x: -50 }
+  };
+
   return (
-    <MatrixClientProvider> {/* Wrap Home with MatrixClientProvider */}
+    <MatrixClientProvider>
       <TabGroup selectedIndex={selectedIndex} onChange={setSelectedIndex}>
         <TabList className="flex space-x-1 bg-gray-200 p-1 rounded-xl">
           <Tab
@@ -29,14 +36,21 @@ function App() {
             Offers
           </Tab>
         </TabList>
-        <TabPanels className="mt-4">
-          <TabPanel className="p-4 bg-white rounded-lg shadow">
-            <NFTs />
-          </TabPanel>
-          <TabPanel className="p-4 bg-white rounded-lg shadow">
-            <Offers />
-          </TabPanel>
-        </TabPanels>
+        <div className="mt-4 relative overflow-hidden">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={selectedIndex}
+              variants={panelVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+              transition={{ duration: 0.4, ease: "easeInOut" }}
+              className="p-4 bg-white rounded-lg shadow"
+            >
+              {selectedIndex === 0 ? <NFTs /> : <Offers />}
+            </motion.div>
+          </AnimatePresence>
+        </div>
       </TabGroup>
     </MatrixClientProvider>
   );
