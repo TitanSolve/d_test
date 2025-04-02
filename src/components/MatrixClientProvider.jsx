@@ -52,7 +52,7 @@ const MatrixClientProvider = () => {
           >
 
 
-            <Box sx={{ width: "100%", bgcolor: "background.paper", borderRadius: 2, boxShadow: 1 }}>
+            <Box sx={{ width: "100%", borderRadius: 2, boxShadow: 1 }}>
               <Tabs
                 value={selectedIndex}
                 onChange={(event, newIndex) => setSelectedIndex(newIndex)}
