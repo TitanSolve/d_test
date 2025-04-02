@@ -26,20 +26,20 @@ const MatrixClientProvider = () => {
         api.start();
         console.log("✅ Matrix Widget API started.");
 
-        // Request user and room info
-        api.getUserId()
-            .then((id) => {
-                setUserId(id);
-                console.log(`✅ User ID: ${id}`);
-            })
-            .catch((error) => console.error("❌ Failed to fetch User ID:", error));
+        // // Request user and room info
+        // api.getUserId()
+        //     .then((id) => {
+        //         setUserId(id);
+        //         console.log(`✅ User ID: ${id}`);
+        //     })
+        //     .catch((error) => console.error("❌ Failed to fetch User ID:", error));
 
-        api.getRoomId()
-            .then((id) => {
-                setRoomId(id);
-                console.log(`✅ Room ID: ${id}`);
-            })
-            .catch((error) => console.error("❌ Failed to fetch Room ID:", error));
+        // api.getRoomId()
+        //     .then((id) => {
+        //         setRoomId(id);
+        //         console.log(`✅ Room ID: ${id}`);
+        //     })
+        //     .catch((error) => console.error("❌ Failed to fetch Room ID:", error));
 
         // Fetch the Matrix client's theme setting
         api.getClient().then((clientInfo) => {
