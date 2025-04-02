@@ -3,7 +3,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { EventDirection, WidgetEventCapability, WidgetApi } from "matrix-widget-api";
 import { WidgetApiImpl, WidgetParameter } from '@matrix-widget-toolkit/api';
 import { useWidgetApi } from '@matrix-widget-toolkit/react';
-import { MuiThemeProvider, MuiWidgetApiProvider } from '@matrix-widget-toolkit/mui';
+import { MuiThemeProvider, MuiWidgetApiProvider, useWidgetTheme } from '@matrix-widget-toolkit/mui';
 import { Tabs, Tab, Box } from "@mui/material";
 import { motion, AnimatePresence } from "framer-motion";
 import NFTs from "../pages/NFTs";
@@ -29,6 +29,23 @@ const widgetApiPromise = WidgetApiImpl.create({
 
 const MatrixClientProvider = () => {
   const [selectedIndex, setSelectedIndex] = useState(0);
+
+  useEffect(() => {
+    console.log("Fetching widget theme from URL parameters...");
+
+    // Extract the 'theme' parameter from the URL (Matrix provides this)
+    const urlParams = new URLSearchParams(window.location.search);
+    console.log("urlParams", urlParams);
+    const themeParam = urlParams.get("theme");
+    console.log("themeParam", themeParam);
+
+    if (themeParam) {
+      console.log(`Detected theme from Matrix: ${themeParam}`);
+      // setThemeMode(themeParam);
+    } else {
+      console.log("No theme parameter found, defaulting to light mode.");
+    }
+  }, []);
 
   const panelVariants = {
     hidden: { opacity: 0, x: 50 },
