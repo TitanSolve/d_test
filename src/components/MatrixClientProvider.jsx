@@ -1,134 +1,46 @@
-import React, { useEffect, useState } from "react";
-import { createClient } from "matrix-js-sdk";
-import API_URLS from "../config";
+import React, { useEffect, useState, Suspense, ReactElement } from "react";
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { EventDirection, WidgetEventCapability } from "matrix-widget-api";
+import { WidgetApiImpl, WidgetApi, WidgetParameter } from '@matrix-widget-toolkit/api';
+import { MuiThemeProvider, MuiWidgetApiProvider } from '@matrix-widget-toolkit/mui';
 
-const MatrixClientProvider = ({ children }) => {
-  const [client, setClient] = useState(null);
-  const [roomInfo, setRoomInfo] = useState({ members: [] });
-  const [userInfo, setUserInfo] = useState(null);
+// Initiate the widget API on startup. The Client will initiate
+// the connection with `capabilities` and we need to make sure
+// that the message doesn't get lost while we are initiating React.
+const widgetApiPromise = WidgetApiImpl.create({
+  // You can specify which capabilities should be requested at startup. One
+  // can also request capabilities after the application started.
+  capabilities: [
+    WidgetEventCapability.forStateEvent(
+      EventDirection.Receive,
+      'm.room.name',
+    ),
+  ],
+});
 
-  useEffect(() => {
-    const initMatrix = async () => {
-      try {
-        const matrixClient = createClient({
-          baseUrl: API_URLS.synapseUrl,
-          accessToken: API_URLS.accesstoken,
-          userId: "@rpxot3Z1EgQMpGR4n3jopgrPdTSXaDqmxS:synapse.textrp.io",
-        });
-        matrixClient.on("sync", async (state) => {
-          if (state === "SYNCING") {
-            setClient((prevClient) => prevClient || matrixClient);
-          }
-        });
-        await matrixClient.startClient({ initialSyncLimit: 10 });
-        const themeEvent = await matrixClient.getAccountData('m.settings');
-        const theme = themeEvent?.theme || 'light'; // Default to light if not found
-        console.log("------------------------------------")
-        console.log("matrixClient:", matrixClient);
-        console.log("themeEvent:", themeEvent);
-        console.log("Current Theme:", theme);
-        console.log("------------------------------------")
 
-      } catch (error) {
-        console.error("Error initializing Matrix client:", error);
-      }
-    };
 
-    initMatrix();
-  }, []);
 
-  useEffect(() => {
-    const handleEvent = (event) => {
-      //  console.log("event aman all events", event);
-      if (event.origin === `${API_URLS.elementsUrl}`) {
-        console.log("event aman", event);
-        console.log("Received message:", event.data);
-
-        const message = event.data;
-        if (message.api === "toWidget") {
-          switch (message.action) {
-            case "capabilities":
-              handleCapabilitiesRequest(message);
-              break;
-            default:
-              console.log("Received unknown action:", message.action);
-          }
-
-          if (message.data && message.data.userInfo) {
-            setUserInfo(message.data.userInfo);
-            console.log("User Info received:", message.data.userInfo);
-          } else {
-            console.log("User Info not found in the message");
-          }
-        }
-      }
-    };
-
-    window.addEventListener("message", handleEvent);
-    return () => window.removeEventListener("message", handleEvent);
-  }, []);
-
-  const handleCapabilitiesRequest = (message) => {
-    // console.log("Capabilities request received:", message);
-    window.parent.postMessage(
-      {
-        response: {
-          requestId: message.requestId,
-        },
-      },
-      `${API_URLS.elementsUrl}`
-    );
-  };
-  useEffect(() => {
-    window.parent.postMessage(
-      {
-        action: "get_room_info",
-      },
-      `${API_URLS.elementsUrl}`
-    );
-  }, []);
-
-  useEffect(() => {
-    const fetchRoomsInfo = async () => {
-      if (client) {
-        console.log("Fetching rooms info...", client);
-        try {
-          const rooms = client.getRooms();
-          const roomsDetails = rooms.map((room) => ({
-            id: room.roomId,
-            name: room.name,
-            members: room.getJoinedMembers().map((member) => ({
-              id: member.userId,
-              name: member.name,
-            })),
-          }));
-
-          // console.log(roomsDetails, "roomsDetails");
-          setRoomInfo(roomsDetails); // This should be setRoomsInfo if handling multiple rooms
-          // console.log("Rooms fetched:", roomsDetails);
-        } catch (error) {
-          console.error("Error fetching rooms:", error);
-        }
-      }
-    };
-
-    fetchRoomsInfo();
-  }, [client]);
-
+const MatrixClientProvider = ({children}) => {
   return (
-    <div>
-      {roomInfo && roomInfo.members && roomInfo.members.length > 0 ? (
-        <div key={roomInfo.id}>
-          <h3>{roomInfo.name}</h3>
-          <ul>
-            {roomInfo.members.map((member) => (
-              <li key={member.id}>{member.name}</li>
-            ))}
-          </ul>
-        </div>
-      ) : null}
-      {children}
-    </div>
+    <BrowserRouter>
+      <MuiThemeProvider>
+        <Suspense fallback={<></>}>
+          <MuiWidgetApiProvider
+            widgetApiPromise={widgetApiPromise}
+            widgetRegistration={{
+              name: 'P2P-NFT-Widget',
+              type: 'com.example.clock',
+              data: { title: 'P2P-NFT-Widget' },
+              // Device ID is required for the WelcomePage example
+              requiredParameters: [WidgetParameter.DeviceId],
+            }}
+          >
+            {children}
+          </MuiWidgetApiProvider>
+        </Suspense>
+      </MuiThemeProvider>
+    </BrowserRouter>
   );
 };
 
