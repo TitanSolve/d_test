@@ -1,11 +1,12 @@
 import React, { useEffect, useState, Suspense, ReactElement } from "react";
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { EventDirection, WidgetEventCapability, WidgetApi } from "matrix-widget-api";
+import { EventDirection, WidgetEventCapability} from "matrix-widget-api";
 import { WidgetApiImpl, WidgetParameter } from '@matrix-widget-toolkit/api';
 import { useWidgetApi } from '@matrix-widget-toolkit/react';
-import { MuiThemeProvider, MuiWidgetApiProvider, useWidgetTheme } from '@matrix-widget-toolkit/mui';
+import { MuiThemeProvider, MuiWidgetApiProvider} from '@matrix-widget-toolkit/mui';
 import { Tabs, Tab, Box } from "@mui/material";
 import { motion, AnimatePresence } from "framer-motion";
+import { map } from 'rxjs';
 import NFTs from "../pages/NFTs";
 import Offers from "../pages/Offers";
 
@@ -29,30 +30,39 @@ const widgetApiPromise = WidgetApiImpl.create({
 
 const MatrixClientProvider = () => {
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const widgetApi = useWidgetApi();
+  const [dices, setDices] = useState([]);
 
   useEffect(() => {
-    console.log("Fetching widget theme from URL parameters...");
+    setDices([]);
 
-    // Extract the 'theme' parameter from the URL (Matrix provides this)
-    const urlParams = new URLSearchParams(window.location.search);
-    console.log("urlParams", urlParams);
-    const themeParam = urlParams.get("theme");
-    console.log("themeParam", themeParam);
+    const subscription = widgetApi
+      .observeRoomEvents('net.nordeck.throw_dice')
+      .pipe(
+        map((r) => r.content.pips),
+      )
+      .subscribe((d) => {
+        setDices((l) => [...l, d]);
+      });
 
-    if (themeParam) {
-      console.log(`Detected theme from Matrix: ${themeParam}`);
-      // setThemeMode(themeParam);
-    } else {
-      console.log("No theme parameter found, defaulting to light mode.");
-    }
-  }, []);
+    console.log("Dices: ", dices);
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [widgetApi]);
+
+  useEffect(() => {
+    console.log("Dice changed", dices);
+  }, [dices]);
+
 
   const panelVariants = {
     hidden: { opacity: 0, x: 50 },
     visible: { opacity: 1, x: 0 },
     exit: { opacity: 0, x: -50 }
   };
-  
+
   return (
     <BrowserRouter>
       <MuiThemeProvider>
@@ -67,8 +77,6 @@ const MatrixClientProvider = () => {
               requiredParameters: [WidgetParameter.DeviceId],
             }}
           >
-
-
             <Box sx={{ width: "100%", borderRadius: 2, boxShadow: 1 }}>
               <Tabs
                 value={selectedIndex}
@@ -95,7 +103,6 @@ const MatrixClientProvider = () => {
                 </AnimatePresence>
               </Box>
             </Box>
-
 
 
           </MuiWidgetApiProvider>
