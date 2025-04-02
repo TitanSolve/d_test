@@ -1,84 +1,81 @@
 import React, { useEffect, useState } from "react";
-import { WidgetApi, WidgetApiImpl, WidgetApiToWidgetAction } from "matrix-widget-api";
+import { WidgetApi} from "matrix-widget-api";
 import API_URLS from "../config";
 
 const MatrixClientProvider = () => {
   const [matrixApi, setMatrixApi] = useState(null);
-    const [userId, setUserId] = useState(null);
-    const [roomId, setRoomId] = useState(null);
+  const [userId, setUserId] = useState(null);
+  const [roomId, setRoomId] = useState(null);
 
-    useEffect(() => {
-        console.log("🔹 Widget is initializing...");
+  useEffect(() => {
+      console.log("🔹 Initializing Widget...");
 
-        // Extract widget ID from the URL
-        const widgetId = new URLSearchParams(window.location.search).get("widgetId");
-        if (!widgetId) {
-            console.error("❌ No widgetId found in URL parameters!");
-            return;
-        }
-        console.log(`✅ Widget ID detected: ${widgetId}`);
+      // Extract widget ID from the URL parameters
+      const widgetId = new URLSearchParams(window.location.search).get("widgetId");
+      if (!widgetId) {
+          console.error("❌ No widgetId found in URL!");
+          return;
+      }
+      console.log(`✅ Widget ID: ${widgetId}`);
 
-        // Initialize Matrix Widget API
-        const api = new WidgetApiImpl(widgetId);
-        console.log("🔹 Matrix Widget API initialized.");
+      // Create a new Widget API instance
+      const api = new WidgetApi(widgetId);
+      console.log("🔹 Matrix Widget API initialized.");
 
-        api.start();
-        console.log("✅ Widget API started.");
+      // Start listening for events
+      api.start();
+      console.log("✅ Matrix Widget API started.");
 
-        // Request necessary capabilities (e.g., sending messages)
-        api.once(`action:${WidgetApiToWidgetAction.Capabilities}`, () => {
-            console.log("🔹 Requesting widget capabilities...");
-            api.send(WidgetApiToWidgetAction.NotifyCapabilities, {
-                requested: ["m.room.message", "m.room.member"],
-            });
-            console.log("✅ Capabilities requested.");
-        });
+      // Request permissions from Matrix
+      api.once("action:capabilities", () => {
+          console.log("🔹 Requesting widget capabilities...");
+          api.send("notify_capabilities", {
+              requested: ["m.room.message", "m.room.member"],
+          });
+          console.log("✅ Capabilities requested.");
+      });
 
-        // Fetch and log User ID
-        api.getUserId()
-            .then((id) => {
-                setUserId(id);
-                console.log(`✅ User ID retrieved: ${id}`);
-            })
-            .catch((error) => {
-                console.error("❌ Failed to fetch user ID:", error);
-            });
+      // Fetch User ID
+      api.getUserId()
+          .then((id) => {
+              setUserId(id);
+              console.log(`✅ User ID: ${id}`);
+          })
+          .catch((error) => console.error("❌ Failed to fetch User ID:", error));
 
-        // Fetch and log Room ID
-        api.getRoomId()
-            .then((id) => {
-                setRoomId(id);
-                console.log(`✅ Room ID retrieved: ${id}`);
-            })
-            .catch((error) => {
-                console.error("❌ Failed to fetch room ID:", error);
-            });
+      // Fetch Room ID
+      api.getRoomId()
+          .then((id) => {
+              setRoomId(id);
+              console.log(`✅ Room ID: ${id}`);
+          })
+          .catch((error) => console.error("❌ Failed to fetch Room ID:", error));
 
-        // Save API reference in state
-        setMatrixApi(api);
-        console.log("✅ Matrix API stored in state.");
+      // Save API instance
+      setMatrixApi(api);
 
-        return () => {
-            console.log("🔹 Cleaning up widget API...");
-            api.stop();
-        };
-    }, []);
+      // Cleanup on unmount
+      return () => {
+          console.log("🔹 Cleaning up Matrix API...");
+          api.stop();
+      };
+  }, []);
 
-    // Function to send a message to the room
-    const sendMessage = () => {
-        if (!matrixApi) {
-            console.error("❌ Cannot send message: Matrix API not initialized!");
-            return;
-        }
-        console.log("🔹 Sending message to the room...");
-        matrixApi
-            .sendRoomEvent("m.room.message", {
-                body: "Hello from widget!",
-                msgtype: "m.text",
-            })
-            .then(() => console.log("✅ Message sent successfully."))
-            .catch((error) => console.error("❌ Failed to send message:", error));
-    };
+  // Function to send a message
+  const sendMessage = () => {
+      if (!matrixApi) {
+          console.error("❌ Cannot send message: Matrix API is not initialized!");
+          return;
+      }
+      console.log("🔹 Sending message to the room...");
+      matrixApi
+          .sendRoomEvent("m.room.message", {
+              body: "Hello from widget!",
+              msgtype: "m.text",
+          })
+          .then(() => console.log("✅ Message sent successfully."))
+          .catch((error) => console.error("❌ Failed to send message:", error));
+  };
 
     return (
         <div style={{ textAlign: "center", padding: "20px" }}>
