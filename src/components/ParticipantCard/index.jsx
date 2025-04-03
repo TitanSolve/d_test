@@ -116,7 +116,7 @@ const ParticipantCard = ({ title, nfts, index, own }) => {
           borderRadius: '10px',
           padding: "16px"
         }}
-        style={{ width: "90%", maxWidth: '400px' }}
+        style={{ width: "80%" }}
       >
         <div>
           <img

@@ -8,31 +8,31 @@ import Offers from "../pages/Offers";
 
 const MatrixClientProvider = () => {
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const widgetApi = useWidgetApi();
-  const [dices, setDices] = useState([]);
+  // const widgetApi = useWidgetApi();
+  // const [dices, setDices] = useState([]);
 
-  useEffect(() => {
-    setDices([]);
+  // useEffect(() => {
+  //   setDices([]);
 
-    const subscription = widgetApi
-      .observeRoomEvents('net.nordeck.throw_dice')
-      .pipe(
-        map((r) => r.content.pips),
-      )
-      .subscribe((d) => {
-        setDices((l) => [...l, d]);
-      });
+  //   const subscription = widgetApi
+  //     .observeRoomEvents('net.nordeck.throw_dice')
+  //     .pipe(
+  //       map((r) => r.content.pips),
+  //     )
+  //     .subscribe((d) => {
+  //       setDices((l) => [...l, d]);
+  //     });
 
-    console.log("Dices: ", dices);
+  //   console.log("Dices: ", dices);
 
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, [widgetApi]);
+  //   return () => {
+  //     subscription.unsubscribe();
+  //   };
+  // }, [widgetApi]);
 
-  useEffect(() => {
-    console.log("Dice changed", dices);
-  }, [dices]);
+  // useEffect(() => {
+  //   console.log("Dice changed", dices);
+  // }, [dices]);
 
 
   const panelVariants = {

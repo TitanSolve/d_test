@@ -8,34 +8,34 @@ import MatrixClientProvider from './components/MatrixClientProvider';
 function App({ widgetApiPromise }) {
   return (
     <BrowserRouter>
-      <MuiThemeProvider>
-        <Suspense fallback={<></>}>
-          <MuiWidgetApiProvider
-            widgetApiPromise={widgetApiPromise}
-            widgetRegistration={{
-              name: 'P2P-NFT-Widget',
-              type: 'com.example.clock',
-              data: { title: 'P2P-NFT-Widget' },
-              // Device ID is required for the WelcomePage example
-              requiredParameters: [WidgetParameter.DeviceId],
-            }}
-          >
-            {/* <MuiCapabilitiesGuard
-              capabilities={[
-                WidgetEventCapability.forRoomEvent(
-                  EventDirection.Receive,
-                  'net.nordeck.throw_dice',
-                ),
-              ]}
-            > */}
-
+       <MuiThemeProvider>
+         <Suspense fallback={<></>}>
+           <MuiWidgetApiProvider
+             widgetApiPromise={widgetApiPromise}
+             widgetRegistration={{
+               name: 'P2P-NFT-Widget',
+               type: 'com.example.clock',
+               data: { title: 'P2P-NFT-Widget' },
+               // Device ID is required for the WelcomePage example
+               requiredParameters: [WidgetParameter.DeviceId],
+             }}
+           >
+                    {/* <MuiCapabilitiesGuard
+                      capabilities={[
+                        WidgetEventCapability.forRoomEvent(
+                          EventDirection.Receive,
+                          'net.nordeck.throw_dice',
+                        ),
+                      ]}
+                    > */}
+                  
               <MatrixClientProvider />
 
-            {/* </MuiCapabilitiesGuard> */}
+                    {/* </MuiCapabilitiesGuard> */}
           </MuiWidgetApiProvider>
         </Suspense>
       </MuiThemeProvider>
-    </BrowserRouter>
+    </BrowserRouter> 
   );
 }
 
