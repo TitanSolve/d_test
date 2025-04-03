@@ -11,11 +11,16 @@ const MatrixClientProvider = () => {
   const widgetApi = useWidgetApi();
 
   useEffect(() => {
-    console.log("------------------------------------")
-    console.log("Widget changed", widgetApi);
-    console.log("Widget Parameters", widgetApi.widgetParameters);
-    console.log("Theme ", widgetApi.widgetParameters.theme);
-    console.log("------------------------------------")
+    const logThemeInfo = () => {
+      console.log("------------------------------------");
+      console.log("Widget changed", widgetApi);
+      console.log("Widget Parameters", widgetApi.widgetParameters);
+      console.log("Theme ", widgetApi.widgetParameters.theme);
+      console.log("------------------------------------");
+    };
+
+    const intervalId = setInterval(logThemeInfo, 3000);
+    return () => clearInterval(intervalId);
   }, [widgetApi]);
 
   useEffect(() => {
