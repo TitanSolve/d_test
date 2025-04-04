@@ -3,9 +3,70 @@ import { useWidgetApi } from '@matrix-widget-toolkit/react';
 import { Tabs, Tab, Box } from "@mui/material";
 import { motion, AnimatePresence } from "framer-motion";
 import { map } from 'rxjs';
+import axios from "axios";
 import NFTs from "../pages/NFTs";
 import Offers from "../pages/Offers";
 import API_URLS from "../config";
+
+const hexToAscii = (str) => {
+  var hexString = str?.toString();
+  var strOut = "";
+  for (var i = 0; i < hexString?.length; i += 2) {
+    strOut += String.fromCharCode(parseInt(hexString.substr(i, 2), 16));
+  }
+  return strOut;
+};
+
+const getImageData = async (nft) => {
+  let URI = hexToAscii(nft?.uri);
+  let name = "";
+
+  if (URI === "") {
+    try {
+      const metadataUrl = `${API_URLS.marketPlace}/api/metadata/${nft?.NFTokenID}`;
+      const response = await axios.get(metadataUrl);
+      URI = response.data.image;
+      name = response.data.name;
+    } catch (error) {
+      console.error("Error fetching metadata:", error);
+    }
+  }
+
+  const httpNftImageUrl = URI.replace("ipfs://", "https://ipfs.io/ipfs/");
+
+  if (URI.includes("ipfs")) {
+    console.log("umang okate URI", httpNftImageUrl);
+    await axios
+      .get(httpNftImageUrl)
+      .then((response) => {
+        const nftImageUrl = response.data.image || URI;
+        const httpNftImageUrl = nftImageUrl.replace(
+          "ipfs://",
+          "https://ipfs.io/ipfs/"
+        );
+        name = response.data.name || name;
+        URI = httpNftImageUrl;
+      })
+      .catch((error) => console.error("Error fetching NFT data:", error));
+  }
+
+  if (URI.includes("json")) {
+    console.log("umang okate URI", URI);
+    await axios
+      .get(URI)
+      .then((response) => {
+        console.log("uamng response", response);
+        const nftImageUrl = response.data.image || URI;
+        console.log(nftImageUrl, "ukang nftImageURL");
+        name = response.data.name || name;
+        URI = nftImageUrl;
+      })
+      .catch((error) => console.error("Error umang fetching NFT data:", error));
+  }
+  nft.URI = URI;
+  nft.name = name;
+  return URI;
+};
 
 const MatrixClientProvider = () => {
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -18,7 +79,7 @@ const MatrixClientProvider = () => {
     console.log("widgetApi.widgetParameters : ", widgetApi.widgetParameters);
     const fetchNFTData = async () => {
       // const address = widgetApi.widgetParameters.userId.split(":")[0].replace("@", "");
-      const address = "@r34VdeAwi8qs1KF3DTn5T3Y5UAPmbBNWpX:synapse.textrp.io"
+      const address = "rfbDjnzr9riELQZtn95REQhR7fiyKyGM77"
       console.log(address, "query params user id");
 
       try {
@@ -37,8 +98,10 @@ const MatrixClientProvider = () => {
         }
 
         const data = await response.json();
-        // console.log(data[address], "get user nft data");
-        console.log("NFT data :", data);
+        console.log("NFT data (JSON) :", data);
+        const nfts = Object.values(data)[0];
+        console.log("NFT data :", nfts);
+
       } catch (error) {
         console.error("Error fetching NFT data:", error);
       }
