@@ -72,7 +72,7 @@ const MatrixClientProvider = () => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const widgetApi = useWidgetApi();
   const wgtParameters = widgetApi.widgetParameters
-  const [myNftData, setNftData] = useState([]);
+  let myNftData = [];
 
   useEffect(() => {
     console.log("widgetApi.widgetParameters : ", wgtParameters);
@@ -99,7 +99,7 @@ const MatrixClientProvider = () => {
         const data = await response.json();
         console.log("NFT data (JSON) :", data);
         const nfts = Object.values(data)[0];
-        setNftData(nfts);
+        myNftData = nfts;
         console.log("NFT data :", nfts);
         console.log("MyNFT data :", myNftData);
 
