@@ -97,7 +97,7 @@ const ParticipantCard = ({ title, nfts, index, own, myNftData, wgtParameters, ge
             {myNftData.map((nft) => (
               <SwiperSlide key={nft.NFTokenID}>
                 {
-                  own ? <NFTCard myNftData={myNftData} getImageData={getImageData} />
+                  own ? <NFTCard myNftData={nft} getImageData={getImageData} />
                     :
                     <div className="transform hover:scale-105 transition-transform duration-300 border p-2 rounded-lg shadow-md bg-gradient-to-br from-blue-200 to-purple-300 text-gray-800 font-semibold text-center cursor-pointer">
                       <img src={nft_pic} alt="NFT" className="w-full max-w-xs md:max-w-sm h-auto rounded-lg mx-auto" onClick={toggleModal} />
