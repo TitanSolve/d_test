@@ -1,5 +1,6 @@
 import React from "react";
 import ParticipantCard from "../../components/ParticipantCard";
+import xrpl from "xrpl";
 
 const NFTs = () => {
   const generateNFTs = (count) => Array.from({ length: count }, (_, i) => ({ id: i + 1 }));
@@ -7,6 +8,27 @@ const NFTs = () => {
   const myNFTs = generateNFTs(8);
   const aliceNFTs = generateNFTs(10);
   const bobNFTs = generateNFTs(10);
+
+  async function fetchNFTs(walletAddress) {
+    const client = new xrpl.Client("wss://xrplcluster.com"); // Public XRPL node
+    await client.connect();
+    try {
+      const response = await client.request({
+        command: "account_nfts",
+        account: walletAddress,
+        ledger_index: "validated",
+      });
+      console.log("response", response);
+      console.log("response.result", response.result);
+      console.log("response.result.nfts", response.result.nfts);
+      return response.result.nfts; // Returns an array of NFTs
+    } catch (error) {
+      console.error("Error fetching NFTs:", error);
+      return [];
+    } finally {
+      client.disconnect();
+    }
+  }
 
   return (
     <div>

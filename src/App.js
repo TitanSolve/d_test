@@ -32,6 +32,7 @@ function App({ widgetApiPromise }) {
               <MatrixClientProvider />
 
                     {/* </MuiCapabilitiesGuard> */}
+
           </MuiWidgetApiProvider>
         </Suspense>
       </MuiThemeProvider>
