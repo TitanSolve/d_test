@@ -8,34 +8,16 @@ import Offers from "../pages/Offers";
 
 const MatrixClientProvider = () => {
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const widgetApi = useWidgetApi();
 
   useEffect(() => {
     const logThemeInfo = () => {
-      // console.log("------------------------------------");
-      // console.log("Widget changed", widgetApi);
-      // console.log("Widget Parameters", widgetApi.widgetParameters);
-      // console.log("Theme ", widgetApi.widgetParameters.theme);
-      // console.log("------------------------------------");
-
-
-      const params = new URLSearchParams(window.location.search);
-      //const paramsObject = Object.fromEntries(params);
-      console.log("------------------------------------");
-      console.log("params", params);
-      console.log("params.get('userId')", params.get("userId"));
-      console.log("params.get('roomId')", params.get("roomId"));
-      console.log("params.get('roomName')", params.get("roomName"));
-      console.log("params.get('widgetId')", params.get("widgetId"));
-      console.log("params.get('parentUrl')", params.get("parentUrl"));
-      console.log("params.get('theme')", params.get("theme"));
-      console.log("------------------------------------");
-
+      const widgetApi = useWidgetApi();
+      console.log("widgetApi.widgetParameters : ", widgetApi.widgetParameters);
     };
 
     const intervalId = setInterval(logThemeInfo, 3000);
     return () => clearInterval(intervalId);
-  }, [widgetApi]);
+  }, []);
 
   // useEffect(() => {
   //   console.log("------------------------------------")
