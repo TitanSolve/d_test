@@ -17,7 +17,8 @@ const MatrixClientProvider = () => {
     console.log("widgetApi.mediaConfig : ", widgetApi.getMediaConfig());
     console.log("widgetApi.widgetParameters : ", widgetApi.widgetParameters);
     const fetchNFTData = async () => {
-      const address = widgetApi.widgetParameters.userId.split(":")[0].replace("@", "");
+      // const address = widgetApi.widgetParameters.userId.split(":")[0].replace("@", "");
+      const address = "@r34VdeAwi8qs1KF3DTn5T3Y5UAPmbBNWpX:synapse.textrp.io"
       console.log(address, "query params user id");
 
       try {
