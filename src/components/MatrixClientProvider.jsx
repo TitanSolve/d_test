@@ -71,12 +71,11 @@ const getImageData = async (nft) => {
 const MatrixClientProvider = () => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const widgetApi = useWidgetApi();
+  const wgtParameters = widgetApi.widgetParameters
+  const [myNftData, setNftData] = useState([]);
 
   useEffect(() => {
-    console.log("widgetApi : ", widgetApi);
-    console.log("widgetApi.widgetConfig : ", widgetApi.getWidgetConfig());
-    console.log("widgetApi.mediaConfig : ", widgetApi.getMediaConfig());
-    console.log("widgetApi.widgetParameters : ", widgetApi.widgetParameters);
+    console.log("widgetApi.widgetParameters : ", wgtParameters);
     const fetchNFTData = async () => {
       // const address = widgetApi.widgetParameters.userId.split(":")[0].replace("@", "");
       const address = "rfbDjnzr9riELQZtn95REQhR7fiyKyGM77"
@@ -100,7 +99,9 @@ const MatrixClientProvider = () => {
         const data = await response.json();
         console.log("NFT data (JSON) :", data);
         const nfts = Object.values(data)[0];
+        setNftData(nfts);
         console.log("NFT data :", nfts);
+        console.log("MyNFT data :", myNftData);
 
       } catch (error) {
         console.error("Error fetching NFT data:", error);
@@ -112,12 +113,6 @@ const MatrixClientProvider = () => {
     // const intervalId = setInterval(logThemeInfo, 3000);
     // return () => clearInterval(intervalId);
   }, [widgetApi]);
-
-  // useEffect(() => {
-  //   console.log("------------------------------------")
-  //   console.log("Widget Theme changed", widgetApi.widgetParameters.theme);
-  //   console.log("------------------------------------")
-  // }, [widgetApi.widgetParameters.theme]);
 
   const panelVariants = {
     hidden: { opacity: 0, x: 50 },
@@ -147,7 +142,7 @@ const MatrixClientProvider = () => {
             exit="exit"
             transition={{ duration: 0.4, ease: "easeInOut" }}
           >
-            {selectedIndex === 0 ? <NFTs /> : <Offers />}
+            {selectedIndex === 0 ? <NFTs myNftData={myNftData} getImageData={getImageData} wgtParameters={wgtParameters} /> : <Offers />}
           </motion.div>
         </AnimatePresence>
       </Box>

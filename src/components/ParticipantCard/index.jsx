@@ -12,7 +12,7 @@ import { DownOutlined, UserOutlined } from "@ant-design/icons";
 
 const { Text } = Typography;
 
-const ParticipantCard = ({ title, nfts, index, own }) => {
+const ParticipantCard = ({ title, nfts, index, own, myNftData, wgtParameters, getImageData }) => {
   const [state, setState] = useState({
     sortOrder: "newest",
     isModalOpen: false,
@@ -28,11 +28,8 @@ const ParticipantCard = ({ title, nfts, index, own }) => {
   );
 
   const toggleModal = () => setState(prev => ({ ...prev, isModalOpen: !prev.isModalOpen }));
-
   const toggleSortOrder = () => setState(prev => ({ ...prev, isOldest: !prev.isOldest }));
-
   const toggleSellMode = () => setState(prev => ({ ...prev, isSell: !prev.isSell }));
-
   const updateField = (field, value) => setState(prev => ({ ...prev, [field]: value }));
 
   const userMenu = (
@@ -52,7 +49,11 @@ const ParticipantCard = ({ title, nfts, index, own }) => {
     <>
       <div className="p-2 border border-gray-200 rounded-2xl bg-white shadow-lg w-full max-w-5xl">
         <div className="flex items-center justify-between">
-          <h2 className="text-lg md:text-xl font-bold text-gray-900">{title}</h2>
+          <h2 className="text-lg md:text-xl font-bold text-gray-900">
+            {own ? wgtParameters.displayName
+              : title
+            }
+          </h2>
           <Select
             className="w-24 md:w-32"
             value={state.token}
@@ -91,10 +92,10 @@ const ParticipantCard = ({ title, nfts, index, own }) => {
             modules={[Navigation, Pagination]}
             className="rounded-lg overflow-hidden shadow-xl"
           >
-            {sortedNFTs.map((nft) => (
-              <SwiperSlide key={nft.id}>
+            {myNftData.map((nft) => (
+              <SwiperSlide key={nft.NFTokenID}>
                 <div className="transform hover:scale-105 transition-transform duration-300 border p-2 rounded-lg shadow-md bg-gradient-to-br from-blue-200 to-purple-300 text-gray-800 font-semibold text-center cursor-pointer">
-                  <img src={nft_pic} alt="NFT" className="w-full max-w-xs md:max-w-sm h-auto rounded-lg mx-auto" onClick={toggleModal} />
+                  <img src={getImageData(nft)} alt="NFT" className="w-full max-w-xs md:max-w-sm h-auto rounded-lg mx-auto" onClick={toggleModal} />
                 </div>
               </SwiperSlide>
             ))}
