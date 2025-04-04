@@ -8,16 +8,16 @@ import Offers from "../pages/Offers";
 
 const MatrixClientProvider = () => {
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const widgetApi = useWidgetApi();
 
   useEffect(() => {
     const logThemeInfo = () => {
-      const widgetApi = useWidgetApi();
       console.log("widgetApi.widgetParameters : ", widgetApi.widgetParameters);
     };
 
     const intervalId = setInterval(logThemeInfo, 3000);
     return () => clearInterval(intervalId);
-  }, []);
+  }, [widgetApi]);
 
   // useEffect(() => {
   //   console.log("------------------------------------")
