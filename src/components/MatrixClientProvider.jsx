@@ -5,18 +5,48 @@ import { motion, AnimatePresence } from "framer-motion";
 import { map } from 'rxjs';
 import NFTs from "../pages/NFTs";
 import Offers from "../pages/Offers";
+import API_URLS from "../config";
 
 const MatrixClientProvider = () => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const widgetApi = useWidgetApi();
 
   useEffect(() => {
-    const logThemeInfo = () => {
-      console.log("widgetApi.widgetParameters : ", widgetApi.widgetParameters);
+    console.log("widgetApi : ", widgetApi);
+    console.log("widgetApi.widgetConfig : ", widgetApi.getWidgetConfig());
+    console.log("widgetApi.mediaConfig : ", widgetApi.getMediaConfig());
+    console.log("widgetApi.widgetParameters : ", widgetApi.widgetParameters);
+    const fetchNFTData = async () => {
+      const address = widgetApi.widgetParameters.userId.split(":")[0].replace("@", "");
+      console.log(address, "query params user id");
+
+      try {
+        const response = await fetch(`${API_URLS.backendUrl}/get-users-nfts`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            addresses: [address],
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch NFT data");
+        }
+
+        const data = await response.json();
+        // console.log(data[address], "get user nft data");
+        console.log("NFT data :", data);
+      } catch (error) {
+        console.error("Error fetching NFT data:", error);
+      }
     };
 
-    const intervalId = setInterval(logThemeInfo, 3000);
-    return () => clearInterval(intervalId);
+    fetchNFTData();
+
+    // const intervalId = setInterval(logThemeInfo, 3000);
+    // return () => clearInterval(intervalId);
   }, [widgetApi]);
 
   // useEffect(() => {
