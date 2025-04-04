@@ -9,6 +9,7 @@ import "swiper/css/effect-coverflow";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Modal, Select, Dropdown, Menu, Input, Button, Switch, Typography, Space } from "antd";
 import { DownOutlined, UserOutlined } from "@ant-design/icons";
+import NFTCard from "../NFT-Card";
 
 const { Text } = Typography;
 
@@ -22,6 +23,7 @@ const ParticipantCard = ({ title, nfts, index, own, myNftData, wgtParameters, ge
     amount: "",
     token: "XRP"
   });
+  const [loading, setLoading] = useState(false);
 
   const sortedNFTs = [...nfts].sort((a, b) =>
     state.sortOrder === "newest" ? b.id - a.id : a.id - b.id
@@ -94,9 +96,13 @@ const ParticipantCard = ({ title, nfts, index, own, myNftData, wgtParameters, ge
           >
             {myNftData.map((nft) => (
               <SwiperSlide key={nft.NFTokenID}>
-                <div className="transform hover:scale-105 transition-transform duration-300 border p-2 rounded-lg shadow-md bg-gradient-to-br from-blue-200 to-purple-300 text-gray-800 font-semibold text-center cursor-pointer">
-                  <img src={getImageData(nft)} alt="NFT" className="w-full max-w-xs md:max-w-sm h-auto rounded-lg mx-auto" onClick={toggleModal} />
-                </div>
+                {
+                  own ? <NFTCard myNftData={myNftData} getImageData={getImageData} />
+                    :
+                    <div className="transform hover:scale-105 transition-transform duration-300 border p-2 rounded-lg shadow-md bg-gradient-to-br from-blue-200 to-purple-300 text-gray-800 font-semibold text-center cursor-pointer">
+                      <img src={nft_pic} alt="NFT" className="w-full max-w-xs md:max-w-sm h-auto rounded-lg mx-auto" onClick={toggleModal} />
+                    </div>
+                }
               </SwiperSlide>
             ))}
           </Swiper>
