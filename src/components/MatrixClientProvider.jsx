@@ -82,11 +82,10 @@ const MatrixClientProvider = () => {
     const loadMembers = async () => {
       try {
         const events = await widgetApi.receiveStateEvents(STATE_EVENT_ROOM_MEMBER);
-        // setMembers(events);
-        console.log("Members loaded:", events);
+        // console.log("Members loaded:", events);
         const formattedMembers = events.map(item => ({
-          sender: item.sender,
-          displayname: item.content.displayname
+          name: item.content.displayname,
+          userId: item.sender
         }));
         console.log("formattedMembers :", formattedMembers);
         setMembers(formattedMembers);
@@ -98,11 +97,15 @@ const MatrixClientProvider = () => {
 
     loadMembers();
 
+    console.log("members :", members);
+    const userIds = members.map(member => member.userId);
+    console.log("userIds :", userIds);
+
 
     const fetchNFTData = async () => {
       // const address = widgetApi.widgetParameters.userId.split(":")[0].replace("@", "");
-      const address = "rfbDjnzr9riELQZtn95REQhR7fiyKyGM77"
-      console.log(address, "query params user id");
+      // const address = "rfbDjnzr9riELQZtn95REQhR7fiyKyGM77"
+      console.log("Fetching NFT data for addresses:", userIds);
 
       try {
         const response = await fetch(`${API_URLS.backendUrl}/get-users-nfts`, {
@@ -111,7 +114,7 @@ const MatrixClientProvider = () => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            addresses: [address],
+            addresses: userIds
           }),
         });
 
