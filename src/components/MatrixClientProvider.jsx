@@ -75,6 +75,7 @@ const MatrixClientProvider = () => {
   const wgtParameters = widgetApi.widgetParameters
   const [myNftData, setMyNftData] = useState([]);
   const [members, setMembers] = useState([]);
+  let membersList = [];
 
   useEffect(() => {
     console.log("widgetApi.widgetParameters : ", wgtParameters);
@@ -83,12 +84,12 @@ const MatrixClientProvider = () => {
       try {
         const events = await widgetApi.receiveStateEvents(STATE_EVENT_ROOM_MEMBER);
         // console.log("Members loaded:", events);
-        const formattedMembers = events.map(item => ({
+        membersList = events.map(item => ({
           name: item.content.displayname,
           userId: item.sender
         }));
-        console.log("formattedMembers :", formattedMembers);
-        setMembers(formattedMembers);
+        console.log("formattedMembers :", membersList);
+        setMembers(membersList);
 
       } catch (error) {
         console.error("Failed to load room members", error);
@@ -97,8 +98,8 @@ const MatrixClientProvider = () => {
 
     loadMembers();
 
-    console.log("members :", members);
-    const userIds = members.map(member => member.userId);
+    console.log("members :", membersList);
+    const userIds = membersList.map(member => member.userId);
     console.log("userIds :", userIds);
 
 
