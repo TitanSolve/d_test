@@ -123,8 +123,9 @@ const MatrixClientProvider = () => {
             const nfts = data[walletAddress] || [];
         
             const enrichedNfts = await Promise.all(
-              nfts.map(async (nft) => {
+              nfts.map(async (nft, index) => {
                 const imageURI = await getImageData(nft);
+                console.log("index", index)
                 return {
                   ...nft,
                   imageURI, // add image URI for rendering
