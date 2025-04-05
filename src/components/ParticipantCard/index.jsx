@@ -91,16 +91,16 @@ const ParticipantCard = ({ index, myNftData, wgtParameters, getImageData }) => {
             className="rounded-lg overflow-hidden shadow-xl"
           >
             {
-              // myNftData.nfts.length > 0 ?
+              myNftData?.nfts?.length > 0 ?
                 myNftData.nfts.map((nft) => (
                   <SwiperSlide key={nft.NFTokenID}>
                       <NFTCard myNftData={nft} getImageData={getImageData} />
                   </SwiperSlide>
                 ))
-                // :
-                // <div className="flex flex-col items-center justify-center h-32 text-gray-500 font-semibold text-center">
-                //   <p>No NFTs available</p>
-                // </div>
+                :
+                <div className="flex flex-col items-center justify-center h-32 text-gray-500 font-semibold text-center">
+                  <p>No NFTs available</p>
+                </div>
             }
           </Swiper>
           <button className={`swiper-button-next-${index} bg-gray-800 hover:bg-gray-700 text-white p-2 md:p-3 rounded-full shadow-lg transition-transform transform hover:scale-110 focus:ring-4 focus:ring-purple-500`}>
