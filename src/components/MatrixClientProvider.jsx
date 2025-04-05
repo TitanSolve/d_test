@@ -111,8 +111,6 @@ const MatrixClientProvider = () => {
 
         const data = await response.json();
         console.log("NFT data (JSON) :", data);
-        // const nfts = Object.values(data)[0];
-        // console.log("NFT data :", nfts);
         
         // Now merge members with their NFT data
         const mergedMembers = membersList.map(member => {
@@ -126,7 +124,7 @@ const MatrixClientProvider = () => {
 
         console.log("Merged members with NFT data:", mergedMembers);
 
-        // setMyNftData(mergedMembers);
+        setMyNftData(mergedMembers);
 
       } catch (error) {
         console.error("Error loading data:", error);

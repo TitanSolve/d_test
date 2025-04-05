@@ -11,9 +11,6 @@ const NFTCard = ({ myNftData, getImageData }) => {
         const fetchImageData = async () => {
             setLoading(true);
             const imageUri = await getImageData(myNftData);
-            
-            console.log("ImageURI", imageUri);
-            console.log("myNFTData", myNftData);
             setLoading(false);
             setUri(imageUri);
 

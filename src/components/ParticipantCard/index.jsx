@@ -13,7 +13,7 @@ import NFTCard from "../NFT-Card";
 
 const { Text } = Typography;
 
-const ParticipantCard = ({ title, nfts, index, own, myNftData, wgtParameters, getImageData }) => {
+const ParticipantCard = ({ index, myNftData, wgtParameters, getImageData }) => {
   const [state, setState] = useState({
     sortOrder: "newest",
     isModalOpen: false,
@@ -25,14 +25,12 @@ const ParticipantCard = ({ title, nfts, index, own, myNftData, wgtParameters, ge
   });
   const [loading, setLoading] = useState(false);
 
-  const sortedNFTs = [...nfts].sort((a, b) =>
-    state.sortOrder === "newest" ? b.id - a.id : a.id - b.id
-  );
-
   const toggleModal = () => setState(prev => ({ ...prev, isModalOpen: !prev.isModalOpen }));
   const toggleSortOrder = () => setState(prev => ({ ...prev, isOldest: !prev.isOldest }));
   const toggleSellMode = () => setState(prev => ({ ...prev, isSell: !prev.isSell }));
   const updateField = (field, value) => setState(prev => ({ ...prev, [field]: value }));
+
+  const own = myNftData.name === wgtParameters.displayName;
 
   const userMenu = (
     <Menu onClick={(e) => updateField('selectedUser', e.key)}>
@@ -52,9 +50,7 @@ const ParticipantCard = ({ title, nfts, index, own, myNftData, wgtParameters, ge
       <div className="p-2 border border-gray-200 rounded-2xl bg-white shadow-lg w-full max-w-5xl">
         <div className="flex items-center justify-between">
           <h2 className="text-lg md:text-xl font-bold text-gray-900">
-            {own ? wgtParameters.displayName
-              : title
-            }
+            {wgtParameters.displayName}
           </h2>
           <Select
             className="w-24 md:w-32"
@@ -94,17 +90,18 @@ const ParticipantCard = ({ title, nfts, index, own, myNftData, wgtParameters, ge
             modules={[Navigation]}
             className="rounded-lg overflow-hidden shadow-xl"
           >
-            {myNftData.map((nft) => (
-              <SwiperSlide key={nft.NFTokenID}>
-                {
-                  own ? <NFTCard myNftData={nft} getImageData={getImageData} />
-                    :
-                    <div className="transform hover:scale-105 transition-transform duration-300 border p-2 rounded-lg shadow-md bg-gradient-to-br from-blue-200 to-purple-300 text-gray-800 font-semibold text-center cursor-pointer">
-                      <img src={nft_pic} alt="NFT" className="w-full max-w-xs md:max-w-sm h-auto rounded-lg mx-auto" onClick={toggleModal} />
-                    </div>
-                }
-              </SwiperSlide>
-            ))}
+            {
+              myNftData.nfts.length > 0 ?
+                myNftData.nfts.map((nft) => (
+                  <SwiperSlide key={nft.NFTokenID}>
+                      <NFTCard myNftData={nft} getImageData={getImageData} />
+                  </SwiperSlide>
+                ))
+                :
+                <div className="flex flex-col items-center justify-center h-32 text-gray-500 font-semibold text-center">
+                  <p>No NFTs available</p>
+                </div>
+            }
           </Swiper>
           <button className={`swiper-button-next-${index} bg-gray-800 hover:bg-gray-700 text-white p-2 md:p-3 rounded-full shadow-lg transition-transform transform hover:scale-110 focus:ring-4 focus:ring-purple-500`}>
             <ChevronRight size={24} />
