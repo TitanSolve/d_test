@@ -31,13 +31,11 @@ const getImageData = async (nft) => {
       name = response.data.name;
     } catch (error) {
       console.log("Error fetching metadata:", error);
-      return "";
     }
   }
 
-  const httpNftImageUrl = URI.replace("ipfs://", "https://ipfs.io/ipfs/");
-
   if (URI.includes("ipfs")) {
+    const httpNftImageUrl = URI.replace("ipfs://", "https://ipfs.io/ipfs/");
     // console.log("umang okate URI", httpNftImageUrl);
     await axios
       .get(httpNftImageUrl)
@@ -51,7 +49,6 @@ const getImageData = async (nft) => {
         URI = httpNftImageUrl;
       })
       .catch((error) => console.log("Error fetching NFT data:", error));
-      return "";
   }
 
   if (URI.includes("json")) {
@@ -66,7 +63,6 @@ const getImageData = async (nft) => {
         URI = nftImageUrl;
       })
       .catch((error) => console.log("Error umang fetching NFT data:", error));
-      return "";
   }
   nft.URI = URI;
   nft.name = name;
