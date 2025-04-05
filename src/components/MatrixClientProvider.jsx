@@ -91,7 +91,7 @@ const MatrixClientProvider = () => {
         setMembers(membersList);
 
         // Now that we have members, extract userIds
-        const userIds = membersList.map(member => member.userId);
+        const userIds = membersList.map(member => member.userId.split(":")[0].replace("@", ""));
         console.log("userIds :", userIds);
 
         // Fetch NFT data
