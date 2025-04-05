@@ -185,7 +185,7 @@ const MatrixClientProvider = () => {
           }}
         >
           <CircularProgress />
-          <Box mt={2}>Loading NFTs...</Box>
+          <Box mt={2}>Loading Data...</Box>
         </Box>
       ) : (
         < Box sx={{ width: "100%", borderRadius: 2, boxShadow: 1 }}>
