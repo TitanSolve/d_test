@@ -117,18 +117,31 @@ const MatrixClientProvider = () => {
         console.log("NFT data (JSON) :", data);
         
         // Now merge members with their NFT data
-        const mergedMembers = membersList.map(member => {
-          const walletAddress = member.userId.split(":")[0].replace("@", "");
-          return {
-            ...member,
-            walletAddress, // Optional, for clarity
-            nfts: data[walletAddress] || [] // Attach NFTs for this user, or an empty array if none
-          };
-        });
+        const mergedMembers = await Promise.all(
+          membersList.map(async (member) => {
+            const walletAddress = member.userId.split(":")[0].replace("@", "");
+            const nfts = data[walletAddress] || [];
+        
+            const enrichedNfts = await Promise.all(
+              nfts.map(async (nft) => {
+                const imageURI = await getImageData(nft);
+                return {
+                  ...nft,
+                  imageURI, // add image URI for rendering
+                };
+              })
+            );
+        
+            return {
+              ...member,
+              walletAddress,
+              nfts: enrichedNfts,
+            };
+          })
+        );
 
         console.log("Merged members with NFT data:", mergedMembers);
-
-        setMyNftData(mergedMembers);
+        // setMyNftData(mergedMembers);
 
       } catch (error) {
         console.error("Error loading data:", error);
