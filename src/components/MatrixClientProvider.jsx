@@ -42,20 +42,21 @@ const getImageData = async (nft) => {
 
   if (URI.startsWith("ipfs")) {
     const httpNftUrl = URI.replace("ipfs://", "https://ipfs.io/ipfs/");
+    URI = httpNftUrl;
     // console.log("umang okate URI", httpNftImageUrl);
-    await axios
-      .get(httpNftUrl)
-      .then((response) => {
-        const nftImageUrl = response.data.image || URI;
-        const httpNftImageUrl = nftImageUrl.replace(
-          "ipfs://",
-          "https://ipfs.io/ipfs/"
-        );
-        name = response.data.name || name;
-        URI = httpNftImageUrl;
-        // console.log("after replace URI", URI);
-      })
-      .catch((error) => console.log("Error fetching NFT data:", error));
+    // await axios
+    //   .get(httpNftUrl)
+    //   .then((response) => {
+    //     const nftImageUrl = response.data.image || URI;
+    //     const httpNftImageUrl = nftImageUrl.replace(
+    //       "ipfs://",
+    //       "https://ipfs.io/ipfs/"
+    //     );
+    //     name = response.data.name || name;
+    //     URI = httpNftImageUrl;
+    //     // console.log("after replace URI", URI);
+    //   })
+    //   .catch((error) => console.log("Error fetching NFT data:", error));
   }
 
   if (URI.includes("json")) {
@@ -67,7 +68,7 @@ const getImageData = async (nft) => {
         let nftImageUrl = response.data.image || URI;
         // console.log(nftImageUrl, "ukang nftImageURL");
         name = response.data.name || name;
-        URI = nftImageUrl.replace("ipfs://", "https://ipfs.io/ipfs/");;
+        URI = nftImageUrl.replace("ipfs://", "https://ipfs.io/ipfs/");
         // console.log("JSON URI", URI);
       })
       .catch((error) => console.log("Error umang fetching NFT data:", error));
