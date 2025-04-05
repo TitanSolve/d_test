@@ -1,6 +1,6 @@
 import React, { useEffect, useState, ReactElement } from "react";
 import { useWidgetApi } from '@matrix-widget-toolkit/react';
-import { Tabs, Tab, Box } from "@mui/material";
+import { Tabs, Tab, Box, Typography, CircularProgress } from "@mui/material";
 import { motion, AnimatePresence } from "framer-motion";
 import { STATE_EVENT_ROOM_MEMBER } from "@matrix-widget-toolkit/api";
 import { map } from 'rxjs';
@@ -9,7 +9,6 @@ import NFTs from "../pages/NFTs";
 import Offers from "../pages/Offers";
 import API_URLS from "../config";
 import nft_default_pic from "../assets/nft.png";
-import CircularProgress from "@mui/material/CircularProgress";
 
 const hexToAscii = (str) => {
   var hexString = str?.toString();
