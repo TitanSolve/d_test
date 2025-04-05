@@ -50,7 +50,7 @@ const ParticipantCard = ({ index, myNftData, wgtParameters, getImageData }) => {
       <div className="p-2 border border-gray-200 rounded-2xl bg-white shadow-lg w-full max-w-5xl">
         <div className="flex items-center justify-between">
           <h2 className="text-lg md:text-xl font-bold text-gray-900">
-            {wgtParameters.displayName}
+            {myNftData.name}
           </h2>
           <Select
             className="w-24 md:w-32"
