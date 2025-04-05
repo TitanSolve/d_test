@@ -8,6 +8,7 @@ import axios from "axios";
 import NFTs from "../pages/NFTs";
 import Offers from "../pages/Offers";
 import API_URLS from "../config";
+import nft_default_pic from "../assets/nft.png";
 
 const hexToAscii = (str) => {
   var hexString = str?.toString();
@@ -32,6 +33,11 @@ const getImageData = async (nft) => {
     } catch (error) {
       console.log("Error fetching metadata:", error);
     }
+  }
+
+  if (URI === "" || URI === undefined || URI === null) {
+    URI = nft_default_pic.toString();
+    return URI;
   }
 
   if (URI.includes("ipfs")) {
@@ -111,33 +117,32 @@ const MatrixClientProvider = () => {
 
         const data = await response.json();
         console.log("NFT data (JSON) :", data);
-        
-        // Now merge members with their NFT data
-        const mergedMembers = await Promise.all(
-          membersList.map(async (member) => {
-            const walletAddress = member.userId.split(":")[0].replace("@", "");
-            const nfts = data[walletAddress] || [];
-        
-            const enrichedNfts = await Promise.all(
-              nfts.map(async (nft, index) => {
-                const imageURI = await getImageData(nft);
-                console.log("index", index)
-                return {
-                  ...nft,
-                  imageURI, // add image URI for rendering
-                };
-              })
-            );
-        
-            return {
-              ...member,
-              walletAddress,
-              nfts: enrichedNfts,
-            };
-          })
-        );
 
-        console.log("---------------------------------------------------------------------")
+        // Now merge members with their NFT data
+        console.time("------------ start");
+
+        const mergedMembers = membersList.map( (member) => {
+          const walletAddress = member.userId.split(":")[0].replace("@", "");
+          const nfts = data[walletAddress] || [];
+
+          const enrichedNfts =
+            nfts.map( (nft, index) => {
+              const imageURI = getImageData(nft);
+              console.log("index", index)
+              return {
+                ...nft,
+                imageURI, // add image URI for rendering
+              };
+            });
+
+          return {
+            ...member,
+            walletAddress,
+            nfts: enrichedNfts,
+          };
+        });
+
+        console.timeEnd("------------ End");
 
         console.log("Merged members with NFT data:", mergedMembers);
         // setMyNftData(mergedMembers);
