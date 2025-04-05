@@ -9,6 +9,7 @@
     "@matrix-widget-toolkit/mui": "^2.1.2",
     "@matrix-widget-toolkit/react": "^2.0.5",
     "@mui/material": "^7.0.1",
+    "@reduxjs/toolkit": "^2.6.1",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.2.0",

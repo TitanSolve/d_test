@@ -2,6 +2,7 @@ import React, { useEffect, useState, ReactElement } from "react";
 import { useWidgetApi } from '@matrix-widget-toolkit/react';
 import { Tabs, Tab, Box } from "@mui/material";
 import { motion, AnimatePresence } from "framer-motion";
+import { STATE_EVENT_ROOM_MEMBER } from "@matrix-widget-toolkit/api";
 import { map } from 'rxjs';
 import axios from "axios";
 import NFTs from "../pages/NFTs";
@@ -73,9 +74,24 @@ const MatrixClientProvider = () => {
   const widgetApi = useWidgetApi();
   const wgtParameters = widgetApi.widgetParameters
   const [myNftData, setMyNftData] = useState([]);
+  // const [members, setMembers] = useState<RoomMemberEvent[]>([]);
 
   useEffect(() => {
     console.log("widgetApi.widgetParameters : ", wgtParameters);
+
+    const loadMembers = async () => {
+      try {
+        const events = await widgetApi.receiveStateEvents(STATE_EVENT_ROOM_MEMBER);
+        // setMembers(events);
+        console.log("Members loaded:", events);
+      } catch (error) {
+        console.error("Failed to load room members", error);
+      }
+    };
+
+    loadMembers();
+
+
     const fetchNFTData = async () => {
       // const address = widgetApi.widgetParameters.userId.split(":")[0].replace("@", "");
       const address = "rfbDjnzr9riELQZtn95REQhR7fiyKyGM77"
