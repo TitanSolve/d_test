@@ -177,15 +177,41 @@ const MatrixClientProvider = () => {
         <Box
           sx={{
             display: "flex",
+            flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
-            height: "100%",
-            fontSize: "1.2rem",
-            color: "#666",
+            height: "60vh",
+            width: "100%",
+            textAlign: "center",
+            gap: 2,
           }}
         >
-          <CircularProgress />
-          <Box mt={2}>Loading Data...</Box>
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{
+              repeat: Infinity,
+              duration: 1.2,
+              ease: "linear",
+            }}
+          >
+            <CircularProgress
+              size={48}
+              thickness={5}
+              sx={{
+                color: "#1976d2", // your primary color or theme
+              }}
+            />
+          </motion.div>
+          <Typography
+            variant="body1"
+            sx={{
+              fontWeight: 600,
+              color: "#555",
+              mt: 1,
+            }}
+          >
+            Loading...
+          </Typography>
         </Box>
       ) : (
         < Box sx={{ width: "100%", borderRadius: 2, boxShadow: 1 }}>
