@@ -68,14 +68,14 @@ const getImageData = async (nft) => {
         // console.log(nftImageUrl, "ukang nftImageURL");
         name = response.data.name || name;
         URI = nftImageUrl.replace("ipfs://", "https://ipfs.io/ipfs/");;
-        console.log("JSON URI", URI);
+        // console.log("JSON URI", URI);
       })
       .catch((error) => console.log("Error umang fetching NFT data:", error));
   }
   nft.URI = URI;
   nft.name = name;
 
-  console.log("return URI", URI);
+  // console.log("return URI", URI);
   return URI;
 };
 
@@ -149,7 +149,7 @@ const MatrixClientProvider = () => {
         console.timeEnd("------------ End");
 
         console.log("Merged members with NFT data:", mergedMembers);
-        // setMyNftData(mergedMembers);
+        setMyNftData(mergedMembers);
 
       } catch (error) {
         console.error("Error loading data:", error);

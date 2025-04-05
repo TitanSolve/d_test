@@ -7,17 +7,17 @@ const NFTCard = ({ myNftData, getImageData }) => {
     const [loading, setLoading] = useState(false);
     const [uri, setUri] = useState("../../assets/nft.png");
 
-    useEffect(() => {
-        const fetchImageData = async () => {
-            setLoading(true);
-            const imageUri = await getImageData(myNftData);
-            setLoading(false);
-            setUri(imageUri);
+    // useEffect(() => {
+    //     const fetchImageData = async () => {
+    //         setLoading(true);
+    //         const imageUri = await getImageData(myNftData);
+    //         setLoading(false);
+    //         setUri(imageUri);
 
-        };
+    //     };
 
-        fetchImageData();
-    }, [myNftData]);
+    //     fetchImageData();
+    // }, [myNftData]);
 
     // if (!uri) {
     //     uri = myNftData?.URI;
@@ -26,7 +26,7 @@ const NFTCard = ({ myNftData, getImageData }) => {
     return (
         <>
             <div className="transform hover:scale-105 transition-transform duration-300 border p-2 rounded-lg shadow-md bg-gradient-to-br from-blue-200 to-purple-300 text-gray-800 font-semibold text-center cursor-pointer">
-                <img src={uri} alt="NFT" className="w-full max-w-xs md:max-w-sm h-auto rounded-lg mx-auto" />
+                <img src={myNftData.imageURI} alt="NFT" className="w-full max-w-xs md:max-w-sm h-auto rounded-lg mx-auto" />
             </div>
         </>
     )
