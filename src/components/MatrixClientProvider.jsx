@@ -195,7 +195,7 @@ const MatrixClientProvider = () => {
           >
             <CircularProgress
               size={48}
-              thickness={5}
+              thickness={2}
               sx={{
                 color: "#1976d2", // your primary color or theme
               }}
