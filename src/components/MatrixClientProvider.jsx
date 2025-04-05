@@ -75,40 +75,27 @@ const MatrixClientProvider = () => {
   const wgtParameters = widgetApi.widgetParameters
   const [myNftData, setMyNftData] = useState([]);
   const [members, setMembers] = useState([]);
-  let membersList = [];
 
   useEffect(() => {
-    console.log("widgetApi.widgetParameters : ", wgtParameters);
+    const loadData = async () => {
+      console.log("widgetApi.widgetParameters : ", wgtParameters);
 
-    const loadMembers = async () => {
       try {
+        // Load members
         const events = await widgetApi.receiveStateEvents(STATE_EVENT_ROOM_MEMBER);
-        // console.log("Members loaded:", events);
-        membersList = events.map(item => ({
+        const membersList = events.map(item => ({
           name: item.content.displayname,
           userId: item.sender
         }));
         console.log("formattedMembers :", membersList);
         setMembers(membersList);
 
-      } catch (error) {
-        console.error("Failed to load room members", error);
-      }
-    };
+        // Now that we have members, extract userIds
+        const userIds = membersList.map(member => member.userId);
+        console.log("userIds :", userIds);
 
-    loadMembers();
-
-    console.log("members :", membersList);
-    const userIds = membersList.map(member => member.userId);
-    console.log("userIds :", userIds);
-
-
-    const fetchNFTData = async () => {
-      // const address = widgetApi.widgetParameters.userId.split(":")[0].replace("@", "");
-      // const address = "rfbDjnzr9riELQZtn95REQhR7fiyKyGM77"
-      console.log("Fetching NFT data for addresses:", userIds);
-
-      try {
+        // Fetch NFT data
+        console.log("Fetching NFT data for addresses:", userIds);
         const response = await fetch(`${API_URLS.backendUrl}/get-users-nfts`, {
           method: "POST",
           headers: {
@@ -130,14 +117,11 @@ const MatrixClientProvider = () => {
         setMyNftData(nfts);
 
       } catch (error) {
-        console.error("Error fetching NFT data:", error);
+        console.error("Error loading data:", error);
       }
     };
 
-    fetchNFTData();
-
-    // const intervalId = setInterval(logThemeInfo, 3000);
-    // return () => clearInterval(intervalId);
+    loadData();
   }, [widgetApi]);
 
   const panelVariants = {
