@@ -19,7 +19,8 @@ const hexToAscii = (str) => {
 };
 
 const getImageData = async (nft) => {
-  let URI = hexToAscii(nft?.uri);
+  let URI = "";
+  URI = hexToAscii(nft?.uri).toString();
   let name = "";
 
   if (URI === "") {
