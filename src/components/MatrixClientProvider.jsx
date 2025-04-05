@@ -53,7 +53,7 @@ const getImageData = async (nft) => {
         );
         name = response.data.name || name;
         URI = httpNftImageUrl;
-        console.log("after replace URI", URI);
+        // console.log("after replace URI", URI);
       })
       .catch((error) => console.log("Error fetching NFT data:", error));
   }
@@ -74,6 +74,8 @@ const getImageData = async (nft) => {
   }
   nft.URI = URI;
   nft.name = name;
+
+  console.log("return URI", URI);
   return URI;
 };
 
@@ -128,9 +130,8 @@ const MatrixClientProvider = () => {
             const nfts = data[walletAddress] || [];
         
             const enrichedNfts = await Promise.all(
-              nfts.map(async (nft, index) => {
+              nfts.map(async (nft) => {
                 const imageURI = await getImageData(nft);
-                console.log("index", index)
                 return {
                   ...nft,
                   imageURI, // add image URI for rendering
