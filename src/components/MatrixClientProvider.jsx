@@ -29,7 +29,7 @@ const getImageData = async (nft) => {
       URI = response.data.image;
       name = response.data.name;
     } catch (error) {
-      console.error("Error fetching metadata:", error);
+      console.log("Error fetching metadata:", error);
       return "";
     }
   }
@@ -49,7 +49,7 @@ const getImageData = async (nft) => {
         name = response.data.name || name;
         URI = httpNftImageUrl;
       })
-      .catch((error) => console.error("Error fetching NFT data:", error));
+      .catch((error) => console.log("Error fetching NFT data:", error));
       return "";
   }
 
@@ -64,7 +64,7 @@ const getImageData = async (nft) => {
         name = response.data.name || name;
         URI = nftImageUrl;
       })
-      .catch((error) => console.error("Error umang fetching NFT data:", error));
+      .catch((error) => console.log("Error umang fetching NFT data:", error));
       return "";
   }
   nft.URI = URI;

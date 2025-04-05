@@ -19,9 +19,8 @@ const NFTCard = ({ myNftData, getImageData }) => {
         fetchImageData();
     }, [myNftData]);
 
-    console.log(uri, "Normalized uri");
     if (!uri) {
-        uri = myNftData;
+        uri = myNftData?.URI;
     }
 
     return (
