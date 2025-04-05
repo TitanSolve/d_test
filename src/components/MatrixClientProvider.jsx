@@ -9,6 +9,7 @@ import NFTs from "../pages/NFTs";
 import Offers from "../pages/Offers";
 import API_URLS from "../config";
 import nft_default_pic from "../assets/nft.png";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const hexToAscii = (str) => {
   var hexString = str?.toString();
@@ -35,7 +36,7 @@ const getImageData = async (nft) => {
     }
   }
 
-  if( URI === "" || URI === undefined || URI === null) {
+  if (URI === "" || URI === undefined || URI === null) {
     URI = nft_default_pic.toString();
     return URI;
   }
@@ -85,10 +86,12 @@ const MatrixClientProvider = () => {
   const widgetApi = useWidgetApi();
   const wgtParameters = widgetApi.widgetParameters
   const [myNftData, setMyNftData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const loadData = async () => {
-      console.log("widgetApi.widgetParameters : ", wgtParameters);
+      setLoading(true);
+      // console.log("widgetApi.widgetParameters : ", wgtParameters);
 
       try {
         // Load members
@@ -122,14 +125,14 @@ const MatrixClientProvider = () => {
 
         const data = await response.json();
         console.log("NFT data (JSON) :", data);
-        
+
         console.time("------------ start");
         // Now merge members with their NFT data
         const mergedMembers = await Promise.all(
           membersList.map(async (member) => {
             const walletAddress = member.userId.split(":")[0].replace("@", "");
             const nfts = data[walletAddress] || [];
-        
+
             const enrichedNfts = await Promise.all(
               nfts.map(async (nft) => {
                 const imageURI = await getImageData(nft);
@@ -139,7 +142,7 @@ const MatrixClientProvider = () => {
                 };
               })
             );
-        
+
             return {
               ...member,
               walletAddress,
@@ -154,6 +157,8 @@ const MatrixClientProvider = () => {
 
       } catch (error) {
         console.error("Error loading data:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -167,33 +172,51 @@ const MatrixClientProvider = () => {
   };
 
   return (
-    <Box sx={{ width: "100%", borderRadius: 2, boxShadow: 1 }}>
-      <Tabs
-        value={selectedIndex}
-        onChange={(event, newIndex) => setSelectedIndex(newIndex)}
-        variant="fullWidth"
-        textColor="primary"
-        indicatorColor="primary"
-      >
-        <Tab label="NFTs" />
-        <Tab label="Offers" />
-      </Tabs>
-      <Box sx={{ p: 2, position: "relative", overflow: "hidden" }}>
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={selectedIndex}
-            variants={panelVariants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-            transition={{ duration: 0.4, ease: "easeInOut" }}
+    <>
+      {loading ? (
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            height: "100%",
+            fontSize: "1.2rem",
+            color: "#666",
+          }}
+        >
+          <CircularProgress />
+          <Box mt={2}>Loading NFTs...</Box>
+        </Box>
+      ) : (
+        < Box sx={{ width: "100%", borderRadius: 2, boxShadow: 1 }}>
+          <Tabs
+            value={selectedIndex}
+            onChange={(event, newIndex) => setSelectedIndex(newIndex)}
+            variant="fullWidth"
+            textColor="primary"
+            indicatorColor="primary"
           >
-            {selectedIndex === 0 ? <NFTs myNftData={myNftData} getImageData={getImageData} wgtParameters={wgtParameters} /> : <Offers />}
-          </motion.div>
-        </AnimatePresence>
-      </Box>
-    </Box>
-
+            <Tab label="NFTs" />
+            <Tab label="Offers" />
+          </Tabs>
+          <Box sx={{ p: 2, position: "relative", overflow: "hidden" }}>
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={selectedIndex}
+                variants={panelVariants}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+                transition={{ duration: 0.4, ease: "easeInOut" }}
+              >
+                {selectedIndex === 0 ? <NFTs myNftData={myNftData} getImageData={getImageData} wgtParameters={wgtParameters} /> : <Offers />}
+              </motion.div>
+            </AnimatePresence>
+          </Box>
+        </Box >
+      )
+      }
+    </>
   );
 };
 
