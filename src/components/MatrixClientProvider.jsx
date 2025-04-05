@@ -20,8 +20,7 @@ const hexToAscii = (str) => {
 };
 
 const getImageData = async (nft) => {
-  let URI = "";
-  URI = hexToAscii(nft?.uri).toString();
+  let URI = hexToAscii(nft?.uri);
   let name = "";
 
   if (URI === "") {
@@ -31,18 +30,14 @@ const getImageData = async (nft) => {
       URI = response.data.image;
       name = response.data.name;
     } catch (error) {
-      console.log("Error fetching metadata:", error);
+      console.error("Error fetching metadata:", error);
     }
   }
 
-  if( URI === "" || URI === undefined || URI === null) {
-    URI = nft_default_pic.toString();
-    // return URI;
-  }
+  const httpNftImageUrl = URI.replace("ipfs://", "https://ipfs.io/ipfs/");
 
   if (URI.includes("ipfs")) {
-    const httpNftImageUrl = URI.replace("ipfs://", "https://ipfs.io/ipfs/");
-    // console.log("umang okate URI", httpNftImageUrl);
+    console.log("umang okate URI", httpNftImageUrl);
     await axios
       .get(httpNftImageUrl)
       .then((response) => {
@@ -54,11 +49,11 @@ const getImageData = async (nft) => {
         name = response.data.name || name;
         URI = httpNftImageUrl;
       })
-      .catch((error) => console.log("Error fetching NFT data:", error));
+      .catch((error) => console.error("Error fetching NFT data:", error));
   }
 
   if (URI.includes("json")) {
-    // console.log("umang okate URI", URI);
+    console.log("umang okate URI", URI);
     await axios
       .get(URI)
       .then((response) => {
@@ -68,7 +63,7 @@ const getImageData = async (nft) => {
         name = response.data.name || name;
         URI = nftImageUrl;
       })
-      .catch((error) => console.log("Error umang fetching NFT data:", error));
+      .catch((error) => console.error("Error umang fetching NFT data:", error));
   }
   nft.URI = URI;
   nft.name = name;
