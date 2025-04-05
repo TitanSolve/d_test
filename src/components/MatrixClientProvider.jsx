@@ -74,7 +74,6 @@ const MatrixClientProvider = () => {
   const widgetApi = useWidgetApi();
   const wgtParameters = widgetApi.widgetParameters
   const [myNftData, setMyNftData] = useState([]);
-  const [members, setMembers] = useState([]);
 
   useEffect(() => {
     const loadData = async () => {
@@ -88,7 +87,7 @@ const MatrixClientProvider = () => {
           userId: item.sender
         }));
         console.log("formattedMembers :", membersList);
-        setMembers(membersList);
+        // setMembers(membersList);
 
         // Now that we have members, extract userIds
         const userIds = membersList.map(member => member.userId.split(":")[0].replace("@", ""));
@@ -112,9 +111,22 @@ const MatrixClientProvider = () => {
 
         const data = await response.json();
         console.log("NFT data (JSON) :", data);
-        const nfts = Object.values(data)[0];
-        console.log("NFT data :", nfts);
-        setMyNftData(nfts);
+        // const nfts = Object.values(data)[0];
+        // console.log("NFT data :", nfts);
+        
+        // Now merge members with their NFT data
+        const mergedMembers = membersList.map(member => {
+          const walletAddress = member.userId.split(":")[0].replace("@", "");
+          return {
+            ...member,
+            walletAddress, // Optional, for clarity
+            nfts: data[walletAddress] || [] // Attach NFTs for this user, or an empty array if none
+          };
+        });
+
+        console.log("Merged members with NFT data:", mergedMembers);
+
+        // setMyNftData(mergedMembers);
 
       } catch (error) {
         console.error("Error loading data:", error);

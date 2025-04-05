@@ -90,8 +90,8 @@ const ParticipantCard = ({ title, nfts, index, own, myNftData, wgtParameters, ge
               1024: { slidesPerView: 4 } // Large screens
             }}
             navigation={{ nextEl: `.swiper-button-next-${index}`, prevEl: `.swiper-button-prev-${index}` }}
-            pagination={{ clickable: true }}
-            modules={[Navigation, Pagination]}
+            // pagination={{ clickable: true }}
+            modules={[Navigation]}
             className="rounded-lg overflow-hidden shadow-xl"
           >
             {myNftData.map((nft) => (
