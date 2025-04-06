@@ -85,6 +85,8 @@ const ParticipantCard = ({ index, myNftData, wgtParameters, getImageData }) => {
               768: { slidesPerView: 3 }, // Small desktops
               1024: { slidesPerView: 4 } // Large screens
             }}
+            watchOverflow={true}
+            loop={false}
             navigation={{ nextEl: `.swiper-button-next-${index}`, prevEl: `.swiper-button-prev-${index}` }}
             // pagination={{ clickable: true }}
             modules={[Navigation]}
@@ -94,7 +96,7 @@ const ParticipantCard = ({ index, myNftData, wgtParameters, getImageData }) => {
               myNftData?.nfts?.length > 0 ?
                 myNftData.nfts.map((nft) => (
                   <SwiperSlide key={nft.NFTokenID}>
-                      <NFTCard myNftData={nft} getImageData={getImageData} />
+                    <NFTCard myNftData={nft} getImageData={getImageData} />
                   </SwiperSlide>
                 ))
                 :
