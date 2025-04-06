@@ -74,7 +74,9 @@ const ParticipantCard = ({ index, myNftData, wgtParameters, getImageData }) => {
         </div>
 
         <div className="flex items-center justify-between mt-4 space-x-4">
-          <button className={`swiper-button-prev-${index} bg-gray-800 hover:bg-gray-700 text-white p-2 md:p-3 rounded-full shadow-lg transition-transform transform hover:scale-110 focus:ring-4 focus:ring-purple-500`}>
+          <button
+            lassName={`swiper-button-prev-${index} bg-gray-800 hover:bg-gray-700 text-white p-2 md:p-3 rounded-full shadow-lg transition-transform transform hover:scale-110 focus:ring-4 focus:ring-purple-500`}
+          >
             <ChevronLeft size={24} />
           </button>
           <Swiper
@@ -87,7 +89,10 @@ const ParticipantCard = ({ index, myNftData, wgtParameters, getImageData }) => {
             }}
             watchOverflow={true}
             loop={false}
-            navigation={{ nextEl: `.swiper-button-next-${index}`, prevEl: `.swiper-button-prev-${index}` }}
+            navigation={{
+              nextEl: `.swiper-button-next-${index}`,
+              prevEl: `.swiper-button-prev-${index}`
+            }}
             // pagination={{ clickable: true }}
             modules={[Navigation]}
             className="rounded-lg overflow-hidden shadow-xl"
@@ -100,9 +105,11 @@ const ParticipantCard = ({ index, myNftData, wgtParameters, getImageData }) => {
                   </SwiperSlide>
                 ))
                 :
-                <div className="flex flex-col items-center justify-center h-32 text-gray-500 font-semibold text-center">
-                  <p>No NFTs available</p>
-                </div>
+                <SwiperSlide>
+                  <div className="flex flex-col items-center justify-center h-32 text-gray-500 font-semibold text-center">
+                    <p>No NFTs available</p>
+                  </div>
+                </SwiperSlide>
             }
           </Swiper>
           <button className={`swiper-button-next-${index} bg-gray-800 hover:bg-gray-700 text-white p-2 md:p-3 rounded-full shadow-lg transition-transform transform hover:scale-110 focus:ring-4 focus:ring-purple-500`}>
