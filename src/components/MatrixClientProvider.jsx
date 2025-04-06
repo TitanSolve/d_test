@@ -234,7 +234,15 @@ const MatrixClientProvider = () => {
                 exit="exit"
                 transition={{ duration: 0.4, ease: "easeInOut" }}
               >
-                {selectedIndex === 0 ? <NFTs myNftData={myNftData} getImageData={getImageData} wgtParameters={wgtParameters} /> : <Offers />}
+                {/* {selectedIndex === 0 ? <NFTs myNftData={myNftData} getImageData={getImageData} wgtParameters={wgtParameters} /> : <Offers />} */}
+
+                <div style={{ display: selectedIndex === 0 ? "block" : "none" }}>
+                  <NFTs myNftData={myNftData} getImageData={getImageData} wgtParameters={wgtParameters} />
+                </div>
+                <div style={{ display: selectedIndex === 1 ? "block" : "none" }}>
+                  <Offers />
+                </div>
+
               </motion.div>
             </AnimatePresence>
           </Box>
