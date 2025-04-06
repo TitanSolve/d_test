@@ -79,41 +79,39 @@ const ParticipantCard = ({ index, myNftData, wgtParameters, getImageData }) => {
           >
             <ChevronLeft size={24} />
           </button>
-          <div className="flex-grow">
-            <Swiper
-              spaceBetween={10}
-              slidesPerView={1}
-              breakpoints={{
-                640: { slidesPerView: 2 }, // Tablets
-                768: { slidesPerView: 3 }, // Small desktops
-                1024: { slidesPerView: 4 } // Large screens
-              }}
-              watchOverflow={true}
-              loop={false}
-              navigation={{
-                nextEl: `.swiper-button-next-${index}`,
-                prevEl: `.swiper-button-prev-${index}`
-              }}
-              // pagination={{ clickable: true }}
-              modules={[Navigation]}
-              className="rounded-lg overflow-hidden shadow-xl"
-            >
-              {
-                myNftData?.nfts?.length > 0 ?
-                  myNftData.nfts.map((nft) => (
-                    <SwiperSlide key={nft.NFTokenID}>
-                      <NFTCard myNftData={nft} getImageData={getImageData} />
-                    </SwiperSlide>
-                  ))
-                  :
-                  <SwiperSlide>
-                    <div className="flex flex-col items-center justify-center h-32 text-gray-500 font-semibold text-center">
-                      <p>No NFTs available</p>
-                    </div>
+          <Swiper
+            spaceBetween={10}
+            slidesPerView={1}
+            breakpoints={{
+              640: { slidesPerView: 2 }, // Tablets
+              768: { slidesPerView: 3 }, // Small desktops
+              1024: { slidesPerView: 4 } // Large screens
+            }}
+            watchOverflow={true}
+            loop={false}
+            navigation={{
+              nextEl: `.swiper-button-next-${index}`,
+              prevEl: `.swiper-button-prev-${index}`
+            }}
+            // pagination={{ clickable: true }}
+            modules={[Navigation]}
+            className="rounded-lg overflow-hidden shadow-xl"
+          >
+            {
+              myNftData?.nfts?.length > 0 ?
+                myNftData.nfts.map((nft) => (
+                  <SwiperSlide key={nft.NFTokenID}>
+                    <NFTCard myNftData={nft} getImageData={getImageData} />
                   </SwiperSlide>
-              }
-            </Swiper>
-          </div>
+                ))
+                :
+                <SwiperSlide>
+                  <div className="flex flex-col items-center justify-center h-32 text-gray-500 font-semibold text-center">
+                    <p>No NFTs available</p>
+                  </div>
+                </SwiperSlide>
+            }
+          </Swiper>
           <button className={`swiper-button-next-${index} bg-gray-800 hover:bg-gray-700 text-white p-2 md:p-3 rounded-full shadow-lg transition-transform transform hover:scale-110 focus:ring-4 focus:ring-purple-500`}>
             <ChevronRight size={24} />
           </button>
