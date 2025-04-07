@@ -73,12 +73,12 @@ const ParticipantCard = ({ index, myNftData, wgtParameters, getImageData }) => {
           </div>
         </div>
 
-        <div className="flex items-center justify-between mt-4 space-x-4">
+        {/* <div className="flex items-center justify-between mt-4 space-x-4">
           <button
             className={`swiper-button-prev-${index} bg-gray-800 hover:bg-gray-700 text-white p-2 md:p-3 rounded-full shadow-lg transition-transform transform hover:scale-110 focus:ring-4 focus:ring-purple-500`}
           >
             <ChevronLeft size={24} />
-          </button>
+          </button> */}
           <Swiper
             spaceBetween={10}
             slidesPerView={1}
@@ -112,11 +112,11 @@ const ParticipantCard = ({ index, myNftData, wgtParameters, getImageData }) => {
                 </SwiperSlide>
             }
           </Swiper>
-          <button className={`swiper-button-next-${index} bg-gray-800 hover:bg-gray-700 text-white p-2 md:p-3 rounded-full shadow-lg transition-transform transform hover:scale-110 focus:ring-4 focus:ring-purple-500`}>
+          {/* <button className={`swiper-button-next-${index} bg-gray-800 hover:bg-gray-700 text-white p-2 md:p-3 rounded-full shadow-lg transition-transform transform hover:scale-110 focus:ring-4 focus:ring-purple-500`}>
             <ChevronRight size={24} />
           </button>
         </div>
-      </div>
+      </div> */}
 
       <Modal
         open={state.isModalOpen}
