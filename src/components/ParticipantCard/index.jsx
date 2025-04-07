@@ -136,7 +136,7 @@ const ParticipantCard = ({ index, myNftData, wgtParameters, getImageData }) => {
               <p>No NFTs available</p>
             </div>
           )}
-        </Carousel>
+        </Carousel>   
       </div>
     </div>
   );
