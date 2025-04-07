@@ -30,6 +30,7 @@ const ParticipantCard = ({ index, myNftData, wgtParameters, getImageData }) => {
   const [state, setState] = useState({
     sortOrder: "newest",
     isModalOpen: false,
+    selectedGroup: null,
     isSell: true,
     isOldest: true,
     selectedUser: "Alice @rPdshidjjore",
@@ -37,9 +38,9 @@ const ParticipantCard = ({ index, myNftData, wgtParameters, getImageData }) => {
     token: "XRP"
   });
 
-  const toggleModal = () => setState(prev => ({ ...prev, isModalOpen: !prev.isModalOpen }));
-  const toggleSortOrder = () => setState(prev => ({ ...prev, isOldest: !prev.isOldest }));
-  const toggleSellMode = () => setState(prev => ({ ...prev, isSell: !prev.isSell }));
+  // const toggleModal = () => setState(prev => ({ ...prev, isModalOpen: !prev.isModalOpen }));
+  // const toggleSortOrder = () => setState(prev => ({ ...prev, isOldest: !prev.isOldest }));
+  // const toggleSellMode = () => setState(prev => ({ ...prev, isSell: !prev.isSell }));
 
   const updateField = (field, value) =>
     setState((prev) => ({ ...prev, [field]: value }));
