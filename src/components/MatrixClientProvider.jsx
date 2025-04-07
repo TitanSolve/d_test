@@ -2236,7 +2236,7 @@ const MatrixClientProvider = () => {
         ];
         */
         console.log("Merged members with NFT data:", mergedMembers);
-        // setMyNftData(mergedMembers);
+        setMyNftData(mergedMembers);
 
       } catch (error) {
         console.error("Error loading data:", error);
