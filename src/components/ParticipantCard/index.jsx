@@ -65,7 +65,7 @@ const ParticipantCard = ({ index, myNftData, wgtParameters, getImageData }) => {
       {/* Header Section */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <Typography variant="h6" className="text-gray-900 font-bold">
-          {myNftData.name}
+          { myNftData.name === wgtParameters.displayName ? "My NFTs" : myNftData.name}
         </Typography>
 
         <FormControl size="small" className="w-full sm:w-32">

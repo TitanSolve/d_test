@@ -3,21 +3,22 @@ import ParticipantCard from "../../components/ParticipantCard";
 import xrpl from "xrpl";
 
 const NFTs = ({ myNftData, wgtParameters, getImageData }) => {
-  // myOwnNftData = myNftData.find(nft => nft.name === wgtParameters.)
+  const myOwnNftData = myNftData.find(nft => nft.name === wgtParameters.displayName);
+  const otherNfts = myNftData.filter(nft => nft.name !== wgtParameters.displayName);
 
   return (
     <div>
       {/* <div className="flex items-center justify-center border border-gray-200 rounded-2xl bg-white shadow-lg"> */}
       <div className="h-full overflow-y-auto p-2 bg-gradient-to-br to-gray-100 flex flex-col items-center space-y-2">
-        {/* <ParticipantCard
-          key={index}
-          index={index + 1}
-          myNftData={nft}
+        <ParticipantCard
+          key={0}
+          index={0}
+          myNftData={myOwnNftData}
           wgtParameters={wgtParameters}
           getImageData={getImageData}
-        /> */}
+        />
         {
-          myNftData.map((nft, index) => (
+          otherNfts.map((nft, index) => (
             <ParticipantCard
               key={index}
               index={index + 1}
