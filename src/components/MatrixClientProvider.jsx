@@ -141,19 +141,25 @@ const MatrixClientProvider = () => {
             );
 
             // Group by NFTokenTaxon
-            const groupedNfts = enrichedNfts.reduce((acc, nft) => {
+            const taxonMap = {};
+            enrichedNfts.forEach((nft) => {
               const taxon = nft.NFTokenTaxon;
-              if (!acc[taxon]) {
-                acc[taxon] = [];
+              if (!taxonMap[taxon]) {
+                taxonMap[taxon] = [];
               }
-              acc[taxon].push(nft);
-              return acc;
-            }, {});
+              taxonMap[taxon].push(nft);
+            });
+
+            // Convert map to array
+            const groupedNfts = Object.entries(taxonMap).map(([taxon, nfts]) => ({
+              taxon: Number(taxon),
+              nfts,
+            }));
 
             return {
               ...member,
               walletAddress,
-              groupedNfts, // NFTs grouped by NFTokenTaxon
+              groupedNfts, // Array of { taxon, nfts }
             };
           })
         );
