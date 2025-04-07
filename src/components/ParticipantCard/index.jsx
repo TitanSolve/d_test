@@ -112,9 +112,7 @@ const ParticipantCard = ({ index, myNftData, wgtParameters, getImageData }) => {
           draggable={true}
           swipeable={true}
           centerMode={true}
-          showDots={true}
-          dotListClass="flex justify-center mt-4 space-x-2"
-          containerClass="carousel-container relative flex justify-center items-center px-2 md:px-4"
+          containerClass="carousel-container flex justify-center items-center px-2 md:px-4"
           itemClass="carousel-item flex justify-center items-center px-2"
           customLeftArrow={
             <button
