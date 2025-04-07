@@ -11,6 +11,7 @@ const NFTCard = ({ myNftData }) => {
                     src={myNftData.imageURI.replace("ipfs://", "https://ipfs.io/ipfs/")}
                     onError={(e) => { e.target.onerror = null; e.target.src = nft_pic; }}
                     alt="NFT"
+                    loading="lazy"
                     className="mx-auto rounded-lg object-cover shadow-md w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 lg:w-56 lg:h-56 xl:w-64 xl:h-64"
                 />
             </div>
