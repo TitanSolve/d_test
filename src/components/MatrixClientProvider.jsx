@@ -86,15 +86,6 @@ const MatrixClientProvider = () => {
   const [myNftData, setMyNftData] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // widgetApi.on("client_theme", (data) => {
-  //   const theme = data?.theme;
-  //   console.log("-------------- data:", data);
-  //   console.log("-------------- theme:", theme);
-  //   if (theme) {
-  //     // applyTheme(theme); // your theming logic
-  //   }
-  // });
-
   window.addEventListener("message", (event) => {
     console.log("------ event :", event);
     if (event.data?.action === "client_theme") {
@@ -104,17 +95,6 @@ const MatrixClientProvider = () => {
       // applyTheme(theme); // light | dark | legacy etc.
     }
   });
-
-  // widgetApi.observeStateEvents("im.vector.web.settings").subscribe((event) => {
-  //   console.log("event :", event )
-  //   if (event.state_key === "") {
-  //     const theme = event.content?.theme;
-  //     console.log("theme :", theme)
-  //     // if (theme) {
-  //     //   applyTheme(theme); // Your custom function
-  //     // }
-  //   }
-  // });
 
   useEffect(() => {
     const loadData = async () => {
@@ -128,15 +108,8 @@ const MatrixClientProvider = () => {
           name: item.content.displayname,
           userId: item.sender
         }));
-        // console.log("formattedMembers :", membersList);
-        // setMembers(membersList);
 
-        // Now that we have members, extract userIds
         const userIds = membersList.map(member => member.userId.split(":")[0].replace("@", ""));
-        // console.log("userIds :", userIds);
-
-        // Fetch NFT data
-        // console.log("Fetching NFT data for addresses:", userIds);
         const response = await fetch(`${API_URLS.backendUrl}/get-users-nfts`, {
           method: "POST",
           headers: {
@@ -150,12 +123,8 @@ const MatrixClientProvider = () => {
         if (!response.ok) {
           throw new Error("Failed to fetch NFT data");
         }
-
         const data = await response.json();
-        // console.log("NFT data (JSON) :", data);
 
-        console.time("------------ start");
-        // Now merge members with their NFT data
         const mergedMembers = await Promise.all(
           membersList.map(async (member) => {
             const walletAddress = member.userId.split(":")[0].replace("@", "");
@@ -166,19 +135,28 @@ const MatrixClientProvider = () => {
                 const imageURI = await getImageData(nft);
                 return {
                   ...nft,
-                  imageURI, // add image URI for rendering
+                  imageURI,
                 };
               })
             );
 
+            // Group by NFTokenTaxon
+            const groupedNfts = enrichedNfts.reduce((acc, nft) => {
+              const taxon = nft.NFTokenTaxon;
+              if (!acc[taxon]) {
+                acc[taxon] = [];
+              }
+              acc[taxon].push(nft);
+              return acc;
+            }, {});
+
             return {
               ...member,
               walletAddress,
-              nfts: enrichedNfts,
+              groupedNfts, // NFTs grouped by NFTokenTaxon
             };
           })
         );
-        // console.timeEnd("------------ End");
 
         /*
         const mergedMembers = [
@@ -2257,8 +2235,8 @@ const MatrixClientProvider = () => {
           }
         ];
         */
-        // console.log("Merged members with NFT data:", mergedMembers);
-        setMyNftData(mergedMembers);
+        console.log("Merged members with NFT data:", mergedMembers);
+        // setMyNftData(mergedMembers);
 
       } catch (error) {
         console.error("Error loading data:", error);

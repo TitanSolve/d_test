@@ -4,6 +4,7 @@ import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/effect-coverflow";
+import './index.css';
 import { ChevronLeft, ChevronRight } from "lucide-react";
 // import { Modal, Select, Dropdown, Menu, Input, Button, Switch, Typography, Space } from "antd";
 import {
@@ -65,7 +66,7 @@ const ParticipantCard = ({ index, myNftData, wgtParameters, getImageData }) => {
       {/* Header Section */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <Typography variant="h6" className="text-gray-900 font-bold">
-          { myNftData.name === wgtParameters.displayName ? "My NFTs" : myNftData.name}
+          {myNftData.name === wgtParameters.displayName ? "My NFTs" : myNftData.name}
         </Typography>
 
         <FormControl size="small" className="w-full sm:w-32">
@@ -111,34 +112,39 @@ const ParticipantCard = ({ index, myNftData, wgtParameters, getImageData }) => {
           draggable={true}
           swipeable={true}
           centerMode={true}
-          containerClass="carousel-container flex justify-center"
+          showDots={true}
+          dotListClass="flex justify-center mt-4 space-x-2"
+          containerClass="carousel-container relative flex justify-center items-center px-2 md:px-4"
           itemClass="carousel-item flex justify-center items-center px-2"
           customLeftArrow={
-            <button className="absolute left-0 z-10 bg-gray-800 text-white p-2 rounded-full hover:bg-gray-700 -translate-y-1/2 top-1/2">
-              <ChevronLeft size={24} />
+            <button
+              className="absolute left-2 md:left-4 top-1/2 z-20 -translate-y-1/2 bg-white text-gray-800 shadow-md p-2 md:p-3 rounded-full hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-500"
+              aria-label="Previous"
+            >
+              <ChevronLeft size={20} className="md:size-6" />
             </button>
           }
           customRightArrow={
-            <button className="absolute right-0 z-10 bg-gray-800 text-white p-2 rounded-full hover:bg-gray-700 -translate-y-1/2 top-1/2">
-              <ChevronRight size={24} />
+            <button
+              className="absolute right-2 md:right-4 top-1/2 z-20 -translate-y-1/2 bg-white text-gray-800 shadow-md p-2 md:p-3 rounded-full hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-500"
+              aria-label="Next"
+            >
+              <ChevronRight size={20} className="md:size-6" />
             </button>
           }
         >
           {myNftData?.nfts?.length > 0 ? (
-            myNftData.nfts.map((nft) => {
-
-              return (
-                <div key={nft.NFTokenID} className="h-full">
-                  <NFTCard myNftData={nft} />
-                </div>
-              );
-            })
+            myNftData.nfts.map((nft) => (
+              <div key={nft.NFTokenID} className="h-full">
+                <NFTCard myNftData={nft} />
+              </div>
+            ))
           ) : (
             <div className="flex items-center justify-center h-32 text-gray-500 font-semibold text-center w-full">
               <p>No NFTs available</p>
             </div>
           )}
-        </Carousel>   
+        </Carousel>
       </div>
     </div>
   );
