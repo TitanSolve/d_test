@@ -108,6 +108,8 @@ const ParticipantCard = ({ index, myNftData, wgtParameters, getImageData }) => {
           responsive={responsive}
           ssr={true}
           infinite={false}
+          draggable={true}
+          swipeable={true}
           centerMode={true}
           containerClass="carousel-container flex justify-center"
           itemClass="carousel-item flex justify-center items-center px-2"
