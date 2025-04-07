@@ -42,6 +42,8 @@ const ParticipantCard = ({ index, myNftData, wgtParameters, getImageData }) => {
   const updateField = (field, value) =>
     setState((prev) => ({ ...prev, [field]: value }));
 
+  console.log("ParticipantCard------> ", myNftData);
+
   const responsive = {
     superLargeDesktop: {
       breakpoint: { max: 4000, min: 1280 },
@@ -131,7 +133,7 @@ const ParticipantCard = ({ index, myNftData, wgtParameters, getImageData }) => {
             </button>
           }
         >
-          {myNftData?.groupedNfts?.length > 0 ? (
+          {myNftData.groupedNfts.length > 0 ? (
             myNftData.groupedNfts.map((groupedNft) => (
               <div className="h-full flex flex-col">
                 <h1 className="text-red-500"> {groupedNft.nfts[0].name} </h1>
