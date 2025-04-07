@@ -42,14 +42,6 @@ const ParticipantCard = ({ index, myNftData, wgtParameters, getImageData }) => {
   const updateField = (field, value) =>
     setState((prev) => ({ ...prev, [field]: value }));
 
-  const visibleCount = () => {
-    const width = window.innerWidth;
-    if (width >= 1280) return 4;
-    if (width >= 1024) return 3;
-    if (width >= 640) return 2;
-    return 1;
-  };
-
   const responsive = {
     superLargeDesktop: {
       breakpoint: { max: 4000, min: 1280 },
@@ -135,7 +127,7 @@ const ParticipantCard = ({ index, myNftData, wgtParameters, getImageData }) => {
           {myNftData?.nfts?.length > 0 ? (
             myNftData.nfts.map((nft, idx) => {
               const start = currentSlide;
-              const end = currentSlide + visibleCount();
+              const end = currentSlide + 5;
               const isVisible = idx >= start && idx < end;
 
               return (
