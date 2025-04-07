@@ -130,7 +130,7 @@ const ParticipantCard = ({ index, myNftData, wgtParameters, getImageData }) => {
               const end = currentSlide + 5;
               const isVisible = idx >= start && idx < end;
 
-              console.log("---------------", start, end, isVisible, currentSlide)
+              console.log("---------------", start, end, isVisible, currentSlide, idx)
 
               return (
                 <div key={nft.NFTokenID} className="h-full">
