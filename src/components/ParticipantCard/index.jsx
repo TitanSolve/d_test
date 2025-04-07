@@ -88,7 +88,7 @@ const ParticipantCard = ({ index, myNftData, wgtParameters, getImageData }) => {
               1024: { slidesPerView: 4 } // Large screens
             }}
             watchOverflow={true}
-            // loop={false}
+            loop={false}
             navigation={{
               nextEl: `.swiper-button-next-${index}`,
               prevEl: `.swiper-button-prev-${index}`
