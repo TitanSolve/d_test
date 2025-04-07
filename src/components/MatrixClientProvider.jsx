@@ -86,6 +86,17 @@ const MatrixClientProvider = () => {
   const [myNftData, setMyNftData] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  widgetApi.observeStateEvents("im.vector.web.settings").subscribe((event) => {
+    console.log("event :", event )
+    if (event.state_key === "") {
+      const theme = event.content?.theme;
+      console.log("theme :", theme)
+      // if (theme) {
+      //   applyTheme(theme); // Your custom function
+      // }
+    }
+  });
+
   useEffect(() => {
     const loadData = async () => {
       setLoading(true);
