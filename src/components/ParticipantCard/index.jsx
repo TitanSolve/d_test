@@ -33,7 +33,6 @@ const ParticipantCard = ({ index, myNftData, wgtParameters, getImageData }) => {
     amount: "",
     token: "XRP"
   });
-  const [currentSlide, setCurrentSlide] = useState(0);
 
   const toggleModal = () => setState(prev => ({ ...prev, isModalOpen: !prev.isModalOpen }));
   const toggleSortOrder = () => setState(prev => ({ ...prev, isOldest: !prev.isOldest }));
@@ -122,19 +121,13 @@ const ParticipantCard = ({ index, myNftData, wgtParameters, getImageData }) => {
               <ChevronRight size={24} />
             </button>
           }
-          afterChange={(nextSlide) => setCurrentSlide(nextSlide)}
         >
           {myNftData?.nfts?.length > 0 ? (
-            myNftData.nfts.map((nft, idx) => {
-              const start = currentSlide - 2;
-              const end = currentSlide + 5;
-              const isVisible = idx >= start && idx < end;
-
-              console.log("---------------", start, end, isVisible, currentSlide, idx)
+            myNftData.nfts.map((nft) => {
 
               return (
                 <div key={nft.NFTokenID} className="h-full">
-                  <NFTCard myNftData={nft} isVisible={isVisible} />
+                  <NFTCard myNftData={nft} />
                 </div>
               );
             })
