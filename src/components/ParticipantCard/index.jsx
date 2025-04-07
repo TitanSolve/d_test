@@ -126,7 +126,7 @@ const ParticipantCard = ({ index, myNftData, wgtParameters, getImageData }) => {
         >
           {myNftData?.nfts?.length > 0 ? (
             myNftData.nfts.map((nft, idx) => {
-              const start = currentSlide;
+              const start = currentSlide - 2;
               const end = currentSlide + 5;
               const isVisible = idx >= start && idx < end;
 

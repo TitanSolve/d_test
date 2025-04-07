@@ -17,7 +17,7 @@ const NFTCard = ({ myNftData, isVisible }) => {
         <div className="transform hover:scale-105 transition-transform duration-300 border p-2 rounded-lg shadow-md bg-gradient-to-br from-blue-200 to-purple-300 text-gray-800 font-semibold text-center cursor-pointer">
             {isVisible ? (
                 <img
-                    src={myNftData.imageURI.replace("ipfs://", "https://ipfs.io/ipfs/")}
+                    src={imageSrc}
                     onError={(e) => { e.target.onerror = null; e.target.src = nft_pic; }}
                     alt="NFT"
                     className="mx-auto rounded-lg object-cover shadow-md w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 lg:w-56 lg:h-56 xl:w-64 xl:h-64"
