@@ -62,5 +62,5 @@ html {
   background-color: #5616B6 !important;
 }
 .custom-prev.swiper-button-disabled, .custom-next.swiper-button-disabled {
-  display: none; /* This hides the buttons when Swiper disables them */
+  /* display: none; */
 }
