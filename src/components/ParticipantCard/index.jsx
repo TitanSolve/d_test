@@ -134,9 +134,9 @@ const ParticipantCard = ({ index, myNftData, wgtParameters, getImageData }) => {
           }
         >
           {myNftData?.groupedNfts?.length > 0 ? (
-            myNftData.groupedNfts.map((nft) => (
+            myNftData.groupedNfts.map((groupedNft) => (
               <div className="h-full">
-                <NFTCard myNftData={nft[0] }  />
+                <NFTCard myNftData={groupedNft.nft[0] }  />
               </div>
             ))
           ) : (
