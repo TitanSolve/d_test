@@ -33,6 +33,7 @@ const ParticipantCard = ({ index, myNftData, wgtParameters, getImageData }) => {
     amount: "",
     token: "XRP"
   });
+  const [currentSlide, setCurrentSlide] = useState(0);
 
   const toggleModal = () => setState(prev => ({ ...prev, isModalOpen: !prev.isModalOpen }));
   const toggleSortOrder = () => setState(prev => ({ ...prev, isOldest: !prev.isOldest }));
@@ -40,6 +41,14 @@ const ParticipantCard = ({ index, myNftData, wgtParameters, getImageData }) => {
 
   const updateField = (field, value) =>
     setState((prev) => ({ ...prev, [field]: value }));
+
+  const visibleCount = () => {
+    const width = window.innerWidth;
+    if (width >= 1280) return 4;
+    if (width >= 1024) return 3;
+    if (width >= 640) return 2;
+    return 1;
+  };
 
   const responsive = {
     superLargeDesktop: {
@@ -121,13 +130,20 @@ const ParticipantCard = ({ index, myNftData, wgtParameters, getImageData }) => {
               <ChevronRight size={24} />
             </button>
           }
+          afterChange={(nextSlide) => setCurrentSlide(nextSlide)}
         >
           {myNftData?.nfts?.length > 0 ? (
-            myNftData.nfts.map((nft) => (
-              <div key={nft.NFTokenID} className="h-full">
-                <NFTCard myNftData={nft} getImageData={getImageData} />
-              </div>
-            ))
+            myNftData.nfts.map((nft, idx) => {
+              const start = currentSlide;
+              const end = currentSlide + visibleCount();
+              const isVisible = idx >= start && idx < end;
+
+              return (
+                <div key={nft.NFTokenID} className="h-full">
+                  <NFTCard myNftData={nft} isVisible={isVisible} />
+                </div>
+              );
+            })
           ) : (
             <div className="flex items-center justify-center h-32 text-gray-500 font-semibold text-center w-full">
               <p>No NFTs available</p>
