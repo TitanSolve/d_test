@@ -66,7 +66,7 @@ const ParticipantCard = ({ index, myNftData, wgtParameters, getImageData }) => {
   };
 
   const openModalWithGroup = (group) => {
-    console.log("Group clicked:", group);
+    // console.log("Group clicked:", group);
     setState((prev) => ({
       ...prev,
       isModalOpen: true,
