@@ -14,6 +14,8 @@ import {
   Switch,
   FormControl,
   InputLabel,
+  Modal,
+  Box,
 } from "@mui/material";
 import { DownOutlined, UserOutlined } from "@ant-design/icons";
 import Carousel from "react-multi-carousel";
@@ -42,8 +44,6 @@ const ParticipantCard = ({ index, myNftData, wgtParameters, getImageData }) => {
   const updateField = (field, value) =>
     setState((prev) => ({ ...prev, [field]: value }));
 
-  console.log("ParticipantCard------> ", myNftData);
-
   const responsive = {
     superLargeDesktop: {
       breakpoint: { max: 4000, min: 1280 },
@@ -62,6 +62,21 @@ const ParticipantCard = ({ index, myNftData, wgtParameters, getImageData }) => {
       items: 1,
     },
   };
+
+  const openModalWithGroup = (group) => {
+    setState((prev) => ({
+      ...prev,
+      isModalOpen: true,
+      selectedGroup: group,
+    }));
+  };
+
+  const closeModal = () =>
+    setState((prev) => ({
+      ...prev,
+      isModalOpen: false,
+      selectedGroup: null,
+    }));
 
   return (
     <div className="p-4 border border-gray-200 rounded-2xl bg-white shadow-lg w-full max-w-5xl">
@@ -134,8 +149,8 @@ const ParticipantCard = ({ index, myNftData, wgtParameters, getImageData }) => {
           }
         >
           {myNftData.groupedNfts.length > 0 ? (
-            myNftData.groupedNfts.map((groupedNft) => (
-                <NFTCard myNftData={groupedNft.nfts[0] }  />
+            myNftData.groupedNfts.map((groupedNft, idx) => (
+              <NFTCard key={idx} myNftData={groupedNft} handleClick={() => openModalWithGroup(groupedNft)} />
             ))
           ) : (
             <div className="flex items-center justify-center h-32 text-gray-500 font-semibold text-center w-full">
@@ -144,6 +159,41 @@ const ParticipantCard = ({ index, myNftData, wgtParameters, getImageData }) => {
           )}
         </Carousel>
       </div>
+
+      <Modal
+        open={state.isModalOpen}
+        onClose={closeModal}
+        aria-labelledby="nft-modal-title"
+        aria-describedby="nft-modal-description"
+      >
+        <Box className="absolute top-1/2 left-1/2 w-11/12 sm:w-3/4 md:w-2/3 lg:w-1/2 bg-white rounded-xl shadow-lg transform -translate-x-1/2 -translate-y-1/2 p-6 outline-none">
+          <Carousel
+            responsive={responsive}
+            ssr={true}
+            infinite={false}
+            draggable={true}
+            swipeable={true}
+            centerMode={true}
+            containerClass="carousel-container"
+            itemClass="carousel-item flex justify-center items-center px-2"
+            customLeftArrow={
+              <button className="absolute left-2 md:left-4 top-1/2 z-20 -translate-y-1/2 bg-white text-gray-800 shadow-md p-2 md:p-3 rounded-full hover:bg-gray-100">
+                <ChevronLeft size={20} />
+              </button>
+            }
+            customRightArrow={
+              <button className="absolute right-2 md:right-4 top-1/2 z-20 -translate-y-1/2 bg-white text-gray-800 shadow-md p-2 md:p-3 rounded-full hover:bg-gray-100">
+                <ChevronRight size={20} />
+              </button>
+            }
+          >
+            {state.selectedGroup &&
+              state.selectedGroup.map((nftItem, idx) => (
+                <NFTCard key={idx} myNftData={[nftItem]} handleClick={() => {}} />
+              ))}
+          </Carousel>
+        </Box>
+      </Modal>
     </div>
   );
 };
