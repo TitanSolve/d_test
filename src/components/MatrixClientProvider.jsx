@@ -86,6 +86,25 @@ const MatrixClientProvider = () => {
   const [myNftData, setMyNftData] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  widgetApi.on("client_theme", (data) => {
+    const theme = data?.theme;
+    console.log("-------------- data:", data);
+    console.log("-------------- theme:", theme);
+    if (theme) {
+      // applyTheme(theme); // your theming logic
+    }
+  });
+
+  window.addEventListener("message", (event) => {
+    console.log("------ event :", event);
+    if (event.data?.action === "client_theme") {
+      const theme = event.data?.data?.theme;
+      console.log("-------------- data:", event.data);
+      console.log("-------------- theme:", theme);
+      // applyTheme(theme); // light | dark | legacy etc.
+    }
+  });
+
   // widgetApi.observeStateEvents("im.vector.web.settings").subscribe((event) => {
   //   console.log("event :", event )
   //   if (event.state_key === "") {
