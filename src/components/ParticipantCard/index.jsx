@@ -6,7 +6,14 @@ import "swiper/css/navigation";
 import "swiper/css/effect-coverflow";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 // import { Modal, Select, Dropdown, Menu, Input, Button, Switch, Typography, Space } from "antd";
-import { Box, Typography, IconButton, Select, MenuItem, Switch, Modal, Button, Input, Menu, Avatar } from "@mui/material";
+import {
+  Typography,
+  Select,
+  MenuItem,
+  Switch,
+  FormControl,
+  InputLabel,
+} from "@mui/material";
 import { DownOutlined, UserOutlined } from "@ant-design/icons";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
@@ -30,20 +37,21 @@ const ParticipantCard = ({ index, myNftData, wgtParameters, getImageData }) => {
   const toggleModal = () => setState(prev => ({ ...prev, isModalOpen: !prev.isModalOpen }));
   const toggleSortOrder = () => setState(prev => ({ ...prev, isOldest: !prev.isOldest }));
   const toggleSellMode = () => setState(prev => ({ ...prev, isSell: !prev.isSell }));
-  const nfts = myNftData?.nfts || [];
-  const updateField = (field, value) => setState((prev) => ({ ...prev, [field]: value }));
+
+  const updateField = (field, value) =>
+    setState((prev) => ({ ...prev, [field]: value }));
 
   const responsive = {
     superLargeDesktop: {
-      breakpoint: { max: 4000, min: 1024 },
+      breakpoint: { max: 4000, min: 1280 },
       items: 4,
     },
     desktop: {
-      breakpoint: { max: 1024, min: 768 },
+      breakpoint: { max: 1280, min: 1024 },
       items: 3,
     },
     tablet: {
-      breakpoint: { max: 768, min: 640 },
+      breakpoint: { max: 1024, min: 640 },
       items: 2,
     },
     mobile: {
@@ -51,49 +59,72 @@ const ParticipantCard = ({ index, myNftData, wgtParameters, getImageData }) => {
       items: 1,
     },
   };
-  
+
   return (
     <div className="p-4 border border-gray-200 rounded-2xl bg-white shadow-lg w-full max-w-5xl">
+      {/* Header Section */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <h2 className="text-lg md:text-xl font-bold text-gray-900">{myNftData.name}</h2>
+        <Typography variant="h6" className="text-gray-900 font-bold">
+          {myNftData.name}
+        </Typography>
 
-        <Select
-          className="w-full sm:w-32"
-          value={state.token}
-          onChange={(value) => updateField("token", value)}
-          size="large"
-        >
-          <Select.Option value="issuer">issuer</Select.Option>
-        </Select>
+        <FormControl size="small" className="w-full sm:w-32">
+          <InputLabel id={`token-select-${index}`}>Token</InputLabel>
+          <Select
+            labelId={`token-select-${index}`}
+            id={`token-select-${index}`}
+            value={state.token}
+            label="Token"
+            onChange={(e) => updateField("token", e.target.value)}
+          >
+            <MenuItem value="issuer">issuer</MenuItem>
+          </Select>
+        </FormControl>
 
-        <div className="flex items-center gap-2">
-          <Text strong className={state.isOldest ? "text-black hidden sm:block" : "text-gray-400 hidden sm:block"}>
+        <div className="flex items-center gap-2 hidden sm:flex">
+          <Typography
+            variant="body2"
+            className={state.isOldest ? "text-black font-semibold" : "text-gray-400"}
+          >
             Oldest
-          </Text>
+          </Typography>
           <Switch
             checked={!state.isOldest}
             onChange={() => updateField("isOldest", !state.isOldest)}
-            className="bg-gray-300"
+            color="primary"
           />
-          <Text strong className={!state.isOldest ? "text-black hidden sm:block" : "text-gray-400 hidden sm:block"}>
+          <Typography
+            variant="body2"
+            className={!state.isOldest ? "text-black font-semibold" : "text-gray-400"}
+          >
             Newest
-          </Text>
+          </Typography>
         </div>
       </div>
 
+      {/* Carousel Section */}
       <div className="mt-4">
         <Carousel
           responsive={responsive}
           ssr={true}
-          infinite={true}
-          containerClass="carousel-container"
-          itemClass="carousel-item"
-          customLeftArrow={<ChevronLeft size={24} />}
-          customRightArrow={<ChevronRight size={24} />}
+          infinite={false}
+          centerMode={true}
+          containerClass="carousel-container flex justify-center"
+          itemClass="carousel-item flex justify-center items-center px-2"
+          customLeftArrow={
+            <button className="absolute left-0 z-10 bg-gray-800 text-white p-2 rounded-full hover:bg-gray-700 -translate-y-1/2 top-1/2">
+              <ChevronLeft size={24} />
+            </button>
+          }
+          customRightArrow={
+            <button className="absolute right-0 z-10 bg-gray-800 text-white p-2 rounded-full hover:bg-gray-700 -translate-y-1/2 top-1/2">
+              <ChevronRight size={24} />
+            </button>
+          }
         >
           {myNftData?.nfts?.length > 0 ? (
             myNftData.nfts.map((nft) => (
-              <div key={nft.NFTokenID} className="p-2">
+              <div key={nft.NFTokenID} className="h-full">
                 <NFTCard myNftData={nft} getImageData={getImageData} />
               </div>
             ))
