@@ -89,7 +89,7 @@ const MatrixClientProvider = () => {
   useEffect(() => {
     const loadData = async () => {
       setLoading(true);
-      // console.log("widgetApi.widgetParameters : ", wgtParameters);
+      console.log("widgetApi.widgetParameters : ", widgetApi.widgetParameters);
 
       try {
         // Load members
@@ -2311,7 +2311,7 @@ const MatrixClientProvider = () => {
                 transition={{ duration: 0.4, ease: "easeInOut" }}
               >
                 <div style={{ display: selectedIndex === 0 ? "block" : "none" }}>
-                  <NFTs myNftData={myNftData} getImageData={getImageData} wgtParameters={""} />
+                  <NFTs myNftData={myNftData} getImageData={getImageData} wgtParameters={widgetApi.widgetParameters} />
                 </div>
                 <div style={{ display: selectedIndex === 1 ? "block" : "none" }}>
                   <Offers />
