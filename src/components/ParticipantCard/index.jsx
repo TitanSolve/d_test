@@ -92,10 +92,10 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
   };
 
   return (
-    <div className="p-4 border border-gray-200 rounded-2xl bg-white shadow-lg w-full max-w-5xl">
+    <div className="p-4 border border-gray-200 rounded-2xl shadow-lg w-full max-w-5xl">
       {/* Header Section */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <Typography variant="h6" className="text-gray-900 font-bold">
+        <Typography variant="h6" className="font-bold">
           {myNftData.name === wgtParameters.displayName /*"Hayden"*/ ? "My NFTs" : myNftData.name}
         </Typography>
 
@@ -168,7 +168,7 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
               </div>
             ))
           ) : (
-            <div className="flex items-center justify-center h-32 text-gray-500 font-semibold text-center w-full">
+            <div className="flex items-center justify-center h-32 font-semibold text-center w-full">
               <p>No NFTs available</p>
             </div>
           )}
