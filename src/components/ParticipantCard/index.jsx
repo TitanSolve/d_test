@@ -92,10 +92,10 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
   };
 
   return (
-    <div className="p-4 border border-gray-200 rounded-2xl bg-white shadow-lg w-full max-w-5xl">
+    <div className="p-4 border rounded-2xl shadow-lg w-full max-w-5xl">
       {/* Header Section */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <Typography variant="h6" className="text-gray-900 font-bold">
+        <Typography variant="h6" className="font-bold">
           {myNftData.name === wgtParameters.displayName /*"Hayden"*/ ? "My NFTs" : myNftData.name}
         </Typography>
 
@@ -146,7 +146,7 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
           itemClass="carousel-item flex justify-center items-center px-2"
           customLeftArrow={
             <button
-              className="absolute left-2 md:left-4 top-1/2 z-20 -translate-y-1/2 bg-white text-gray-800 shadow-md p-2 md:p-3 rounded-full hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-500"
+              className="absolute left-2 md:left-4 top-1/2 z-20 -translate-y-1/2 shadow-md p-2 md:p-3 rounded-full focus:outline-none focus:ring-2 focus:ring-gray-500"
               aria-label="Previous"
             >
               <ChevronLeft size={20} className="md:size-6" />
@@ -154,7 +154,7 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
           }
           customRightArrow={
             <button
-              className="absolute right-2 md:right-4 top-1/2 z-20 -translate-y-1/2 bg-white text-gray-800 shadow-md p-2 md:p-3 rounded-full hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-500"
+              className="absolute right-2 md:right-4 top-1/2 z-20 -translate-y-1/2 shadow-md p-2 md:p-3 rounded-full focus:outline-none focus:ring-2 focus:ring-gray-500"
               aria-label="Next"
             >
               <ChevronRight size={20} className="md:size-6" />
@@ -168,7 +168,7 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
               </div>
             ))
           ) : (
-            <div className="flex items-center justify-center h-32 text-gray-500 font-semibold text-center w-full">
+            <div className="flex items-center justify-center h-32 font-semibold text-center w-full">
               <p>No NFTs available</p>
             </div>
           )}
@@ -184,7 +184,7 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
         bodyStyle={{ borderRadius: "10px", padding: "24px" }}
         style={{ width: "90%" }}
       >
-        <Box className="absolute top-1/2 left-1/2 w-11/12 sm:w-3/4 md:w-2/3 lg:w-1/2 bg-white rounded-xl shadow-lg transform -translate-x-1/2 -translate-y-1/2 p-6 outline-none">
+        <Box className="absolute top-1/2 left-1/2 w-11/12 sm:w-3/4 md:w-2/3 lg:w-1/2 rounded-xl shadow-lg transform -translate-x-1/2 -translate-y-1/2 p-6 outline-none">
           <Carousel
             responsive={responsive}
             ssr={true}
@@ -194,12 +194,12 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
             containerClass="carousel-container"
             itemClass="carousel-item flex justify-center items-center px-2"
             customLeftArrow={
-              <button className="absolute left-2 md:left-4 top-1/2 z-20 -translate-y-1/2 bg-white text-gray-800 shadow-md p-2 md:p-3 rounded-full hover:bg-gray-100">
+              <button className="absolute left-2 md:left-4 top-1/2 z-20 -translate-y-1/2 shadow-md p-2 md:p-3 rounded-full hover:outline-none">
                 <ChevronLeft size={20} />
               </button>
             }
             customRightArrow={
-              <button className="absolute right-2 md:right-4 top-1/2 z-20 -translate-y-1/2 bg-white text-gray-800 shadow-md p-2 md:p-3 rounded-full hover:bg-gray-100">
+              <button className="absolute right-2 md:right-4 top-1/2 z-20 -translate-y-1/2 shadow-md p-2 md:p-3 rounded-full hover:outline-none">
                 <ChevronRight size={20} />
               </button>
             }
