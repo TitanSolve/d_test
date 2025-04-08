@@ -89,7 +89,7 @@ const ParticipantCard = ({ index, myNftData, wgtParameters, getImageData }) => {
           {myNftData.name === wgtParameters.displayName ? "My NFTs" : myNftData.name}
         </Typography>
 
-        <FormControl size="small" className="w-full sm:w-32">
+        {/* <FormControl size="small" className="w-full sm:w-32">
           <InputLabel id={`token-select-${index}`}>Token</InputLabel>
           <Select
             labelId={`token-select-${index}`}
@@ -100,7 +100,7 @@ const ParticipantCard = ({ index, myNftData, wgtParameters, getImageData }) => {
           >
             <MenuItem value="issuer">issuer</MenuItem>
           </Select>
-        </FormControl>
+        </FormControl> */}
 
         <div className="flex items-center gap-2 hidden sm:flex">
           <Typography
