@@ -228,7 +228,7 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
         <div>
           {selectedNftForOffer !== null && (
             <Box
-              className="bg-white rounded-xl p-6 shadow-lg max-w-[90%] md:max-w-[500px] w-full mx-auto top-1/2 left-1/2 absolute transform -translate-x-1/2 -translate-y-1/2"
+              className="rounded-xl p-6 shadow-lg max-w-[90%] md:max-w-[500px] w-full mx-auto top-1/2 left-1/2 absolute transform -translate-x-1/2 -translate-y-1/2"
             >
               <img
                 src={selectedNftForOffer.imageURI.replace("ipfs://", "https://ipfs.io/ipfs/")}
@@ -239,7 +239,7 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
               />
               <Typography
                 variant="subtitle1"
-                className="text-center font-semibold text-black mb-4"
+                className="text-center font-semibold mb-4"
               >
                 {selectedNftForOffer.name}
               </Typography>
@@ -247,7 +247,7 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
               {!(selectedNftForOffer.userName === wgtParameters.displayName) && (
                 <Typography
                   variant="subtitle1"
-                  className="text-center font-semibold text-black mb-4"
+                  className="text-center font-semibold mb-4"
                 >
                   Offer to buy from {selectedNftForOffer.userName}
                 </Typography>
@@ -281,7 +281,7 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
                     fullWidth
                     variant="outlined"
                     size="small"
-                    className="mb-4 bg-white rounded"
+                    className="mb-4 rounded"
                   >
                     {membersList.map(user => (
                       <MenuItem key={user.userId} value={user.name}>
@@ -313,7 +313,7 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
                     onChange={e => updateField("token", e.target.value)}
                     fullWidth
                     size="small"
-                    className="bg-white rounded"
+                    className="rounded"
                   >
                     <MenuItem value="XRP">XRP</MenuItem>
                     <MenuItem value="TokenA">TokenA</MenuItem>
