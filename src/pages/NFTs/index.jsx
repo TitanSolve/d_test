@@ -2,9 +2,9 @@ import React from "react";
 import ParticipantCard from "../../components/ParticipantCard";
 import xrpl from "xrpl";
 
-const NFTs = ({ myNftData, wgtParameters, getImageData }) => {
+const NFTs = ({ membersList, myNftData, wgtParameters, getImageData }) => {
   const myOwnNftData = myNftData.find(nft => nft.name === wgtParameters.displayName);
-  const otherNfts = myNftData.filter(nft => nft.name !== wgtParameters.displayName);
+  const otherNfts = myNftData.filter(nft => nft.name !== wgtParameters.displayName /*"Hayden"*/);
 
   return (
     <div>
@@ -13,6 +13,7 @@ const NFTs = ({ myNftData, wgtParameters, getImageData }) => {
         <ParticipantCard
           key={0}
           index={0}
+          membersList={membersList}
           myNftData={myOwnNftData}
           wgtParameters={wgtParameters}
           getImageData={getImageData}
@@ -22,6 +23,7 @@ const NFTs = ({ myNftData, wgtParameters, getImageData }) => {
             <ParticipantCard
               key={index}
               index={index + 1}
+              membersList={membersList}
               myNftData={nft}
               wgtParameters={wgtParameters}
               getImageData={getImageData}

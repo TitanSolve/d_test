@@ -2,18 +2,16 @@ import React, { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 import API_URLS from "../../config";
 import nft_pic from "../../assets/nft.png";
- import { useInView } from 'react-intersection-observer';
+import { useInView } from 'react-intersection-observer';
 
-const NFTCard = ({ myNftData, handleClick  }) => {
+const NFTCard = ({ myNftData, isGroup }) => {
     // const { ref, inView } = useInView({ triggerOnce: true });
-    // console.log("NFTCard", myNftData);
-
+    console.log("NFTCard", myNftData, isGroup);
     return (
         <>
-            <div onClick={handleClick} className="transform hover:scale-105 transition-transform duration-300 border p-2 rounded-lg shadow-md bg-gradient-to-br from-blue-200 to-purple-300 text-gray-800 font-semibold text-center cursor-pointer">
+            <div className="transform hover:scale-105 transition-transform duration-300 border p-2 rounded-lg shadow-md bg-gradient-to-br from-blue-200 to-purple-300 text-gray-800 font-semibold text-center cursor-pointer">
                 <img
-                    // src={nft_pic}
-                    src={myNftData.nfts[0].imageURI.replace("ipfs://", "https://ipfs.io/ipfs/")}
+                    src={ isGroup ? myNftData.nfts[0].imageURI.replace("ipfs://", "https://ipfs.io/ipfs/") : myNftData.imageURI.replace("ipfs://", "https://ipfs.io/ipfs/")}
                     onError={(e) => { e.target.onerror = null; e.target.src = nft_pic; }}
                     alt="NFT"
                     draggable="false"
