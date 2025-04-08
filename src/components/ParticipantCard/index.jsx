@@ -184,33 +184,35 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
         bodyStyle={{ borderRadius: "10px", padding: "24px" }}
         style={{ width: "90%" }}
       >
-        <Box className="absolute top-1/2 left-1/2 w-11/12 sm:w-3/4 md:w-2/3 lg:w-1/2 bg-white rounded-xl shadow-lg transform -translate-x-1/2 -translate-y-1/2 p-6 outline-none">
-          <Carousel
-            responsive={responsive}
-            ssr={true}
-            infinite={false}
-            draggable={true}
-            swipeable={true}
-            containerClass="carousel-container"
-            itemClass="carousel-item flex justify-center items-center px-2"
-            customLeftArrow={
-              <button className="absolute left-2 md:left-4 top-1/2 z-20 -translate-y-1/2 bg-white text-gray-800 shadow-md p-2 md:p-3 rounded-full hover:bg-gray-100">
-                <ChevronLeft size={20} />
-              </button>
-            }
-            customRightArrow={
-              <button className="absolute right-2 md:right-4 top-1/2 z-20 -translate-y-1/2 bg-white text-gray-800 shadow-md p-2 md:p-3 rounded-full hover:bg-gray-100">
-                <ChevronRight size={20} />
-              </button>
-            }
-          >
-            {selectedNFTGroup &&
-              selectedNFTGroup.nfts.map((nft, idx) => (
-                <div key={idx} onClick={() => openOfferModal(nft)} className="cursor-pointer">
-                  <NFTCard myNftData={nft} isGroup={false} />
-                </div>
-              ))}
-          </Carousel>
+        <Box className="absolute top-1/2 left-1/2 w-11/12 sm:w-3/4 md:w-2/3 lg:w-1/2 bg-white rounded-2xl shadow-2xl transform -translate-x-1/2 -translate-y-1/2 p-4 sm:p-6 md:p-8 outline-none border border-gray-200">
+          <div className="relative">
+            <Carousel
+              responsive={responsive}
+              ssr={true}
+              infinite={false}
+              draggable={true}
+              swipeable={true}
+              containerClass="carousel-container"
+              itemClass="carousel-item flex justify-center items-center px-2"
+              customLeftArrow={
+                <button className="absolute left-2 md:left-4 top-1/2 z-20 -translate-y-1/2 bg-white text-gray-800 shadow-lg p-2 md:p-3 rounded-full hover:bg-gray-100 transition duration-200 ease-in-out">
+                  <ChevronLeft size={20} />
+                </button>
+              }
+              customRightArrow={
+                <button className="absolute right-2 md:right-4 top-1/2 z-20 -translate-y-1/2 bg-white text-gray-800 shadow-lg p-2 md:p-3 rounded-full hover:bg-gray-100 transition duration-200 ease-in-out">
+                  <ChevronRight size={20} />
+                </button>
+              }
+            >
+              {selectedNFTGroup &&
+                selectedNFTGroup.nfts.map((nft, idx) => (
+                  <div key={idx} onClick={() => openOfferModal(nft)} className="cursor-pointer hover:scale-105 transition-transform duration-300">
+                    <NFTCard myNftData={nft} isGroup={false} />
+                  </div>
+                ))}
+            </Carousel>
+          </div>
         </Box>
       </Modal>
 
