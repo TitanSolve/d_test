@@ -6,7 +6,7 @@ import { useInView } from 'react-intersection-observer';
 
 const NFTCard = ({ myNftData, isGroup }) => {
     // const { ref, inView } = useInView({ triggerOnce: true });
-    console.log("NFTCard", myNftData, isGroup);
+
     return (
         <>
             <div className="transform hover:scale-105 transition-transform duration-300 border p-2 rounded-lg shadow-md bg-gradient-to-br from-blue-200 to-purple-300 text-gray-800 font-semibold text-center cursor-pointer">

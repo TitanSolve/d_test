@@ -45,8 +45,6 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
   const [offerModalOpen, setOfferModalOpen] = useState(false);
   const [selectedNftForOffer, setSelectedNftForOffer] = useState(null);
 
-  console.log("selectedNftForOffer", selectedNftForOffer);
-
   const toggleSellMode = () => setState(prev => ({ ...prev, isSell: !prev.isSell }));
   const updateField = (field, value) =>
     setState((prev) => ({ ...prev, [field]: value }));
