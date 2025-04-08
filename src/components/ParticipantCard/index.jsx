@@ -7,6 +7,7 @@ import "swiper/css/effect-coverflow";
 import './index.css';
 import nft_pic from "../../assets/nft.png";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import LazyLoad from 'react-lazyload';
 // import { Modal, Select, Dropdown, Menu, Input, Button, Switch, Typography, Space } from "antd";
 import {
   Typography,
@@ -52,19 +53,19 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
   const responsive = {
     superLargeDesktop: {
       breakpoint: { max: 4000, min: 1280 },
-      items: 4,
+      items: 5,
     },
     desktop: {
       breakpoint: { max: 1280, min: 1024 },
-      items: 3,
+      items: 4,
     },
     tablet: {
       breakpoint: { max: 1024, min: 640 },
-      items: 2,
+      items: 3,
     },
     mobile: {
       breakpoint: { max: 640, min: 0 },
-      items: 1,
+      items: 2,
     },
   };
 
@@ -94,7 +95,7 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
       {/* Header Section */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <Typography variant="h6" className="font-bold">
-          {myNftData.name === wgtParameters.displayName /*"Hayden"*/ ? "My NFTs" : myNftData.name}
+          {myNftData.name === wgtParameters.displayName ? "My NFTs" : myNftData.name}
         </Typography>
 
         {/* <FormControl size="small" className="w-full sm:w-32">
@@ -162,7 +163,7 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
           {myNftData.groupedNfts.length > 0 ? (
             myNftData.groupedNfts.map((groupedNft, idx) => (
               <div key={idx} onClick={() => openPreviewModal(groupedNft)} className="cursor-pointer">
-                <NFTCard myNftData={groupedNft} isGroup={true} />
+                <NFTCard myNftData={groupedNft} isGroup={true} isImgOnly={false} />
               </div>
             ))
           ) : (
@@ -181,7 +182,7 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
         maskClosable={true}
         bodyStyle={{ borderRadius: "10px", padding: "24px" }}
       >
-        <Box className="absolute top-1/2 left-1/2 w-11/12 sm:w-3/4 md:w-2/3 lg:w-1/2 bg-white rounded-2xl shadow-2xl transform -translate-x-1/2 -translate-y-1/2 p-4 sm:p-6 md:p-8 outline-none border border-gray-200">
+        <Box className="absolute top-1/2 left-1/2 w-11/12 bg-white rounded-2xl shadow-2xl transform -translate-x-1/2 -translate-y-1/2 p-4 sm:p-6 md:p-8 outline-none border border-gray-200">
           <div className="relative">
             <Carousel
               responsive={responsive}
@@ -205,7 +206,7 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
               {selectedNFTGroup &&
                 selectedNFTGroup.nfts.map((nft, idx) => (
                   <div key={idx} onClick={() => openOfferModal(nft)} className="cursor-pointer hover:scale-105 transition-transform duration-300">
-                    <NFTCard myNftData={nft} isGroup={false} />
+                    <NFTCard myNftData={nft} isGroup={false} isImgOnly={false} />
                   </div>
                 ))}
             </Carousel>
@@ -228,13 +229,7 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
             <Box
               className="bg-white rounded-xl p-6 shadow-lg max-w-[90%] md:max-w-[500px] w-full mx-auto top-1/2 left-1/2 absolute transform -translate-x-1/2 -translate-y-1/2"
             >
-              <img
-                src={selectedNftForOffer.imageURI.replace("ipfs://", "https://ipfs.io/ipfs/")}
-                onError={(e) => { e.target.onerror = null; e.target.src = nft_pic; }}
-                alt="NFT"
-                draggable="false"
-                className="w-32 h-32 sm:w-42 sm:h-42 md:w-48 md:h-48 lg:w-52 lg:h-52 object-cover rounded-md mx-auto mb-3 shadow-lg select-none"
-              />
+              <NFTCard myNftData={selectedNftForOffer} isGroup={false} isImgOnly={true} />
               <Typography
                 variant="subtitle1"
                 className="text-center font-semibold text-black mb-4"
