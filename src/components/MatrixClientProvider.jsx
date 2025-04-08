@@ -145,19 +145,19 @@ const MatrixClientProvider = () => {
               })
             );
 
-            // Group by NFTokenTaxon
-            const taxonMap = {};
+            // Group by Issuer
+            const IssuerMap = {};
             enrichedNfts.forEach((nft) => {
-              const taxon = nft.NFTokenTaxon;
-              if (!taxonMap[taxon]) {
-                taxonMap[taxon] = [];
+              const Issuer = nft.Issuer;
+              if (!IssuerMap[Issuer]) {
+                IssuerMap[Issuer] = [];
               }
-              taxonMap[taxon].push(nft);
+              IssuerMap[Issuer].push(nft);
             });
 
             // Convert map to array
-            const groupedNfts = Object.entries(taxonMap).map(([taxon, nfts]) => ({
-              taxon: Number(taxon),
+            const groupedNfts = Object.entries(IssuerMap).map(([Issuer, nfts]) => ({
+              Issuer: String(Issuer),
               nfts,
             }));
 
@@ -2493,7 +2493,7 @@ const MatrixClientProvider = () => {
         */
 
         console.log("Merged members with NFT data:", mergedMembers);
-        setMyNftData(mergedMembers);
+        // setMyNftData(mergedMembers);
 
       } catch (error) {
         console.error("Error loading data:", error);
