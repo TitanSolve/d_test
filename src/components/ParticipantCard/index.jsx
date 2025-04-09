@@ -8,7 +8,7 @@ import './index.css';
 import nft_pic from "../../assets/nft.png";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import LazyLoad from 'react-lazyload';
-// import { Modal, Select, Dropdown, Menu, Input, Button, Switch, Typography, Space } from "antd";
+
 import {
   Typography,
   Select,
@@ -50,24 +50,24 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
   const updateField = (field, value) =>
     setState((prev) => ({ ...prev, [field]: value }));
 
-  const responsive = {
-    superLargeDesktop: {
-      breakpoint: { max: 4000, min: 1280 },
-      items: 5,
-    },
-    desktop: {
-      breakpoint: { max: 1280, min: 1024 },
-      items: 4,
-    },
-    tablet: {
-      breakpoint: { max: 1024, min: 640 },
-      items: 3,
-    },
-    mobile: {
-      breakpoint: { max: 640, min: 0 },
-      items: 2,
-    },
-  };
+    const responsive = {
+      superLargeDesktop: {
+        breakpoint: { max: 4000, min: 1280 },
+        items: 5,
+      },
+      desktop: {
+        breakpoint: { max: 1280, min: 1024 },
+        items: 4,
+      },
+      tablet: {
+        breakpoint: { max: 1024, min: 640 },
+        items: 3,
+      },
+      mobile: {
+        breakpoint: { max: 640, min: 0 },
+        items: 2,
+      },
+    };
 
   const openPreviewModal = (group) => {
     setSelectedNFTGroup(group);
@@ -75,7 +75,6 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
   };
 
   const closePreviewModal = () => {
-    console.log("closePreviewModal");
     setPreviewModalOpen(false);
     setSelectedNFTGroup(null);
   };
@@ -141,7 +140,7 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
           draggable={true}
           swipeable={true}
           centerMode={true}
-          containerClass="carousel-container "
+          containerClass="carousel-container"
           itemClass="carousel-item flex justify-center items-center px-2"
           customLeftArrow={
             <button
@@ -160,17 +159,17 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
             </button>
           }
         >
-          {myNftData.groupedNfts.length > 0 ? (
-            myNftData.groupedNfts.map((groupedNft, idx) => (
-              <div key={idx} onClick={() => openPreviewModal(groupedNft)} className="cursor-pointer">
-                <NFTCard myNftData={groupedNft} isGroup={true} isImgOnly={false} />
+            {myNftData.groupedNfts.length > 0 ? (
+              myNftData.groupedNfts.map((groupedNft, idx) => (
+                <div key={idx} onClick={() => openPreviewModal(groupedNft)} className="cursor-pointer">
+                  <NFTCard myNftData={groupedNft} isGroup={true} isImgOnly={false} />
+                </div>
+              ))
+            ) : (
+              <div className="flex items-center justify-center h-32 font-semibold text-center w-full">
+                <p>No NFTs available</p>
               </div>
-            ))
-          ) : (
-            <div className="flex items-center justify-center h-32 font-semibold text-center w-full">
-              <p>No NFTs available</p>
-            </div>
-          )}
+            )}
         </Carousel>
       </div>
 

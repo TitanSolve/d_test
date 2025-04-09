@@ -4,7 +4,7 @@ import xrpl from "xrpl";
 
 const NFTs = ({ membersList, myNftData, wgtParameters, getImageData }) => {
   const myOwnNftData = myNftData.find(nft => nft.name === wgtParameters.displayName);
-  const otherNfts = myNftData.filter(nft => nft.name !== wgtParameters.displayName /*"Hayden"*/);
+  const otherNfts = myNftData.filter(nft => nft.name !== wgtParameters.displayName);
 
   return (
     <div>

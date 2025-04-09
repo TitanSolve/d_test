@@ -10555,7 +10555,7 @@ svgo@^2.7.0:
 
 swiper@^11.2.6:
   version "11.2.6"
-  resolved "https://registry.npmjs.org/swiper/-/swiper-11.2.6.tgz"
+  resolved "https://registry.yarnpkg.com/swiper/-/swiper-11.2.6.tgz#826943bf87158518ca0b1f57d387272b12a07c52"
   integrity sha512-8aXpYKtjy3DjcbzZfz+/OX/GhcU5h+looA6PbAzHMZT6ESSycSp9nAjPCenczgJyslV+rUGse64LMGpWE3PX9Q==
 
 symbol-tree@^3.2.4:

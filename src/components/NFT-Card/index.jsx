@@ -18,7 +18,7 @@ const NFTCard = ({ myNftData, isGroup, isImgOnly }) => {
                 {!imgLoaded && (
                     <div className="rounded-xl overflow-hidden">
                         <Skeleton
-                            className="mx-auto rounded-lg object-cover shadow-lg w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 lg:w-56 lg:h-56 xl:w-64 xl:h-64 select-none animate-pulse"
+                            className={`mx-auto rounded-lg object-cover shadow-lg w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 lg:w-56 lg:h-56 xl:w-64 xl:h-64 select-none animate-pulse`}
                             baseColor="#c7d2fe"
                             highlightColor="#9ca3af"
                         />
