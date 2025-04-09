@@ -80,10 +80,10 @@ const MatrixClientProvider = () => {
   useEffect(() => {
     const loadData = async () => {
       setLoading(true);
+      // console.log("widgetApi.widgetParameters : ", widgetApi.widgetParameters);
 
       try {
         const events = await widgetApi.receiveStateEvents(STATE_EVENT_ROOM_MEMBER);
-
         const usersList = events.map(item => ({
           name: item.content.displayname,
           userId: item.sender
@@ -93,15 +93,18 @@ const MatrixClientProvider = () => {
         const userIds = usersList.map(member => member.userId.split(":")[0].replace("@", ""));
         const response = await fetch(`${API_URLS.backendUrl}/get-users-nfts`, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ addresses: userIds }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            addresses: userIds
+          }),
         });
 
-        if (!response.ok) throw new Error("Failed to fetch NFT data");
-
+        if (!response.ok) {
+          throw new Error("Failed to fetch NFT data");
+        }
         const data = await response.json();
-
-        console.log("---------------------------->", data);
 
         const mergedMembers = await Promise.all(
           usersList.map(async (member) => {
@@ -122,6 +125,7 @@ const MatrixClientProvider = () => {
               })
             );
 
+            // Group by Issuer
             const IssuerMap = {};
             enrichedNfts.forEach((nft) => {
               const Issuer = nft.Issuer;
@@ -131,6 +135,7 @@ const MatrixClientProvider = () => {
               IssuerMap[Issuer].push(nft);
             });
 
+            // Convert map to array
             const groupedNfts = Object.entries(IssuerMap).map(([Issuer, nfts]) => ({
               Issuer: String(Issuer),
               nfts,
@@ -2489,31 +2494,78 @@ const MatrixClientProvider = () => {
   return (
     <>
       {loading ? (
-        <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "60vh", width: "100%", textAlign: "center", gap: 2 }}>
-          <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1.2, ease: "linear" }}>
-            <CircularProgress size={48} thickness={2} sx={{ color: "#1976d2" }} />
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            height: "60vh",
+            width: "100%",
+            textAlign: "center",
+            gap: 2,
+          }}
+        >
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{
+              repeat: Infinity,
+              duration: 1.2,
+              ease: "linear",
+            }}
+          >
+            <CircularProgress
+              size={48}
+              thickness={2}
+              sx={{
+                color: "#1976d2", // your primary color or theme
+              }}
+            />
           </motion.div>
-          <Typography variant="body1" sx={{ fontWeight: 600, color: "#555", mt: 1 }}>Loading...</Typography>
+          <Typography
+            variant="body1"
+            sx={{
+              fontWeight: 600,
+              color: "#555",
+              mt: 1,
+            }}
+          >
+            Loading...
+          </Typography>
         </Box>
       ) : (
-        <Box sx={{ width: "100%", borderRadius: 2, boxShadow: 1 }}>
-          <Tabs value={selectedIndex} onChange={(e, newIndex) => setSelectedIndex(newIndex)} variant="fullWidth" textColor="primary" indicatorColor="primary">
+        < Box sx={{ width: "100%", borderRadius: 2, boxShadow: 1 }}>
+          <Tabs
+            value={selectedIndex}
+            onChange={(event, newIndex) => setSelectedIndex(newIndex)}
+            variant="fullWidth"
+            textColor="primary"
+            indicatorColor="primary"
+          >
             <Tab label="NFTs" />
             <Tab label="Offers" />
           </Tabs>
           <Box sx={{ p: 2, position: "relative", overflow: "hidden" }}>
             <AnimatePresence mode="wait">
-              <motion.div key={selectedIndex} variants={panelVariants} initial="hidden" animate="visible" exit="exit" transition={{ duration: 0.4, ease: "easeInOut" }}>
+              <motion.div
+                key={selectedIndex}
+                variants={panelVariants}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+                transition={{ duration: 0.4, ease: "easeInOut" }}
+              >
                 <div style={{ display: selectedIndex === 0 ? "block" : "none" }}>
-                  <NFTs membersList={membersList} myNftData={myNftData} getImageData={getImageData} wgtParameters={widgetApi.widgetParameters} />
+                  <NFTs membersList={membersList} myNftData={myNftData} getImageData={getImageData} wgtParameters={widgetApi.widgetParameters /*"Hayden"*/} />
                 </div>
                 <div style={{ display: selectedIndex === 1 ? "block" : "none" }}>
                   <Offers />
                 </div>
+
               </motion.div>
             </AnimatePresence>
           </Box>
-        </Box>
+        </Box >
       )
       }
     </>
