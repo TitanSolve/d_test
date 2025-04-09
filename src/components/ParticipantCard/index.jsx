@@ -7,6 +7,7 @@ import {
   Switch,
   Modal,
   Box,
+  FormControl,
   TextField,
   Button,
   InputAdornment
