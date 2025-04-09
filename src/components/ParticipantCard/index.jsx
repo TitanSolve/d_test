@@ -1,35 +1,21 @@
 import React, { useState } from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation } from "swiper/modules";
-import "swiper/css";
-import "swiper/css/navigation";
-import "swiper/css/effect-coverflow";
-import './index.css';
-import nft_pic from "../../assets/nft.png";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import LazyLoad from 'react-lazyload';
-
 import {
   Typography,
   Select,
   MenuItem,
   Switch,
-  FormControl,
-  InputLabel,
   Modal,
   Box,
   TextField,
   Button,
   InputAdornment
 } from "@mui/material";
-import { DownOutlined, UserOutlined } from "@ant-design/icons";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
-
-
 import NFTCard from "../NFT-Card";
+import './index.css';
 
-const { Text } = Typography;
 
 const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImageData }) => {
   const [state, setState] = useState({
@@ -50,24 +36,12 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
   const updateField = (field, value) =>
     setState((prev) => ({ ...prev, [field]: value }));
 
-    const responsive = {
-      superLargeDesktop: {
-        breakpoint: { max: 4000, min: 1280 },
-        items: 4,
-      },
-      desktop: {
-        breakpoint: { max: 1280, min: 700 },
-        items: 3,
-      },
-      tablet: {
-        breakpoint: { max: 700, min: 400 },
-        items: 2,
-      },
-      mobile: {
-        breakpoint: { max: 400, min: 0 },
-        items: 1,
-      },
-    };
+  const responsive = {
+    superLargeDesktop: { breakpoint: { max: 4000, min: 1280 }, items: 4 },
+    desktop: { breakpoint: { max: 1280, min: 700 }, items: 3 },
+    tablet: { breakpoint: { max: 700, min: 400 }, items: 2 },
+    mobile: { breakpoint: { max: 400, min: 0 }, items: 1 },
+  };
 
   const openPreviewModal = (group) => {
     setSelectedNFTGroup(group);
@@ -91,7 +65,6 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
 
   return (
     <div className="p-4 border border-gray-200 rounded-2xl shadow-lg w-full max-w-5xl">
-      {/* Header Section */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <Typography variant="h6" className="font-bold">
           {myNftData.name === wgtParameters.displayName ? "My NFTs" : myNftData.name}
@@ -131,7 +104,6 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
         </div>
       </div>
 
-      {/* Carousel Section */}
       <div className="mt-4">
         <Carousel
           responsive={responsive}
@@ -157,17 +129,17 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
             </button>
           }
         >
-            {myNftData.groupedNfts.length > 0 ? (
-              myNftData.groupedNfts.map((groupedNft, idx) => (
-                <div key={idx} onClick={() => openPreviewModal(groupedNft)} className="cursor-pointer">
-                  <NFTCard myNftData={groupedNft} isGroup={true} isImgOnly={false} />
-                </div>
-              ))
-            ) : (
-              <div className="flex items-center justify-center h-32 font-semibold text-center w-full">
-                <p>No NFTs available</p>
+          {myNftData.groupedNfts.length > 0 ? (
+            myNftData.groupedNfts.map((groupedNft, idx) => (
+              <div key={idx} onClick={() => openPreviewModal(groupedNft)} className="cursor-pointer">
+                <NFTCard myNftData={groupedNft} isGroup={true} isImgOnly={false} />
               </div>
-            )}
+            ))
+          ) : (
+            <div className="flex items-center justify-center h-32 font-semibold text-center w-full">
+              <p>No NFTs available</p>
+            </div>
+          )}
         </Carousel>
       </div>
 

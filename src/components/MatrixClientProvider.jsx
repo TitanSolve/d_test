@@ -1,9 +1,8 @@
-import React, { useEffect, useState, ReactElement } from "react";
+import React, { useEffect, useState } from "react";
 import { useWidgetApi } from '@matrix-widget-toolkit/react';
 import { Tabs, Tab, Box, Typography, CircularProgress } from "@mui/material";
 import { motion, AnimatePresence } from "framer-motion";
 import { STATE_EVENT_ROOM_MEMBER } from "@matrix-widget-toolkit/api";
-import { map } from 'rxjs';
 import axios from "axios";
 import NFTs from "../pages/NFTs";
 import Offers from "../pages/Offers";
@@ -20,8 +19,7 @@ const hexToAscii = (str) => {
 };
 
 const getImageData = async (nft) => {
-  let URI = "";
-  URI = hexToAscii(nft?.uri).toString();
+  let URI = hexToAscii(nft?.uri) || nft_default_pic.toString();
   let name = "";
 
   if (URI === "") {
@@ -43,7 +41,6 @@ const getImageData = async (nft) => {
   if (URI.startsWith("ipfs")) {
     const httpNftUrl = URI.replace("ipfs://", "https://ipfs.io/ipfs/");
     URI = httpNftUrl;
-    // console.log("umang okate URI", httpNftImageUrl);
     // await axios
     //   .get(httpNftUrl)
     //   .then((response) => {
@@ -54,29 +51,22 @@ const getImageData = async (nft) => {
     //     );
     //     name = response.data.name || name;
     //     URI = httpNftImageUrl;
-    //     // console.log("after replace URI", URI);
     //   })
     //   .catch((error) => console.log("Error fetching NFT data:", error));
   }
 
   if (URI.includes("json")) {
-    // console.log("umang okate URI", URI);
     await axios
       .get(URI)
       .then((response) => {
-        // console.log("uamng response", response);
         let nftImageUrl = response.data.image || URI;
-        // console.log(nftImageUrl, "ukang nftImageURL");
         name = response.data.name || name;
         URI = nftImageUrl.replace("ipfs://", "https://ipfs.io/ipfs/");
-        // console.log("JSON URI", URI);
       })
       .catch((error) => console.log("Error umang fetching NFT data:", error));
   }
   nft.URI = URI;
   nft.name = name;
-
-  // console.log("return URI", URI);
   return URI;
 };
 
@@ -87,23 +77,13 @@ const MatrixClientProvider = () => {
   const [loading, setLoading] = useState(true);
   const [membersList, setMembersList] = useState([]);
 
-  window.addEventListener("message", (event) => {
-    console.log("------ event :", event);
-    if (event.data?.action === "client_theme") {
-      const theme = event.data?.data?.theme;
-      console.log("-------------- data:", event.data);
-      console.log("-------------- theme:", theme);
-      // applyTheme(theme); // light | dark | legacy etc.
-    }
-  });
-
   useEffect(() => {
     const loadData = async () => {
       setLoading(true);
-      // console.log("widgetApi.widgetParameters : ", widgetApi.widgetParameters);
 
       try {
         const events = await widgetApi.receiveStateEvents(STATE_EVENT_ROOM_MEMBER);
+
         const usersList = events.map(item => ({
           name: item.content.displayname,
           userId: item.sender
@@ -113,19 +93,13 @@ const MatrixClientProvider = () => {
         const userIds = usersList.map(member => member.userId.split(":")[0].replace("@", ""));
         const response = await fetch(`${API_URLS.backendUrl}/get-users-nfts`, {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            addresses: userIds
-          }),
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ addresses: userIds }),
         });
 
-        if (!response.ok) {
-          throw new Error("Failed to fetch NFT data");
-        }
-        const data = await response.json();
+        if (!response.ok) throw new Error("Failed to fetch NFT data");
 
+        const data = await response.json();
         const mergedMembers = await Promise.all(
           usersList.map(async (member) => {
             const walletAddress = member.userId.split(":")[0].replace("@", "");
@@ -145,7 +119,6 @@ const MatrixClientProvider = () => {
               })
             );
 
-            // Group by Issuer
             const IssuerMap = {};
             enrichedNfts.forEach((nft) => {
               const Issuer = nft.Issuer;
@@ -155,7 +128,6 @@ const MatrixClientProvider = () => {
               IssuerMap[Issuer].push(nft);
             });
 
-            // Convert map to array
             const groupedNfts = Object.entries(IssuerMap).map(([Issuer, nfts]) => ({
               Issuer: String(Issuer),
               nfts,
@@ -2514,78 +2486,31 @@ const MatrixClientProvider = () => {
   return (
     <>
       {loading ? (
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            height: "60vh",
-            width: "100%",
-            textAlign: "center",
-            gap: 2,
-          }}
-        >
-          <motion.div
-            animate={{ rotate: 360 }}
-            transition={{
-              repeat: Infinity,
-              duration: 1.2,
-              ease: "linear",
-            }}
-          >
-            <CircularProgress
-              size={48}
-              thickness={2}
-              sx={{
-                color: "#1976d2", // your primary color or theme
-              }}
-            />
+        <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "60vh", width: "100%", textAlign: "center", gap: 2 }}>
+          <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1.2, ease: "linear" }}>
+            <CircularProgress size={48} thickness={2} sx={{ color: "#1976d2" }} />
           </motion.div>
-          <Typography
-            variant="body1"
-            sx={{
-              fontWeight: 600,
-              color: "#555",
-              mt: 1,
-            }}
-          >
-            Loading...
-          </Typography>
+          <Typography variant="body1" sx={{ fontWeight: 600, color: "#555", mt: 1 }}>Loading...</Typography>
         </Box>
       ) : (
-        < Box sx={{ width: "100%", borderRadius: 2, boxShadow: 1 }}>
-          <Tabs
-            value={selectedIndex}
-            onChange={(event, newIndex) => setSelectedIndex(newIndex)}
-            variant="fullWidth"
-            textColor="primary"
-            indicatorColor="primary"
-          >
+        <Box sx={{ width: "100%", borderRadius: 2, boxShadow: 1 }}>
+          <Tabs value={selectedIndex} onChange={(e, newIndex) => setSelectedIndex(newIndex)} variant="fullWidth" textColor="primary" indicatorColor="primary">
             <Tab label="NFTs" />
             <Tab label="Offers" />
           </Tabs>
           <Box sx={{ p: 2, position: "relative", overflow: "hidden" }}>
             <AnimatePresence mode="wait">
-              <motion.div
-                key={selectedIndex}
-                variants={panelVariants}
-                initial="hidden"
-                animate="visible"
-                exit="exit"
-                transition={{ duration: 0.4, ease: "easeInOut" }}
-              >
+              <motion.div key={selectedIndex} variants={panelVariants} initial="hidden" animate="visible" exit="exit" transition={{ duration: 0.4, ease: "easeInOut" }}>
                 <div style={{ display: selectedIndex === 0 ? "block" : "none" }}>
-                  <NFTs membersList={membersList} myNftData={myNftData} getImageData={getImageData} wgtParameters={widgetApi.widgetParameters /*"Hayden"*/} />
+                  <NFTs membersList={membersList} myNftData={myNftData} getImageData={getImageData} wgtParameters={widgetApi.widgetParameters} />
                 </div>
                 <div style={{ display: selectedIndex === 1 ? "block" : "none" }}>
                   <Offers />
                 </div>
-
               </motion.div>
             </AnimatePresence>
           </Box>
-        </Box >
+        </Box>
       )
       }
     </>

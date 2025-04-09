@@ -6,8 +6,6 @@ import './index.css';
 import App from './App';
 
 const widgetApiPromise = WidgetApiImpl.create({
-  // You can specify which capabilities should be requested at startup. One
-  // can also request capabilities after the application started.
   capabilities: [
     WidgetEventCapability.forStateEvent(
       EventDirection.Receive,
@@ -24,11 +22,8 @@ const widgetApiPromise = WidgetApiImpl.create({
   ],
 });
 
-
-const container = document.getElementById('root');
-const root = createRoot(container);
-root.render(
+createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <App widgetApiPromise={widgetApiPromise} />
-  </React.StrictMode>,
+  </React.StrictMode>
 );

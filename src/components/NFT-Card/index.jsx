@@ -1,20 +1,15 @@
-import React, { useCallback, useEffect, useState } from "react";
-import axios from "axios";
-import API_URLS from "../../config";
+import React, { useState } from "react";
 import nft_pic from "../../assets/nft.png";
-import { useInView } from 'react-intersection-observer';
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 
 const NFTCard = ({ myNftData, isGroup, isImgOnly }) => {
     const [imgLoaded, setImgLoaded] = useState(false);
-    const imageUrl = isGroup
-        ? myNftData.nfts[0].imageURI.replace("ipfs://", "https://ipfs.io/ipfs/")
-        : myNftData.imageURI.replace("ipfs://", "https://ipfs.io/ipfs/");
+    const imageUrl = (isGroup ? myNftData.nfts[0].imageURI : myNftData.imageURI)
+        .replace("ipfs://", "https://ipfs.io/ipfs/");
 
         return (
             <div className={`mx-auto transform transition-transform duration-300 text-gray-800 font-semibold text-center ${!isImgOnly ? 'cursor-pointer hover:scale-105 from-blue-200 to-purple-300 bg-gradient-to-br border p-2 rounded-lg shadow-md' : ''}`}>
-                {/* Skeleton */}
                 {!imgLoaded && (
                     <div className="rounded-xl overflow-hidden">
                         <Skeleton
@@ -24,8 +19,7 @@ const NFTCard = ({ myNftData, isGroup, isImgOnly }) => {
                         />
                     </div>
                 )}
-    
-                {/* Actual Image */}
+                
                 <img
                     src={imageUrl}
                     alt="NFT"
