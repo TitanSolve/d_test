@@ -13,7 +13,8 @@ const NFTCard = ({ myNftData, isGroup, isImgOnly }) => {
             <div className="relative">
                 {/* Display the NFT group badge in the top-right if isGroup is true */}
                 {isGroup && (
-                    <div className="absolute top-1 right-1 sm:top-2 sm:right-2 bg-blue-600 text-white px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-full text-[10px] sm:text-xs shadow-md">
+                    <div className="absolute top-2 right-2 z-10 bg-white/70 backdrop-blur-md text-gray-800 px-2 py-1 rounded-full text-[11px] sm:text-xs shadow-md flex items-center gap-1 transition-all">
+                        <span role="img" aria-label="sparkle">✨</span>
                         {myNftData.nfts.length}
                     </div>
                 )}
