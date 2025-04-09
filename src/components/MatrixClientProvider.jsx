@@ -106,6 +106,8 @@ const MatrixClientProvider = () => {
         }
         const data = await response.json();
 
+        console.log("NFT data:----------------->", data);
+
         const mergedMembers = await Promise.all(
           usersList.map(async (member) => {
             const walletAddress = member.userId.split(":")[0].replace("@", "");
