@@ -100,6 +100,9 @@ const MatrixClientProvider = () => {
         if (!response.ok) throw new Error("Failed to fetch NFT data");
 
         const data = await response.json();
+
+        console.log("---------------------------->", data);
+
         const mergedMembers = await Promise.all(
           usersList.map(async (member) => {
             const walletAddress = member.userId.split(":")[0].replace("@", "");
