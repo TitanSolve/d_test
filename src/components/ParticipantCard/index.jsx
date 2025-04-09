@@ -206,7 +206,7 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
                 {selectedNftForOffer.originTokenName}
               </Typography>
 
-              <Typography variant="subtitle2" className="text-center font-semibold text-black mb-4" >
+              <Typography variant="subtitle2" className="text-center font-semibold text-black mb-4 overflow-hidden" >
                 Issuer : {selectedNftForOffer.Issuer}
               </Typography>
               <Typography variant="subtitle2" className="text-center font-semibold text-black mb-4" >
@@ -219,16 +219,9 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
                 NFTokenSerial : {selectedNftForOffer.nft_serial}
               </Typography>
 
-              <Typography
-                variant="subtitle1"
-                className="text-center font-semibold text-black mb-4"
-              >
-                Issuer : {selectedNftForOffer.Issuer}
-              </Typography>
-
               {!(selectedNftForOffer.userName === wgtParameters.displayName) && (
                 <Typography
-                  variant="h6"
+                  variant="h5"
                   className="text-center font-semibold text-black mb-4"
                 >
                   Offer to buy from {selectedNftForOffer.userName}
