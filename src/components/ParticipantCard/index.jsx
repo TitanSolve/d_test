@@ -56,15 +56,15 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
         items: 4,
       },
       desktop: {
-        breakpoint: { max: 1280, min: 1024 },
+        breakpoint: { max: 1280, min: 700 },
         items: 3,
       },
       tablet: {
-        breakpoint: { max: 1024, min: 640 },
+        breakpoint: { max: 700, min: 400 },
         items: 2,
       },
       mobile: {
-        breakpoint: { max: 640, min: 0 },
+        breakpoint: { max: 400, min: 0 },
         items: 1,
       },
     };
