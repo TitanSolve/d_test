@@ -8,6 +8,7 @@ import {
   Modal,
   Box,
   FormControl,
+  InputLabel,
   TextField,
   Button,
   InputAdornment
@@ -72,6 +73,7 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
         </Typography>
 
         <FormControl size="small" className="w-full sm:w-32">
+          <InputLabel >Collection</InputLabel>
           <Select
             labelId={`token-select-${index}`}
             id={`token-select-${index}`}
