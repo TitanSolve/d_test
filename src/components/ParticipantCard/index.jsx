@@ -203,7 +203,7 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
                 variant="subtitle1"
                 className="text-center font-semibold text-black mb-4"
               >
-                {selectedNftForOffer.name}
+                {selectedNftForOffer.originTokenName}
               </Typography>
 
               {!(selectedNftForOffer.userName === wgtParameters.displayName) && (

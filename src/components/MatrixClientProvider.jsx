@@ -19,57 +19,57 @@ const hexToAscii = (str) => {
 };
 
 const getImageData = async (nft) => {
-  let URI = hexToAscii(nft?.uri) || nft_default_pic.toString();
+  let URI = "";
   let name = nft.name;
 
-  if (URI === "") {
+  // if (URI === "") {
     try {
       const metadataUrl = `${API_URLS.marketPlace}/api/metadata/${nft?.NFTokenID}`;
       const response = await axios.get(metadataUrl);
-      URI = response.data.image;
+      URI = response.data.image.replace("ipfs://", "https://ipfs.io/ipfs/");
       name = response.data.name;
     } catch (error) {
       console.log("Error fetching metadata:", error);
     }
-  }
+  // }
 
-  if (URI === "" || URI === undefined || URI === null) {
-    URI = nft_default_pic.toString();
-    return URI;
-  }
+  // if (URI === "" || URI === undefined || URI === null) {
+  //   URI = nft_default_pic.toString();
+  //   return URI;
+  // }
 
-  const httpNftImageUrl = URI.replace("ipfs://", "https://ipfs.io/ipfs/");
+  // const httpNftImageUrl = URI.replace("ipfs://", "https://ipfs.io/ipfs/");
 
-  if (URI.includes("ipfs")) {
-    await axios
-      .get(httpNftImageUrl)
-      .then((response) => {
-        const nftImageUrl = response.data.image || URI;
-        const imageUrl = nftImageUrl.replace(
-          "ipfs://",
-          "https://ipfs.io/ipfs/"
-        );
-        name = response.data.name || name;
-        URI = imageUrl;
-      })
-      .catch((error) => console.error("Error fetching NFT data:", error));
-  }
+  // if (URI.includes("ipfs")) {
+  //   await axios
+  //     .get(httpNftImageUrl)
+  //     .then((response) => {
+  //       const nftImageUrl = response.data.image || URI;
+  //       const imageUrl = nftImageUrl.replace(
+  //         "ipfs://",
+  //         "https://ipfs.io/ipfs/"
+  //       );
+  //       name = response.data.name || name;
+  //       URI = imageUrl;
+  //     })
+  //     .catch((error) => console.error("Error fetching NFT data:", error));
+  // }
 
-  if (URI.includes("json")) {
-    await axios
-      .get(httpNftImageUrl)
-      .then((response) => {
-        const nftImageUrl = response.data.image || URI;
-        name = response.data.name || name;
-        URI = nftImageUrl.replace(
-          "ipfs://",
-          "https://ipfs.io/ipfs/"
-        );
-      })
-      .catch((error) => console.error("Error umang fetching NFT data:", error));
-  }
-  nft.URI = URI;
-  nft.name = name;
+  // if (URI.includes("json")) {
+  //   await axios
+  //     .get(httpNftImageUrl)
+  //     .then((response) => {
+  //       const nftImageUrl = response.data.image || URI;
+  //       name = response.data.name || name;
+  //       URI = nftImageUrl.replace(
+  //         "ipfs://",
+  //         "https://ipfs.io/ipfs/"
+  //       );
+  //     })
+  //     .catch((error) => console.error("Error umang fetching NFT data:", error));
+  // }
+  // nft.URI = URI;
+  // nft.name = name;
   return {name:name, URI:URI};
 };
 
