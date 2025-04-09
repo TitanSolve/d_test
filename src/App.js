@@ -27,11 +27,11 @@ function App({ widgetApiPromise }) {
                           'net.nordeck.throw_dice',
                         ),
                       ]}
-                    >
-                  
-              <MatrixClientProvider />
+                    > */}
 
-                    {/* </MuiCapabilitiesGuard> */}
+            <MatrixClientProvider />
+
+            {/* </MuiCapabilitiesGuard> */}
 
           </MuiWidgetApiProvider>
         </Suspense>
