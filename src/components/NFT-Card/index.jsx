@@ -8,11 +8,16 @@ const NFTCard = ({ myNftData, isGroup, isImgOnly }) => {
     const imageUrl = (isGroup ? myNftData.nfts[0].imageURI : myNftData.imageURI)
         .replace("ipfs://", "https://ipfs.io/ipfs/");
 
-        console.log("myNftData--------->", myNftData);
-        console.log("imageUrl--------->", imageUrl);
+    return (
+        <div className={`mx-auto transform transition-transform duration-300 text-gray-800 font-semibold text-center ${!isImgOnly ? 'cursor-pointer hover:scale-105 from-blue-200 to-purple-300 bg-gradient-to-br border p-2 rounded-lg shadow-md' : ''}`}>
+            <div className="relative">
+                {/* Display the NFT group badge in the top-right if isGroup is true */}
+                {isGroup && (
+                    <div className="absolute top-1 right-1 sm:top-2 sm:right-2 bg-blue-600 text-white px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-full text-[10px] sm:text-xs shadow-md">
+                        {myNftData.nfts.length}
+                    </div>
+                )}
 
-        return (
-            <div className={`mx-auto transform transition-transform duration-300 text-gray-800 font-semibold text-center ${!isImgOnly ? 'cursor-pointer hover:scale-105 from-blue-200 to-purple-300 bg-gradient-to-br border p-2 rounded-lg shadow-md' : ''}`}>
                 {!imgLoaded && (
                     <div className="rounded-xl overflow-hidden">
                         <Skeleton
@@ -22,7 +27,7 @@ const NFTCard = ({ myNftData, isGroup, isImgOnly }) => {
                         />
                     </div>
                 )}
-                
+
                 <img
                     src={imageUrl}
                     alt="NFT"
@@ -36,7 +41,8 @@ const NFTCard = ({ myNftData, isGroup, isImgOnly }) => {
                     className={` mx-auto rounded-lg object-cover shadow-md w-32 sm:w-40 md:w-48 lg:w-56 xl:w-64 transition-opacity duration-500 ${imgLoaded ? 'h-32 sm:h-40 md:h-48 lg:h-56 xl:h-64' : 'h-0'}`}
                 />
             </div>
-        );
+        </div>
+    );
 }
 
 export default NFTCard;
