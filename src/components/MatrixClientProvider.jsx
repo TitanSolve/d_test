@@ -20,7 +20,7 @@ const hexToAscii = (str) => {
 
 const getImageData = async (nft) => {
   let URI = hexToAscii(nft?.uri) || nft_default_pic.toString();
-  let name = "";
+  let name = nft.name;
 
   if (URI === "") {
     try {
@@ -38,36 +38,39 @@ const getImageData = async (nft) => {
     return URI;
   }
 
-  if (URI.startsWith("ipfs")) {
-    const httpNftUrl = URI.replace("ipfs://", "https://ipfs.io/ipfs/");
-    URI = httpNftUrl;
-    // await axios
-    //   .get(httpNftUrl)
-    //   .then((response) => {
-    //     const nftImageUrl = response.data.image || URI;
-    //     const httpNftImageUrl = nftImageUrl.replace(
-    //       "ipfs://",
-    //       "https://ipfs.io/ipfs/"
-    //     );
-    //     name = response.data.name || name;
-    //     URI = httpNftImageUrl;
-    //   })
-    //   .catch((error) => console.log("Error fetching NFT data:", error));
+  const httpNftImageUrl = URI.replace("ipfs://", "https://ipfs.io/ipfs/");
+
+  if (URI.includes("ipfs")) {
+    await axios
+      .get(httpNftImageUrl)
+      .then((response) => {
+        const nftImageUrl = response.data.image || URI;
+        const imageUrl = nftImageUrl.replace(
+          "ipfs://",
+          "https://ipfs.io/ipfs/"
+        );
+        name = response.data.name || name;
+        URI = imageUrl;
+      })
+      .catch((error) => console.error("Error fetching NFT data:", error));
   }
 
   if (URI.includes("json")) {
     await axios
-      .get(URI)
+      .get(httpNftImageUrl)
       .then((response) => {
-        let nftImageUrl = response.data.image || URI;
+        const nftImageUrl = response.data.image || URI;
         name = response.data.name || name;
-        URI = nftImageUrl.replace("ipfs://", "https://ipfs.io/ipfs/");
+        URI = nftImageUrl.replace(
+          "ipfs://",
+          "https://ipfs.io/ipfs/"
+        );
       })
-      .catch((error) => console.log("Error umang fetching NFT data:", error));
+      .catch((error) => console.error("Error umang fetching NFT data:", error));
   }
   nft.URI = URI;
   nft.name = name;
-  return URI;
+  return {name:name, URI:URI};
 };
 
 const MatrixClientProvider = () => {
@@ -115,11 +118,14 @@ const MatrixClientProvider = () => {
 
             const enrichedNfts = await Promise.all(
               nfts.map(async (nft) => {
-                const imageURI = await getImageData(nft);
+                const imageUriJSON = await getImageData(nft);
                 const userName = member.name;
                 const userId = member.userId;
+                const originTokenName = imageUriJSON.name;
+                const imageURI = imageUriJSON.URI;
                 return {
                   ...nft,
+                  originTokenName,
                   imageURI,
                   userName,
                   userId
@@ -2475,7 +2481,7 @@ const MatrixClientProvider = () => {
         */
 
         console.log("Merged members with NFT data:", mergedMembers);
-        setMyNftData(mergedMembers);
+        // setMyNftData(mergedMembers);
 
       } catch (error) {
         console.error("Error loading data:", error);
