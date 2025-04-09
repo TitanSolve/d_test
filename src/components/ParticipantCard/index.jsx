@@ -24,7 +24,7 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
     isOldest: true,
     selectedUser: "Alice @rPdshidjjore",
     amount: "",
-    token: "XRP"
+    collection: "Issuer"
   });
 
   const [previewModalOpen, setPreviewModalOpen] = useState(false);
@@ -70,20 +70,20 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
           {myNftData.name === wgtParameters.displayName ? "My NFTs" : myNftData.name}
         </Typography>
 
-        {/* <FormControl size="small" className="w-full sm:w-32">
-          <InputLabel id={`token-select-${index}`}>Token</InputLabel>
+        <FormControl size="small" className="w-full sm:w-32">
           <Select
             labelId={`token-select-${index}`}
             id={`token-select-${index}`}
-            value={state.token}
-            label="Token"
-            onChange={(e) => updateField("token", e.target.value)}
+            value={state.collection}
+            label="Issuer"
+            onChange={(e) => updateField("collection", e.target.value)}
           >
-            <MenuItem value="issuer">issuer</MenuItem>
+            <MenuItem value="issuer">Issuer</MenuItem>
+            <MenuItem value="taxon">Taxon</MenuItem>
           </Select>
-        </FormControl> */}
+        </FormControl>
 
-        <div className="flex items-center gap-2 hidden sm:flex">
+        {/* <div className="flex items-center gap-2 hidden sm:flex">
           <Typography
             variant="body2"
             className={state.isOldest ? "text-black font-semibold" : "text-gray-400"}
@@ -101,7 +101,7 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
           >
             Newest
           </Typography>
-        </div>
+        </div> */}
       </div>
 
       <div className="mt-4">
