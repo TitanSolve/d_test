@@ -119,14 +119,15 @@ const MatrixClientProvider = () => {
             const enrichedNfts = await Promise.all(
               nfts.map(async (nft) => {
                 const imageUriJSON = await getImageData(nft);
+                console.log("--------------------------------------->", imageUriJSON)
                 const userName = member.name;
                 const userId = member.userId;
-                const originTokenName = imageUriJSON.name;
-                const imageURI = imageUriJSON.URI;
+                // const originTokenName = imageUriJSON.name;
+                // const imageURI = imageUriJSON.URI;
                 return {
                   ...nft,
-                  originTokenName,
-                  imageURI,
+                  // originTokenName,
+                  // imageURI,
                   userName,
                   userId
                 };
