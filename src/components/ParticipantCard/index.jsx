@@ -53,19 +53,19 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
     const responsive = {
       superLargeDesktop: {
         breakpoint: { max: 4000, min: 1280 },
-        items: 5,
+        items: 4,
       },
       desktop: {
         breakpoint: { max: 1280, min: 1024 },
-        items: 4,
+        items: 3,
       },
       tablet: {
         breakpoint: { max: 1024, min: 640 },
-        items: 3,
+        items: 2,
       },
       mobile: {
         breakpoint: { max: 640, min: 0 },
-        items: 2,
+        items: 1,
       },
     };
 
@@ -138,8 +138,6 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
           ssr={true}
           infinite={false}
           draggable={true}
-          swipeable={true}
-          centerMode={true}
           containerClass="carousel-container"
           itemClass="carousel-item flex justify-center items-center px-2"
           customLeftArrow={
