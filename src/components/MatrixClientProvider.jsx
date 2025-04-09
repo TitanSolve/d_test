@@ -119,15 +119,14 @@ const MatrixClientProvider = () => {
             const enrichedNfts = await Promise.all(
               nfts.map(async (nft) => {
                 const imageUriJSON = await getImageData(nft);
-                console.log("--------------------------------------->", imageUriJSON)
                 const userName = member.name;
                 const userId = member.userId;
-                // const originTokenName = imageUriJSON.name;
-                // const imageURI = imageUriJSON.URI;
+                const originTokenName = imageUriJSON.name;
+                const imageURI = imageUriJSON.URI;
                 return {
                   ...nft,
-                  // originTokenName,
-                  // imageURI,
+                  originTokenName,
+                  imageURI,
                   userName,
                   userId
                 };
@@ -2482,7 +2481,7 @@ const MatrixClientProvider = () => {
         */
 
         console.log("Merged members with NFT data:", mergedMembers);
-        // setMyNftData(mergedMembers);
+        setMyNftData(mergedMembers);
 
       } catch (error) {
         console.error("Error loading data:", error);
