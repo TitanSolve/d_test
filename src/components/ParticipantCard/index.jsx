@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import {
   Typography,
@@ -29,6 +29,8 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
     collection: "Issuer"
   });
 
+  const [filterType, setFilterType] = useState("issuer"); // Default mode
+  const [filteredNfts, setFilteredNfts] = useState(myNftData.groupedNfts); // Default to Issuer grouping
   const [previewModalOpen, setPreviewModalOpen] = useState(false);
   const [selectedNFTGroup, setSelectedNFTGroup] = useState(null);
   const [offerModalOpen, setOfferModalOpen] = useState(false);
@@ -65,6 +67,34 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
     setSelectedNftForOffer(null);
   };
 
+  useEffect(() => {
+    console.log(`NFT grouping changed to: ${filterType}`);
+
+    // Grouping logic
+    const regrouped = {};
+    myNftData.groupedNfts.flatMap(group =>
+      group.nfts.forEach(nft => {
+        const key = filterType === "issuer" ? nft.Issuer : nft.NFTokenTaxon;
+        if (!regrouped[key]) regrouped[key] = [];
+        regrouped[key].push(nft);
+      })
+    );
+
+    const newGrouped = Object.entries(regrouped).map(([key, nfts]) => ({
+      [filterType]: key,
+      nfts
+    }));
+
+    setFilteredNfts(newGrouped);
+
+    console.log("Filtered NFTs:", newGrouped);
+
+  }, [filterType, myNftData]);
+
+  const handleFilterChange = (e) => {
+    setFilterType(e.target.value);
+  };
+
   return (
     <div className="p-4 border border-gray-200 rounded-2xl shadow-lg w-full max-w-5xl">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -73,13 +103,13 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
         </Typography>
 
         <FormControl size="small" className="w-full sm:w-32">
-          <InputLabel >NFTs</InputLabel>
+          <InputLabel id={`token-select-label-${index}`}>NFTs</InputLabel>
           <Select
-            labelId={`token-select-${index}`}
+            labelId={`token-select-label-${index}`}
             id={`token-select-${index}`}
-            value={state.collection}
-            label="Issuer"
-            onChange={(e) => updateField("collection", e.target.value)}
+            value={filterType}
+            label="NFTs"
+            onChange={handleFilterChange}
           >
             <MenuItem value="issuer">Issuer</MenuItem>
             <MenuItem value="taxon">Taxon</MenuItem>
@@ -132,8 +162,8 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
             </button>
           }
         >
-          {myNftData.groupedNfts.length > 0 ? (
-            myNftData.groupedNfts.map((groupedNft, idx) => (
+          {filteredNfts .length > 0 ? (
+            filteredNfts.map((groupedNft, idx) => (
               <div key={idx} onClick={() => openPreviewModal(groupedNft)} className="cursor-pointer">
                 <NFTCard myNftData={groupedNft} isGroup={true} isImgOnly={false} />
               </div>
@@ -157,7 +187,7 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
         <Box className="absolute top-1/2 left-1/2 w-11/12 bg-white rounded-2xl shadow-2xl transform -translate-x-1/2 -translate-y-1/2 p-4 sm:p-6 md:p-8 outline-none border border-gray-200">
           <Typography variant="h6" className="font-bold">
             {selectedNFTGroup && (
-              state.collection === "Issuer" ? "Issuer : " + selectedNFTGroup.nfts[0].Issuer : "Taxon : " +selectedNFTGroup.nfts[0].NFTokenTaxon
+              state.collection === "issuer" ? "Issuer : " + selectedNFTGroup.nfts[0].Issuer : "Taxon : " + selectedNFTGroup.nfts[0].NFTokenTaxon
             )}
           </Typography>
           <div className="relative">
