@@ -2514,27 +2514,30 @@ const MatrixClientProvider = () => {
 
         const incomingNFTs = [];
         for (const tx of allTxs) {
-          const { tx_json: transaction, meta } = tx
+          const meta = tx.meta
+          const nodes = meta?.AffectedNodes || [];
 
-          if (
-            transaction.TransactionType === "NFTokenAcceptOffer" &&
-            meta &&
-            meta.AffectedNodes
-          ) {
-            const received = meta.AffectedNodes.some(node => {
-              const isCreatedNode = node.CreatedNode?.LedgerEntryType === "NFTokenPage"
-              const finalOwner = node.CreatedNode?.NewFields?.Owner
+          let receivedNFTId = null;
+          let sender = null;
 
-              return isCreatedNode && finalOwner === "r34VdeAwi8qs1KF3DTn5T3Y5UAPmbBNWpX"
-            })
-
-            if (received) {
-              incomingNFTs.push({
-                txHash: transaction.hash,
-                tokenId: transaction.NFTokenID,
-                type: transaction.TransactionType
-              })
+          for (const node of nodes) {
+            // Look for DeletedNode of type NFTokenOffer
+            if (
+              node.DeletedNode?.LedgerEntryType === "NFTokenOffer" &&
+              node.DeletedNode?.FinalFields?.Destination === "r34VdeAwi8qs1KF3DTn5T3Y5UAPmbBNWpX"
+            ) {
+              receivedNFTId = node.DeletedNode.FinalFields.NFTokenID
+              sender = node.DeletedNode.FinalFields.Owner
             }
+          }
+
+          if (receivedNFTId) {
+            incomingNFTs.push({
+              tokenId: receivedNFTId,
+              from: sender,
+              txHash: tx.hash,
+              date: tx.close_time_iso
+            })
           }
         }
 
