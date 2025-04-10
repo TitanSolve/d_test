@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import axios from "axios";
 import {
   Typography,
   Select,
@@ -17,6 +18,7 @@ import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import NFTCard from "../NFT-Card";
 import './index.css';
+import xrpl from "xrpl"
 
 
 const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImageData }) => {
@@ -57,8 +59,43 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
     setSelectedNFTGroup(null);
   };
 
-  const openOfferModal = (nft) => {
+  const openOfferModal = async (nft) => {
     setSelectedNftForOffer(nft);
+
+    const client = new xrpl.Client("wss://xrplcluster.com/");
+    await client.connect();
+    console.log("Connected to wss://xrplcluster.com/.");
+
+    const response = await client.request({
+      command: 'nft_info',
+      nft_id: nft.NFTokenID
+    });
+
+    console.log("response------->", response);
+
+    const nftData = response.result;
+    console.log("nftData------->", nftData);
+    const uriHex = nftData.URI;
+    console.log("uriHex------->", uriHex);
+
+    if (!uriHex) {
+      throw new Error('No URI found for this NFT');
+    }
+
+    // Step 3: Decode the URI from hexadecimal
+    const uri = xrpl.convertHexToString(uriHex);
+    console.log("------------>URI", uri);
+
+    // Step 4: Fetch the metadata (assuming an HTTP URL)
+    const metadataResponse = await axios.get(uri);
+    console.log("metadataResponse------>", metadataResponse);
+    const metadata = metadataResponse.data;
+    console.log("metadataResponse.data------>", metadataResponse.data);
+
+    // Step 5: Extract traits (assuming ERC-721-like standard)
+    const traits = metadata.attributes;
+    console.log("traits------>", traits);
+
     setOfferModalOpen(true);
   };
 
@@ -162,9 +199,10 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
             </button>
           }
         >
-          {filteredNfts .length > 0 ? (
+          {filteredNfts.length > 0 ? (
             filteredNfts.map((groupedNft, idx) => (
               <div key={idx} onClick={() => openPreviewModal(groupedNft)} className="cursor-pointer">
+                {/* <div key={idx} onClick={() => openOfferModal(nft)} className="cursor-pointer hover:scale-105 transition-transform duration-300"></div> */}
                 <NFTCard myNftData={groupedNft} isGroup={true} isImgOnly={false} />
               </div>
             ))
@@ -185,7 +223,7 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
         bodyStyle={{ borderRadius: "10px", padding: "24px" }}
       >
         <Box className="absolute top-1/2 left-1/2 w-11/12 bg-white rounded-2xl shadow-2xl transform -translate-x-1/2 -translate-y-1/2 p-4 sm:p-6 md:p-8 outline-none border border-gray-200">
-          <Typography variant="h6" className="font-bold">
+          <Typography variant="h6" className="font-bold overflow-hidden">
             {selectedNFTGroup && (
               filterType === "issuer" ? "Issuer : " + selectedNFTGroup.nfts[0].Issuer : "Taxon : " + selectedNFTGroup.nfts[0].NFTokenTaxon
             )}
@@ -239,28 +277,22 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
               <NFTCard myNftData={selectedNftForOffer} isGroup={false} isImgOnly={true} />
               <Typography
                 variant="subtitle1"
-                className="text-center font-semibold text-black mb-4"
+                className="text-center font-semibold text-black"
               >
                 {selectedNftForOffer.originTokenName}
               </Typography>
 
-              <Typography variant="subtitle2" className="text-center font-semibold text-black mb-4 overflow-hidden" >
+              <Typography variant="subtitle2" className="text-center font-semibold text-black overflow-hidden" >
                 Issuer : {selectedNftForOffer.Issuer}
               </Typography>
-              <Typography variant="subtitle2" className="text-center font-semibold text-black mb-4" >
-                NFTokenTaxon : {selectedNftForOffer.NFTokenTaxon}
-              </Typography>
-              <Typography variant="subtitle2" className="text-center font-semibold text-black mb-4" >
+              <Typography variant="subtitle2" className="text-center font-semibold text-black" >
                 TransferFee : {selectedNftForOffer.TransferFee}
-              </Typography>
-              <Typography variant="subtitle2" className="text-center font-semibold text-black mb-4" >
-                NFTokenSerial : {selectedNftForOffer.nft_serial}
               </Typography>
 
               {!(selectedNftForOffer.userName === wgtParameters.displayName) && (
                 <Typography
                   variant="h5"
-                  className="text-center font-semibold text-black mb-4"
+                  className="text-center font-semibold text-black"
                 >
                   Offer to buy from {selectedNftForOffer.userName}
                 </Typography>
@@ -268,7 +300,7 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
 
               {(selectedNftForOffer.userName === wgtParameters.displayName) && (
                 <>
-                  <div className="flex justify-center items-center gap-4 mb-4">
+                  <div className="flex justify-center items-center gap-4">
                     <Typography
                       className={`font-medium ${state.isSell ? "text-black" : "text-gray-400"
                         }`}
@@ -356,3 +388,4 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
 };
 
 export default ParticipantCard;
+
