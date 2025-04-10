@@ -2496,7 +2496,7 @@ const MatrixClientProvider = () => {
         const offers = await client.request({
           method: "account_tx",
           account: "r34VdeAwi8qs1KF3DTn5T3Y5UAPmbBNWpX",
-          limit: 3000,
+          // limit: 3000,
         });
         console.log("Offers data:---------->", offers);
 
