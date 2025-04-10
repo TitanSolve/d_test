@@ -187,7 +187,7 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
         <Box className="absolute top-1/2 left-1/2 w-11/12 bg-white rounded-2xl shadow-2xl transform -translate-x-1/2 -translate-y-1/2 p-4 sm:p-6 md:p-8 outline-none border border-gray-200">
           <Typography variant="h6" className="font-bold">
             {selectedNFTGroup && (
-              state.collection === "issuer" ? "Issuer : " + selectedNFTGroup.nfts[0].Issuer : "Taxon : " + selectedNFTGroup.nfts[0].NFTokenTaxon
+              filterType === "issuer" ? "Issuer : " + selectedNFTGroup.nfts[0].Issuer : "Taxon : " + selectedNFTGroup.nfts[0].NFTokenTaxon
             )}
           </Typography>
           <div className="relative">
