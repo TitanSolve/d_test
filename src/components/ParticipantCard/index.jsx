@@ -273,7 +273,7 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
                 Issuer : {selectedNftForOffer.Issuer}
               </Typography>
               <Typography variant="subtitle2" className="text-center font-semibold text-black" >
-                TransferFee : {selectedNftForOffer.TransferFee}
+                TransferFee : {selectedNftForOffer.TransferFee*1 / 1000} %
               </Typography>
 
               {!(selectedNftForOffer.userName === wgtParameters.displayName) && (
