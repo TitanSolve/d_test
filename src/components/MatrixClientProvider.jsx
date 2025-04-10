@@ -2512,19 +2512,33 @@ const MatrixClientProvider = () => {
 
         console.log("Offers data:---------->", allTxs);
 
+        const incomingNFTs = [];
+        for (const tx of allTxs) {
+          const { tx_json: transaction, meta } = tx
 
-        // let nftSellOffers;
-        // try {
-        //   nftSellOffers = await client.request({
-        //     method: "nft_sell_offers",
-        //     nft_id: brokerTokenIdField.value
-        //   })
-        // } catch (err) {
-        //   nftSellOffers = 'No sell offers.'
-        // }
-        // results += JSON.stringify(nftSellOffers, null, 2)
-        // brokerResultField.value = results
+          if (
+            transaction.TransactionType === "NFTokenAcceptOffer" &&
+            meta &&
+            meta.AffectedNodes
+          ) {
+            const received = meta.AffectedNodes.some(node => {
+              const isCreatedNode = node.CreatedNode?.LedgerEntryType === "NFTokenPage"
+              const finalOwner = node.CreatedNode?.NewFields?.Owner
 
+              return isCreatedNode && finalOwner === walletAddress
+            })
+
+            if (received) {
+              incomingNFTs.push({
+                txHash: transaction.hash,
+                tokenId: transaction.NFTokenID,
+                type: transaction.TransactionType
+              })
+            }
+          }
+        }
+
+        console.log("incomingNFTs----->", incomingNFTs);
 
       } catch (error) {
         console.error("Error loading data:", error);
