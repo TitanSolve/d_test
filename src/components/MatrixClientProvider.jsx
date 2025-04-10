@@ -136,26 +136,33 @@ const MatrixClientProvider = () => {
               })
             );
 
-            // Group by Issuer
-            const IssuerMap = {};
+            // Group by Issuer + Taxon
+            const IssuerTaxonMap = {};
             enrichedNfts.forEach((nft) => {
               const Issuer = nft.Issuer;
-              if (!IssuerMap[Issuer]) {
-                IssuerMap[Issuer] = [];
+              const Taxon = nft.NFTokenTaxon;
+              const key = `${Issuer}-${Taxon}`; // Create a unique key combining Issuer and Taxon
+
+              if (!IssuerTaxonMap[key]) {
+                IssuerTaxonMap[key] = [];
               }
-              IssuerMap[Issuer].push(nft);
+              IssuerTaxonMap[key].push(nft);
             });
 
             // Convert map to array
-            const groupedNfts = Object.entries(IssuerMap).map(([Issuer, nfts]) => ({
-              Issuer: String(Issuer),
-              nfts,
-            }));
+            const groupedNfts = Object.entries(IssuerTaxonMap).map(([key, nfts]) => {
+              const [Issuer, Taxon] = key.split("-"); // Split the key back into Issuer and Taxon
+              return {
+                Issuer: String(Issuer),
+                NFTokenTaxon: Number(Taxon),
+                nfts,
+              };
+            });
 
             return {
               ...member,
               walletAddress,
-              groupedNfts, // Array of { taxon, nfts }
+              groupedNfts, // Array of { Issuer, NFTokenTaxon, nfts }
             };
           })
         );
