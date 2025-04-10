@@ -123,7 +123,7 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
           {myNftData.name === wgtParameters.displayName ? "My NFTs" : myNftData.name}
         </Typography>
 
-        <FormControl variant="outlined" size="small" className="w-1/4">
+        <FormControl variant="outlined" size="small" className="">
           <InputLabel>Issuer</InputLabel>
           <Select
             value={state.selectedIssuer}
