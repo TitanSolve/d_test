@@ -67,13 +67,13 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
 
   return (
     <div className="p-4 border border-gray-200 rounded-2xl shadow-lg w-full max-w-5xl">
-      <div className="flex flex-row items-center gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <Typography variant="h6" className="font-bold">
           {myNftData.name === wgtParameters.displayName ? "My NFTs" : myNftData.name}
         </Typography>
 
         <FormControl size="small" className="w-full sm:w-32">
-          <InputLabel >NFTs</InputLabel>
+          <InputLabel >Collection</InputLabel>
           <Select
             labelId={`token-select-${index}`}
             id={`token-select-${index}`}
