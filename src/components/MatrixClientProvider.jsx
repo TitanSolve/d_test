@@ -2493,12 +2493,24 @@ const MatrixClientProvider = () => {
         console.log("Connecting to ", API_URLS.xrplMainnetUrl);
         await client.connect();
         console.log("Connected to ", API_URLS.xrplMainnetUrl);
-        const offers = await client.request({
-          method: "account_tx",
-          account: "r34VdeAwi8qs1KF3DTn5T3Y5UAPmbBNWpX",
-          // limit: 3000,
-        });
-        console.log("Offers data:---------->", offers);
+
+        let allTxs = [];
+        let marker = null;
+
+        do {
+          const response = await client.request({
+            command: "account_tx",
+            account: "r34VdeAwi8qs1KF3DTn5T3Y5UAPmbBNWpX",
+            limit: 200,
+            ...(marker && { marker }) // only include marker if it exists
+          })
+
+          const txs = response.result.transactions
+          allTxs.push(...txs)
+          marker = response.result.marker // if there's more, marker will exist
+        } while (marker)
+
+        console.log("Offers data:---------->", allTxs);
 
 
         // let nftSellOffers;
