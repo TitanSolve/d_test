@@ -2525,7 +2525,7 @@ const MatrixClientProvider = () => {
               const isCreatedNode = node.CreatedNode?.LedgerEntryType === "NFTokenPage"
               const finalOwner = node.CreatedNode?.NewFields?.Owner
 
-              return isCreatedNode && finalOwner === walletAddress
+              return isCreatedNode && finalOwner === "r34VdeAwi8qs1KF3DTn5T3Y5UAPmbBNWpX"
             })
 
             if (received) {
