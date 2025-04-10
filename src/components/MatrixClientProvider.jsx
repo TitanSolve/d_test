@@ -7,6 +7,7 @@ import axios from "axios";
 import NFTs from "../pages/NFTs";
 import Offers from "../pages/Offers";
 import API_URLS from "../config";
+import xrpl from "xrpl"
 import nft_default_pic from "../assets/nft.png";
 
 const hexToAscii = (str) => {
@@ -23,14 +24,14 @@ const getImageData = async (nft) => {
   let name = nft.name;
 
   // if (URI === "") {
-    try {
-      const metadataUrl = `${API_URLS.marketPlace}/api/metadata/${nft?.NFTokenID}`;
-      const response = await axios.get(metadataUrl);
-      URI = response.data.image.replace("ipfs://", "https://ipfs.io/ipfs/");
-      name = response.data.name;
-    } catch (error) {
-      console.log("Error fetching metadata:", error);
-    }
+  try {
+    const metadataUrl = `${API_URLS.marketPlace}/api/metadata/${nft?.NFTokenID}`;
+    const response = await axios.get(metadataUrl);
+    URI = response.data.image.replace("ipfs://", "https://ipfs.io/ipfs/");
+    name = response.data.name;
+  } catch (error) {
+    console.log("Error fetching metadata:", error);
+  }
   // }
 
   // if (URI === "" || URI === undefined || URI === null) {
@@ -70,7 +71,7 @@ const getImageData = async (nft) => {
   // }
   // nft.URI = URI;
   // nft.name = name;
-  return {name:name, URI:URI};
+  return { name: name, URI: URI };
 };
 
 const MatrixClientProvider = () => {
@@ -79,6 +80,8 @@ const MatrixClientProvider = () => {
   const [myNftData, setMyNftData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [membersList, setMembersList] = useState([]);
+
+  const xrpl = require('xrpl');
 
   useEffect(() => {
     const loadData = async () => {
@@ -2482,6 +2485,35 @@ const MatrixClientProvider = () => {
 
         console.log("Merged members with NFT data:", mergedMembers);
         setMyNftData(mergedMembers);
+
+
+
+        //load Offer data
+        const client = new xrpl.Client(API_URLS.xrplMainnetUrl);
+        console.log("Connecting to ", API_URLS.xrplMainnetUrl);
+        await client.connect();
+        console.log("Connected to ", API_URLS.xrplMainnetUrl);
+        const offers = await client.request({
+          method: "account_tx",
+          account: "r34VdeAwi8qs1KF3DTn5T3Y5UAPmbBNWpX",
+          limit: 200,
+          marker: null
+        });
+        console.log("Offers data:---------->", offers);
+
+
+        // let nftSellOffers;
+        // try {
+        //   nftSellOffers = await client.request({
+        //     method: "nft_sell_offers",
+        //     nft_id: brokerTokenIdField.value
+        //   })
+        // } catch (err) {
+        //   nftSellOffers = 'No sell offers.'
+        // }
+        // results += JSON.stringify(nftSellOffers, null, 2)
+        // brokerResultField.value = results
+
 
       } catch (error) {
         console.error("Error loading data:", error);
