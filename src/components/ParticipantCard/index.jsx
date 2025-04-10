@@ -66,7 +66,7 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
 
     const client = new xrpl.Client("wss://xrplcluster.com/");
     await client.connect();
-    console.log("Connected to wss://xrplcluster.com/.");
+    console.log("Connected to wss://xrplcluster.com/, nftID:", nft.NFTokenID);
 
     const response = await client.request({
       command: 'nft_info',
