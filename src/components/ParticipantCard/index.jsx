@@ -73,7 +73,7 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
         </Typography>
 
         <FormControl size="small" className="w-full sm:w-32">
-          <InputLabel >Collection</InputLabel>
+          <InputLabel >NFTs</InputLabel>
           <Select
             labelId={`token-select-${index}`}
             id={`token-select-${index}`}
@@ -155,6 +155,11 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
         bodyStyle={{ borderRadius: "10px", padding: "24px" }}
       >
         <Box className="absolute top-1/2 left-1/2 w-11/12 bg-white rounded-2xl shadow-2xl transform -translate-x-1/2 -translate-y-1/2 p-4 sm:p-6 md:p-8 outline-none border border-gray-200">
+          <Typography variant="h6" className="font-bold">
+            {selectedNFTGroup && (
+              state.collection === "Issuer" ? "Issuer : " + selectedNFTGroup.nfts[0].Issuer : "Taxon : " +selectedNFTGroup.nfts[0].NFTokenTaxon
+            )}
+          </Typography>
           <div className="relative">
             <Carousel
               responsive={responsive}
@@ -216,7 +221,7 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
                 NFTokenTaxon : {selectedNftForOffer.NFTokenTaxon}
               </Typography>
               <Typography variant="subtitle2" className="text-center font-semibold text-black mb-4" >
-              TransferFee : {selectedNftForOffer.TransferFee}
+                TransferFee : {selectedNftForOffer.TransferFee}
               </Typography>
               <Typography variant="subtitle2" className="text-center font-semibold text-black mb-4" >
                 NFTokenSerial : {selectedNftForOffer.nft_serial}
