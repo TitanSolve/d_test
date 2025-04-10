@@ -2489,59 +2489,59 @@ const MatrixClientProvider = () => {
 
 
         //load Offer data
-        const client = new xrpl.Client(API_URLS.xrplMainnetUrl);
-        console.log("Connecting to ", API_URLS.xrplMainnetUrl);
-        await client.connect();
-        console.log("Connected to ", API_URLS.xrplMainnetUrl);
+        // const client = new xrpl.Client(API_URLS.xrplMainnetUrl);
+        // console.log("Connecting to ", API_URLS.xrplMainnetUrl);
+        // await client.connect();
+        // console.log("Connected to ", API_URLS.xrplMainnetUrl);
 
-        let allTxs = [];
-        let marker = null;
+        // let allTxs = [];
+        // let marker = null;
 
-        do {
-          const response = await client.request({
-            command: "account_tx",
-            account: "r34VdeAwi8qs1KF3DTn5T3Y5UAPmbBNWpX",
-            limit: 200,
-            ...(marker && { marker }) // only include marker if it exists
-          })
+        // do {
+        //   const response = await client.request({
+        //     command: "account_tx",
+        //     account: "r34VdeAwi8qs1KF3DTn5T3Y5UAPmbBNWpX",
+        //     limit: 200,
+        //     ...(marker && { marker }) // only include marker if it exists
+        //   })
 
-          const txs = response.result.transactions
-          allTxs.push(...txs)
-          marker = response.result.marker // if there's more, marker will exist
-        } while (marker)
+        //   const txs = response.result.transactions
+        //   allTxs.push(...txs)
+        //   marker = response.result.marker // if there's more, marker will exist
+        // } while (marker)
 
-        console.log("Offers data:---------->", allTxs);
+        // console.log("Offers data:---------->", allTxs);
 
-        const incomingNFTs = [];
-        for (const tx of allTxs) {
-          const meta = tx.meta
-          const nodes = meta?.AffectedNodes || [];
+        // const incomingNFTs = [];
+        // for (const tx of allTxs) {
+        //   const meta = tx.meta
+        //   const nodes = meta?.AffectedNodes || [];
 
-          let receivedNFTId = null;
-          let sender = null;
+        //   let receivedNFTId = null;
+        //   let sender = null;
 
-          for (const node of nodes) {
-            // Look for DeletedNode of type NFTokenOffer
-            if (
-              node.DeletedNode?.LedgerEntryType === "NFTokenOffer" &&
-              node.DeletedNode?.FinalFields?.Destination === "r34VdeAwi8qs1KF3DTn5T3Y5UAPmbBNWpX"
-            ) {
-              receivedNFTId = node.DeletedNode.FinalFields.NFTokenID
-              sender = node.DeletedNode.FinalFields.Owner
-            }
-          }
+        //   for (const node of nodes) {
+        //     // Look for DeletedNode of type NFTokenOffer
+        //     if (
+        //       node.DeletedNode?.LedgerEntryType === "NFTokenOffer" &&
+        //       node.DeletedNode?.FinalFields?.Destination === "r34VdeAwi8qs1KF3DTn5T3Y5UAPmbBNWpX"
+        //     ) {
+        //       receivedNFTId = node.DeletedNode.FinalFields.NFTokenID
+        //       sender = node.DeletedNode.FinalFields.Owner
+        //     }
+        //   }
 
-          if (receivedNFTId) {
-            incomingNFTs.push({
-              tokenId: receivedNFTId,
-              from: sender,
-              txHash: tx.hash,
-              date: tx.close_time_iso
-            })
-          }
-        }
+        //   if (receivedNFTId) {
+        //     incomingNFTs.push({
+        //       tokenId: receivedNFTId,
+        //       from: sender,
+        //       txHash: tx.hash,
+        //       date: tx.close_time_iso
+        //     })
+        //   }
+        // }
 
-        console.log("incomingNFTs----->", incomingNFTs);
+        // console.log("incomingNFTs----->", incomingNFTs);
 
       } catch (error) {
         console.error("Error loading data:", error);
