@@ -31,6 +31,8 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
     collection: "Issuer"
   });
 
+  const xrpl = require('xrpl');
+
   const [filterType, setFilterType] = useState("issuer"); // Default mode
   const [filteredNfts, setFilteredNfts] = useState(myNftData.groupedNfts); // Default to Issuer grouping
   const [previewModalOpen, setPreviewModalOpen] = useState(false);
