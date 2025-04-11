@@ -401,7 +401,7 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
                           borderColor: "purple", // focused border
                         },
                         "& .MuiInputBase-input": {
-                          color: "black", // 👈 text color
+                          color: "black dark:white", // 👈 text color
                         },
                       },
                     }}
@@ -423,7 +423,7 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
                         borderColor: "green", // focused border
                       },
                       "& .MuiInputBase-input": {
-                        color: "black", // 👈 text color
+                        color: "black dark:white", // 👈 text color
                       },
                     }}
                   >
