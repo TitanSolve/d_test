@@ -2538,7 +2538,7 @@ const MatrixClientProvider = () => {
         */
 
         console.log("Merged members with NFT data:", mergedMembers);
-        // setMyNftData(mergedMembers);
+        setMyNftData(mergedMembers);
 
 
 
