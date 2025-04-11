@@ -106,13 +106,13 @@ const MatrixClientProvider = () => {
   }
 
   async function fetchNameData() {
-    const response = await widgetApi.receiveStateEvents('m.room.name');
-    setNameResponse(response);
+    const nameResponse = await widgetApi.receiveStateEvents('m.room.name');
+    console.log("nameResponse : ", nameResponse);
   }
 
   async function fetchReactionData() {
     let reactionsResponse = await widgetApi.receiveRoomEvents('m.reaction', { limit: 20 });
-    setReactions(reactionsResponse);
+    console.log("reactionsResponse : ", reactionsResponse);
   }
 
   useEffect(() => {
