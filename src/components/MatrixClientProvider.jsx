@@ -117,7 +117,8 @@ const MatrixClientProvider = () => {
                 "x-bithomp-token": "0b833219-c387-4b3f-9606-0e4bd82e5862"
               }
             }).catch(error => console.error(error));
-            console.log(response)
+            console.log(response.data)
+            console.log(response.result.data)
 
             nfts = response.data.nfts || [];
 
