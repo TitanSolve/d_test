@@ -189,7 +189,7 @@ const MatrixClientProvider = () => {
             // Group by Issuer + Taxon
             const collectionMap = {};
             enrichedNfts.forEach((nft) => {
-              const key = nft.metadata.collection.name || nft.collection; // Create a unique key combining Issuer and Taxon
+              const key = nft.metadata?.collection?.name || nft.collection; // Create a unique key combining Issuer and Taxon
 
               if (!collectionMap[key]) {
                 collectionMap[key] = [];
