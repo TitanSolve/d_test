@@ -359,6 +359,19 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
                     fullWidth
                     size="small"
                     className="bg-white rounded"
+                    sx={{
+                      "& .MuiOutlinedInput-root": {
+                        "& fieldset": {
+                          borderColor: "green", // default border
+                        },
+                        "&:hover fieldset": {
+                          borderColor: "blue", // hover border
+                        },
+                        "&.Mui-focused fieldset": {
+                          borderColor: "purple", // focused border
+                        },
+                      },
+                    }}
                   >
                     <MenuItem value="XRP">XRP</MenuItem>
                     <MenuItem value="TokenA">TokenA</MenuItem>
