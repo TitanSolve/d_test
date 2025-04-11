@@ -9,6 +9,7 @@ import Offers from "../pages/Offers";
 import API_URLS from "../config";
 import xrpl from "xrpl"
 import nft_default_pic from "../assets/nft.png";
+import { WidgetApi } from "matrix-widget-api";
 
 const hexToAscii = (str) => {
   var hexString = str?.toString();
@@ -82,6 +83,7 @@ const MatrixClientProvider = () => {
   const [membersList, setMembersList] = useState([]);
 
   const xrpl = require('xrpl');
+  const widgetApi1 = new WidgetApi();
 
   // useEffect(() => {
   //   const subscription = widgetApi
@@ -95,8 +97,8 @@ const MatrixClientProvider = () => {
   // }, [widgetApi]);
 
   useEffect(() => {
-    widgetApi.start();
-    widgetApi.on("org.matrix.msc2871.theme", (ev) => {
+    widgetApi1.start();
+    widgetApi1.on("org.matrix.msc2871.theme", (ev) => {
       console.log("ev : ", ev)
       console.log("ev.data : ", ev.data)
       // const newTheme = ev.data.theme;
