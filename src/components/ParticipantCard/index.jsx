@@ -28,8 +28,8 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
     isOldest: true,
     selectedUser: "Alice @rPdshidjjore",
     amount: "",
-    collection: "Issuer",
-    selectedIssuer: ""
+    collection: "collection",
+    selectedCollection: ""
   });
 
   const xrpl = require('xrpl');
@@ -44,7 +44,7 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
     setState((prev) => ({ ...prev, [field]: value }));
 
   const filteredNfts = myNftData.groupedNfts.filter((group) =>
-    group.Issuer === state.selectedIssuer || state.selectedIssuer === ""
+    group.collection === state.selectedCollection || state.selectedCollection === ""
   );
 
   const responsive = {
@@ -114,7 +114,7 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
     setSelectedNftForOffer(null);
   };
 
-  const issuers = [...new Set(myNftData.groupedNfts.map(group => group.Issuer))];
+  const collections = [...new Set(myNftData.groupedNfts.map(group => group.collection))];
 
   return (
     <div className="p-4 border border-gray-200 rounded-2xl shadow-lg w-full max-w-5xl">
@@ -124,18 +124,18 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
         </Typography>
 
         <FormControl variant="outlined" size="small" className="">
-          <InputLabel>Issuer</InputLabel>
+          <InputLabel>Collection</InputLabel>
           <Select
-            value={state.selectedIssuer}
-            onChange={(e) => updateField("selectedIssuer", e.target.value)}
-            label="Issuer"
+            value={state.selectedCollection}
+            onChange={(e) => updateField("selectedCollection", e.target.value)}
+            label="Collection"
           >
             <MenuItem value="">
               <em>All</em>
             </MenuItem>
-            {issuers.map((issuer, idx) => (
-              <MenuItem key={idx} value={issuer}>
-                {issuer}
+            {collections.map((collection, idx) => (
+              <MenuItem key={idx} value={collection}>
+                {collection}
               </MenuItem>
             ))}
           </Select>

@@ -171,15 +171,15 @@ const MatrixClientProvider = () => {
 
             const enrichedNfts = await Promise.all(
               nfts.map(async (nft) => {
-                const imageUriJSON = await getImageData(nft);
+                // const imageUriJSON = await getImageData(nft);
                 const userName = member.name;
                 const userId = member.userId;
-                const originTokenName = imageUriJSON.name;
-                const imageURI = imageUriJSON.URI;
+                // const originTokenName = imageUriJSON.name;
+                // const imageURI = imageUriJSON.URI;
                 return {
                   ...nft,
-                  originTokenName,
-                  imageURI,
+                  // originTokenName,
+                  // imageURI,
                   userName,
                   userId
                 };
@@ -187,24 +187,21 @@ const MatrixClientProvider = () => {
             );
 
             // Group by Issuer + Taxon
-            const IssuerTaxonMap = {};
+            const collectionMap = {};
             enrichedNfts.forEach((nft) => {
-              const Issuer = nft.Issuer;
-              const Taxon = nft.NFTokenTaxon;
-              const key = `${Issuer}-${Taxon}`; // Create a unique key combining Issuer and Taxon
+              const key = nft.collection; // Create a unique key combining Issuer and Taxon
 
-              if (!IssuerTaxonMap[key]) {
-                IssuerTaxonMap[key] = [];
+              if (!collectionMap[key]) {
+                collectionMap[key] = [];
               }
-              IssuerTaxonMap[key].push(nft);
+              collectionMap[key].push(nft);
             });
 
             // Convert map to array
-            const groupedNfts = Object.entries(IssuerTaxonMap).map(([key, nfts]) => {
-              const [Issuer, Taxon] = key.split("-"); // Split the key back into Issuer and Taxon
+            const groupedNfts = Object.entries(collectionMap).map(([key, nfts]) => {
+              const collection = key; // Split the key back into Issuer and Taxon
               return {
-                Issuer: String(Issuer),
-                NFTokenTaxon: Number(Taxon),
+                collection: String(collection),
                 nfts,
               };
             });
@@ -2541,7 +2538,7 @@ const MatrixClientProvider = () => {
         */
 
         console.log("Merged members with NFT data:", mergedMembers);
-        setMyNftData(mergedMembers);
+        // setMyNftData(mergedMembers);
 
 
 
