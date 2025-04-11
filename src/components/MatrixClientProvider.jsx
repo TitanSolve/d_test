@@ -115,25 +115,31 @@ const MatrixClientProvider = () => {
     console.log("reactionsResponse : ", reactionsResponse);
   }
 
+  async function fetchThemeData() {
+    const themeResponse = await widgetApi.receiveStateEvents('org.matrix.msc2871.theme');
+    console.log("theme---------------------------------------> : ", themeResponse);
+  }
+
   useEffect(() => {
     fetchUserData();
     fetchMessageData();
     fetchNameData();
     fetchReactionData();
+    fetchThemeData();
   }, []);
 
-  // useEffect(() => {
-  //   widgetApi.on("org.matrix.msc2871.theme", (ev) => {
-  //     console.log("ev : ", ev)
-  //     console.log("ev.data : ", ev.data)
-  //     // const newTheme = ev.data.theme;
-  //     // if (newTheme === "light" || newTheme === "dark") {
-  //     //   setTheme(newTheme); // React will rerender here
-  //     //   document.documentElement.classList.remove("light", "dark");
-  //     //   document.documentElement.classList.add(newTheme);
-  //     // }
-  //   });
-  // }, []);
+  useEffect(() => {
+    widgetApi.on("org.matrix.msc2871.theme", (ev) => {
+      console.log("ev : ", ev)
+      console.log("ev.data : ", ev.data)
+      // const newTheme = ev.data.theme;
+      // if (newTheme === "light" || newTheme === "dark") {
+      //   setTheme(newTheme); // React will rerender here
+      //   document.documentElement.classList.remove("light", "dark");
+      //   document.documentElement.classList.add(newTheme);
+      // }
+    });
+  }, []);
 
   useEffect(() => {
     const loadData = async () => {
