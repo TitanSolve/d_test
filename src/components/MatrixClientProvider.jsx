@@ -10,7 +10,7 @@ import API_URLS from "../config";
 import xrpl from "xrpl"
 import nft_default_pic from "../assets/nft.png";
 import { WidgetApi } from "matrix-widget-api";
-
+import { Tooltip } from "@mui/material";
 import { ThemeProvider, useTheme } from "../context/ThemeContext";
 
 const hexToAscii = (str) => {
@@ -75,6 +75,12 @@ const getImageData = async (nft) => {
   // nft.URI = URI;
   // nft.name = name;
   return { name: name, URI: URI };
+};
+
+const panelVariants = {
+  hidden: { opacity: 0, x: 50 },
+  visible: { opacity: 1, x: 0 },
+  exit: { opacity: 0, x: -50 },
 };
 
 const MatrixClientProvider = () => {
@@ -2644,13 +2650,25 @@ const MatrixClientProvider = () => {
           </Typography>
         </Box>
       ) : (
-        < Box sx={{ width: "100%", borderRadius: 2, boxShadow: 1 }}>
-          <button
-            onClick={toggleTheme}
-            className="fixed top-4 right-4 z-50 p-2 rounded-md bg-gray-200 dark:bg-gray-700 text-black dark:text-white transition"
-          >
-            {theme === "light" ? "🌙 Dark" : "☀️ Light"}
-          </button>
+        < Box sx={{
+          width: "100%",
+          borderRadius: 2,
+          boxShadow: 1,
+          bgcolor: "background.paper",
+          transition: "background-color 0.3s ease",
+        }}
+          className="dark:bg-gray-900 dark:text-white bg-white text-black"
+        >
+          {/* Toggle Button */}
+          <Tooltip title={`Switch to ${theme === "light" ? "Dark" : "Light"} Mode`} arrow>
+            <button
+              onClick={toggleTheme}
+              className="fixed top-4 right-4 z-50 p-2 md:p-3 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-white shadow-lg hover:scale-105 active:scale-95 transition-all duration-300 ease-in-out border border-gray-300 dark:border-gray-700 backdrop-blur-md"
+            >
+              {theme === "light" ? "🌙" : "☀️"}
+            </button>
+          </Tooltip>
+
           <Tabs
             value={selectedIndex}
             onChange={(event, newIndex) => setSelectedIndex(newIndex)}
@@ -2672,7 +2690,7 @@ const MatrixClientProvider = () => {
                 transition={{ duration: 0.4, ease: "easeInOut" }}
               >
                 <div style={{ display: selectedIndex === 0 ? "block" : "none" }}>
-                  <NFTs membersList={membersList} myNftData={myNftData} getImageData={getImageData} wgtParameters={widgetApi.widgetParameters /*"Hayden"*/} />
+                  <NFTs membersList={membersList} myNftData={myNftData} getImageData={getImageData} wgtParameters={widgetApi.widgetParameters} />
                 </div>
                 <div style={{ display: selectedIndex === 1 ? "block" : "none" }}>
                   <Offers />
