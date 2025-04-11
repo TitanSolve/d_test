@@ -261,17 +261,31 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
             <Box
               className="bg-white rounded-xl p-6 shadow-lg max-w-[90%] md:max-w-[500px] w-full mx-auto top-1/2 left-1/2 absolute transform -translate-x-1/2 -translate-y-1/2"
             >
-              <NFTCard myNftData={selectedNftForOffer} isGroup={false} isImgOnly={true} />
-              <Typography
-                variant="subtitle1"
-                className="text-center font-semibold text-black"
-              >
-                {selectedNftForOffer.metadata.name}
-              </Typography>
+              <div className="flex justify-between items-center mb-4">
+                <div>
+                  <Typography variant="subtitle1" className="font-semibold text-black">
+                    {selectedNftForOffer.metadata.name}
+                  </Typography>
+                  <Typography variant="subtitle2" className="text-sm text-gray-600">
+                    Issuer: {selectedNftForOffer.issuer} - {selectedNftForOffer.nftokenTaxon}
+                  </Typography>
+                </div>
+                <Button
+                  onClick={closeOfferModal}
+                  className="min-w-[36px] h-[36px] text-black"
+                  sx={{
+                    fontSize: "1.2rem",
+                    fontWeight: "bold",
+                    lineHeight: 1,
+                    padding: 0,
+                    minHeight: "auto"
+                  }}
+                >
+                  ✕
+                </Button>
+              </div>
 
-              <Typography variant="subtitle2" className="text-center font-semibold text-black overflow-hidden" >
-                Issuer : {selectedNftForOffer.issuer}
-              </Typography>
+              <NFTCard myNftData={selectedNftForOffer} isGroup={false} isImgOnly={true} />
               <Typography variant="subtitle2" className="text-center font-semibold text-black" >
                 TransferFee : {selectedNftForOffer.transferFee * 1 / 1000} %
               </Typography>
