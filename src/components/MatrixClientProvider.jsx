@@ -129,16 +129,14 @@ const MatrixClientProvider = () => {
   }, []);
 
   useEffect(() => {
-    widgetApi.on("org.matrix.msc2871.theme", (ev) => {
-      console.log("ev : ", ev)
-      console.log("ev.data : ", ev.data)
+    const response = widgetApi.observeStateEvents("org.matrix.msc2871.theme");
+      console.log("observeStateEvents-------------------------> : ", response)
       // const newTheme = ev.data.theme;
       // if (newTheme === "light" || newTheme === "dark") {
       //   setTheme(newTheme); // React will rerender here
       //   document.documentElement.classList.remove("light", "dark");
       //   document.documentElement.classList.add(newTheme);
       // }
-    });
   }, []);
 
   useEffect(() => {
