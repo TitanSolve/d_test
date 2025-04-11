@@ -189,7 +189,7 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
         >
           {filteredNfts.length > 0 ? (
             filteredNfts.map((groupedNft, idx) => (
-              <div key={idx} onClick={() => openPreviewModal(groupedNft)} className="cursor-pointer">                
+              <div key={idx} onClick={() => openPreviewModal(groupedNft)} className="cursor-pointer">
                 <NFTCard myNftData={groupedNft} isGroup={true} isImgOnly={false} />
               </div>
             ))
@@ -273,7 +273,7 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
                 Issuer : {selectedNftForOffer.issuer}
               </Typography>
               <Typography variant="subtitle2" className="text-center font-semibold text-black" >
-                TransferFee : {selectedNftForOffer.transferFee*1 / 1000} %
+                TransferFee : {selectedNftForOffer.transferFee * 1 / 1000} %
               </Typography>
 
               {!(selectedNftForOffer.userName === wgtParameters.displayName) && (
@@ -338,6 +338,19 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
                       startAdornment: (
                         <InputAdornment position="start">🪙</InputAdornment>
                       )
+                    }}
+                    sx={{
+                      "& .MuiOutlinedInput-root": {
+                        "& fieldset": {
+                          borderColor: "green", // default border
+                        },
+                        "&:hover fieldset": {
+                          borderColor: "blue", // hover border
+                        },
+                        "&.Mui-focused fieldset": {
+                          borderColor: "purple", // focused border
+                        },
+                      },
                     }}
                   />
                   <Select
