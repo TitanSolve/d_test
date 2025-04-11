@@ -112,15 +112,20 @@ const MatrixClientProvider = () => {
         for (const walletAddress of userIds) {
           try {
             let nfts = [];
-            const response = axios.get(`${API_URLS.marketPlace}/api/v2/nfts?owner=${walletAddress}`, {
+            const response = await fetch(`${API_URLS.marketPlace}/api/v2/nfts?owner=${walletAddress}`, {
+              method: "GET",
               headers: {
                 "x-bithomp-token": "0b833219-c387-4b3f-9606-0e4bd82e5862"
               }
-            }).catch(error => console.error(error));
-            console.log(response.data)
-            console.log(response.result.data)
+            });
 
-            nfts = response.data.nfts || [];
+            if (!response.ok) {
+              throw new Error("Failed to fetch NFT data");
+            }
+            const data = await response.json();
+            console.log(data)
+
+            nfts = data.nfts || [];
 
             // Enrich the NFTs by resolving the image URIs
             const enrichedNfts = await Promise.all(
