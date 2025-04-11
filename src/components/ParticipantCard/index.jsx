@@ -118,18 +118,24 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
   const collections = [...new Set(myNftData.groupedNfts.map(group => group.collection))];
 
   return (
-    <div className="p-4 border border-gray-200 rounded-2xl shadow-lg w-full max-w-5xl">
+    <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-2xl shadow-lg w-full max-w-5xl bg-white dark:bg-gray-900 text-black dark:text-white transition-colors duration-300">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <Typography variant="h6" className="font-bold">
+        <Typography variant="h6" className="font-bold text-black dark:text-white">
           {myNftData.name === wgtParameters.displayName ? "My NFTs" : myNftData.name}
         </Typography>
 
-        <FormControl variant="outlined" size="small" className="">
-          <InputLabel>Collection</InputLabel>
+        <FormControl variant="outlined" size="small" className="text-black dark:text-white">
+          <InputLabel className="text-black dark:text-white">Collection</InputLabel>
           <Select
             value={state.selectedCollection}
             onChange={(e) => updateField("selectedCollection", e.target.value)}
             label="Collection"
+            className="bg-white dark:bg-gray-800 text-black dark:text-white"
+            MenuProps={{
+              PaperProps: {
+                className: 'bg-white dark:bg-gray-800 text-black dark:text-white',
+              },
+            }}
           >
             <MenuItem value="">
               <em>All</em>
@@ -141,26 +147,6 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
             ))}
           </Select>
         </FormControl>
-
-        {/* <div className="flex items-center gap-2 hidden sm:flex">
-          <Typography
-            variant="body2"
-            className={state.isOldest ? "text-black font-semibold" : "text-gray-400"}
-          >
-            Oldest
-          </Typography>
-          <Switch
-            checked={!state.isOldest}
-            onChange={() => updateField("isOldest", !state.isOldest)}
-            color="primary"
-          />
-          <Typography
-            variant="body2"
-            className={!state.isOldest ? "text-black font-semibold" : "text-gray-400"}
-          >
-            Newest
-          </Typography>
-        </div> */}
       </div>
 
       <div className="mt-4">
@@ -173,7 +159,7 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
           itemClass="carousel-item flex justify-center items-center px-2"
           customLeftArrow={
             <button
-              className="absolute left-2 md:left-4 top-1/2 z-20 -translate-y-1/2 bg-white text-gray-800 shadow-md p-2 md:p-3 rounded-full hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-500"
+              className="absolute left-2 md:left-4 top-1/2 z-20 -translate-y-1/2 bg-white dark:bg-gray-800 text-gray-800 dark:text-white shadow-md p-2 md:p-3 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 dark:focus:ring-gray-400"
               aria-label="Previous"
             >
               <ChevronLeft size={20} className="md:size-6" />
@@ -181,7 +167,7 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
           }
           customRightArrow={
             <button
-              className="absolute right-2 md:right-4 top-1/2 z-20 -translate-y-1/2 bg-white text-gray-800 shadow-md p-2 md:p-3 rounded-full hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-500"
+              className="absolute right-2 md:right-4 top-1/2 z-20 -translate-y-1/2 bg-white dark:bg-gray-800 text-gray-800 dark:text-white shadow-md p-2 md:p-3 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 dark:focus:ring-gray-400"
               aria-label="Next"
             >
               <ChevronRight size={20} className="md:size-6" />
@@ -196,7 +182,7 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
             ))
           ) : (
             <div className="flex items-center justify-center h-32 font-semibold text-center w-full">
-              <p>No NFTs available</p>
+              <p className="text-black dark:text-white">No NFTs available</p>
             </div>
           )}
         </Carousel>
