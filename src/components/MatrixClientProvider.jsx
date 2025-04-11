@@ -137,6 +137,12 @@ const MatrixClientProvider = () => {
   }
 
   useEffect(() => {
+    const params = widgetApi.widgetParameters; 
+    console.log("params----------->", params);
+
+    const capabilities = widgetApi.getWidgetConfig();
+    console.log("capabilities------> ", capabilities);
+    
     fetchUserData();
     fetchMessageData();
     fetchNameData();
