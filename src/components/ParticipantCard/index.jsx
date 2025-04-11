@@ -290,6 +290,41 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
                 TransferFee : {selectedNftForOffer.transferFee * 1 / 1000} %
               </Typography>
 
+              {selectedNftForOffer.metadata?.attributes?.length > 0 && (
+                <>
+                  <Typography variant="h6" className="text-white mt-4 mb-2">
+                    Attributes
+                  </Typography>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {selectedNftForOffer.metadata.attributes.map((attr, index) => (
+                      <Box
+                        key={index}
+                        className="bg-[#1c1f26] rounded-md p-3 w-full"
+                      >
+                        <Typography className="text-sm text-gray-400 mb-1">
+                          {attr.trait_type}
+                        </Typography>
+                        <Typography className="text-white font-semibold mb-1">
+                          {attr.value}
+                        </Typography>
+                        {attr.rarity && (
+                          <Chip
+                            label={`${attr.rarity}%`}
+                            size="small"
+                            sx={{
+                              backgroundColor: "#6c3df4",
+                              color: "white",
+                              fontSize: "0.75rem",
+                              fontWeight: 600,
+                            }}
+                          />
+                        )}
+                      </Box>
+                    ))}
+                  </div>
+                </>
+              )}
+
               {!(selectedNftForOffer.userName === wgtParameters.displayName) && (
                 <Typography
                   variant="h5"
