@@ -390,6 +390,11 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
                       )
                     }}
                     sx={{
+                      backgroundColor: {
+                        xs: "white",
+                        "@media (prefers-color-scheme: dark)": "#15191E",
+                      },
+                      borderRadius: 1,
                       "& .MuiOutlinedInput-root": {
                         "& fieldset": {
                           borderColor: "green", // default border
@@ -401,7 +406,16 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
                           borderColor: "purple", // focused border
                         },
                         "& .MuiInputBase-input": {
-                          color: "black", // 👈 text color
+                          color: {
+                            xs: "black",
+                            "@media (prefers-color-scheme: dark)": "white",
+                          },
+                        },
+                      },
+                      "& .MuiInputLabel-root": {
+                        color: {
+                          xs: "gray",
+                          "@media (prefers-color-scheme: dark)": "#ccc",
                         },
                       },
                     }}
