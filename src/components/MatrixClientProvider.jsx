@@ -83,7 +83,6 @@ const MatrixClientProvider = () => {
   const [membersList, setMembersList] = useState([]);
 
   const xrpl = require('xrpl');
-  const widgetApi1 = new WidgetApi();
 
   // useEffect(() => {
   //   const subscription = widgetApi
@@ -97,11 +96,7 @@ const MatrixClientProvider = () => {
   // }, [widgetApi]);
 
   useEffect(() => {
-
-    console.log("--------------------------------------------");
-
-    widgetApi1.start();
-    widgetApi1.on("*", (ev) => {
+    widgetApi.on("org.matrix.msc2871.theme", (ev) => {
       console.log("ev : ", ev)
       console.log("ev.data : ", ev.data)
       // const newTheme = ev.data.theme;
