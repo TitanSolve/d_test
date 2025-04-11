@@ -384,39 +384,29 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
                     onChange={e => updateField("amount", e.target.value)}
                     fullWidth
                     size="small"
+                    className="bg-white text-black dark:bg-[#15191E] dark:text-white rounded-md"
                     InputProps={{
                       startAdornment: (
                         <InputAdornment position="start">🪙</InputAdornment>
                       )
                     }}
                     sx={{
-                      backgroundColor: {
-                        xs: "white",
-                        "@media (prefers-color-scheme: dark)": "#15191E",
-                      },
-                      borderRadius: 1,
                       "& .MuiOutlinedInput-root": {
                         "& fieldset": {
-                          borderColor: "green", // default border
+                          borderColor: "green",
                         },
                         "&:hover fieldset": {
-                          borderColor: "blue", // hover border
+                          borderColor: "blue",
                         },
                         "&.Mui-focused fieldset": {
-                          borderColor: "purple", // focused border
+                          borderColor: "purple",
                         },
-                        "& .MuiInputBase-input": {
-                          color: {
-                            xs: "black",
-                            "@media (prefers-color-scheme: dark)": "white",
-                          },
+                        "& input": {
+                          color: "inherit", // Inherit Tailwind-applied text color
                         },
                       },
                       "& .MuiInputLabel-root": {
-                        color: {
-                          xs: "gray",
-                          "@media (prefers-color-scheme: dark)": "#ccc",
-                        },
+                        color: "inherit", // Inherit from Tailwind too
                       },
                     }}
                   />
