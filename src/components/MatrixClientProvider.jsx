@@ -2658,13 +2658,13 @@ const MatrixClientProvider = () => {
           bgcolor: "background.paper",
           transition: "background-color 0.3s ease",
         }}
-          className="dark:bg-gray-900 dark:text-white bg-white text-black"
+          className="dark:bg-[#15191E] dark:text-white bg-white text-black"
         >
           {/* Toggle Button */}
           <Tooltip title={`Switch to ${theme === "light" ? "Dark" : "Light"} Mode`} arrow>
             <button
               onClick={toggleTheme}
-              className="fixed top-4 right-4 z-50 p-2 md:p-3 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-white shadow-lg hover:scale-105 active:scale-95 transition-all duration-300 ease-in-out border border-gray-300 dark:border-gray-700 backdrop-blur-md"
+              className="fixed top-4 right-4 z-50 p-2 md:p-3 rounded-full bg-gray-100 dark:bg-[#15191E] text-gray-800 dark:text-white shadow-lg hover:scale-105 active:scale-95 transition-all duration-300 ease-in-out border border-gray-300 dark:border-gray-700 backdrop-blur-md"
             >
               {theme === "light" ? "🌙" : "☀️"}
             </button>
