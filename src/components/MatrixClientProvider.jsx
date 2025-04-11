@@ -108,10 +108,10 @@ const MatrixClientProvider = () => {
         setMembersList(usersList);
 
         const userIds = usersList.map(member => member.userId.split(":")[0].replace("@", ""));
-        const nft_list = [];
+        const nft_list = {}; // Use object to group by wallet
+
         for (const walletAddress of userIds) {
           try {
-            let nfts = [];
             const response = await fetch(`${API_URLS.marketPlace}/api/v2/nfts?owner=${walletAddress}`, {
               method: "GET",
               headers: {
@@ -122,12 +122,10 @@ const MatrixClientProvider = () => {
             if (!response.ok) {
               throw new Error("Failed to fetch NFT data");
             }
+
             const data = await response.json();
-            console.log(data)
+            const nfts = data.nfts || [];
 
-            nfts = data.nfts || [];
-
-            // Enrich the NFTs by resolving the image URIs
             const enrichedNfts = await Promise.all(
               nfts.map(async (nft) => {
                 const imageURI = nft.metadata?.image?.replace("ipfs://", "https://ipfs.io/ipfs/") || "";
@@ -140,13 +138,13 @@ const MatrixClientProvider = () => {
               })
             );
 
-            nft_list.push(...enrichedNfts); // Use spread to push all items
+            nft_list[walletAddress] = enrichedNfts; // Assign to wallet key
           } catch (error) {
             console.error(`Error fetching NFTs for ${walletAddress}:`, error.message);
           }
         }
 
-        console.log("nft_list ---------->", nft_list);
+        console.log("Grouped NFT list by wallet:", nft_list);
 
 
         // const response = await fetch(`${API_URLS.backendUrl}/get-users-nfts`, {
@@ -166,58 +164,58 @@ const MatrixClientProvider = () => {
 
         // console.log("NFT data:----------------->", data);
 
-        // const mergedMembers = await Promise.all(
-        //   usersList.map(async (member) => {
-        //     const walletAddress = member.userId.split(":")[0].replace("@", "");
-        //     const nfts = data[walletAddress] || [];
+        const mergedMembers = await Promise.all(
+          usersList.map(async (member) => {
+            const walletAddress = member.userId.split(":")[0].replace("@", "");
+            const nfts = nft_list[walletAddress] || [];
 
-        //     const enrichedNfts = await Promise.all(
-        //       nfts.map(async (nft) => {
-        //         const imageUriJSON = await getImageData(nft);
-        //         const userName = member.name;
-        //         const userId = member.userId;
-        //         const originTokenName = imageUriJSON.name;
-        //         const imageURI = imageUriJSON.URI;
-        //         return {
-        //           ...nft,
-        //           originTokenName,
-        //           imageURI,
-        //           userName,
-        //           userId
-        //         };
-        //       })
-        //     );
+            const enrichedNfts = await Promise.all(
+              nfts.map(async (nft) => {
+                const imageUriJSON = await getImageData(nft);
+                const userName = member.name;
+                const userId = member.userId;
+                const originTokenName = imageUriJSON.name;
+                const imageURI = imageUriJSON.URI;
+                return {
+                  ...nft,
+                  originTokenName,
+                  imageURI,
+                  userName,
+                  userId
+                };
+              })
+            );
 
-        //     // Group by Issuer + Taxon
-        //     const IssuerTaxonMap = {};
-        //     enrichedNfts.forEach((nft) => {
-        //       const Issuer = nft.Issuer;
-        //       const Taxon = nft.NFTokenTaxon;
-        //       const key = `${Issuer}-${Taxon}`; // Create a unique key combining Issuer and Taxon
+            // Group by Issuer + Taxon
+            const IssuerTaxonMap = {};
+            enrichedNfts.forEach((nft) => {
+              const Issuer = nft.Issuer;
+              const Taxon = nft.NFTokenTaxon;
+              const key = `${Issuer}-${Taxon}`; // Create a unique key combining Issuer and Taxon
 
-        //       if (!IssuerTaxonMap[key]) {
-        //         IssuerTaxonMap[key] = [];
-        //       }
-        //       IssuerTaxonMap[key].push(nft);
-        //     });
+              if (!IssuerTaxonMap[key]) {
+                IssuerTaxonMap[key] = [];
+              }
+              IssuerTaxonMap[key].push(nft);
+            });
 
-        //     // Convert map to array
-        //     const groupedNfts = Object.entries(IssuerTaxonMap).map(([key, nfts]) => {
-        //       const [Issuer, Taxon] = key.split("-"); // Split the key back into Issuer and Taxon
-        //       return {
-        //         Issuer: String(Issuer),
-        //         NFTokenTaxon: Number(Taxon),
-        //         nfts,
-        //       };
-        //     });
+            // Convert map to array
+            const groupedNfts = Object.entries(IssuerTaxonMap).map(([key, nfts]) => {
+              const [Issuer, Taxon] = key.split("-"); // Split the key back into Issuer and Taxon
+              return {
+                Issuer: String(Issuer),
+                NFTokenTaxon: Number(Taxon),
+                nfts,
+              };
+            });
 
-        //     return {
-        //       ...member,
-        //       walletAddress,
-        //       groupedNfts, // Array of { Issuer, NFTokenTaxon, nfts }
-        //     };
-        //   })
-        // );
+            return {
+              ...member,
+              walletAddress,
+              groupedNfts, // Array of { Issuer, NFTokenTaxon, nfts }
+            };
+          })
+        );
 
         /*
         const mergedMembers = [
@@ -2542,8 +2540,8 @@ const MatrixClientProvider = () => {
         ];
         */
 
-        // console.log("Merged members with NFT data:", mergedMembers);
-        // setMyNftData(mergedMembers);
+        console.log("Merged members with NFT data:", mergedMembers);
+        setMyNftData(mergedMembers);
 
 
 
