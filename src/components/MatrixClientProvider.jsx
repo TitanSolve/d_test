@@ -111,7 +111,9 @@ const MatrixClientProvider = () => {
         const nft_list = [];
         for (const walletAddress of userIds) {
           try {
-            const response = await axios.get(`${API_URLS.marketPlace}/api/v2/nfts?owner=${walletAddress}`);
+            const response = await axios.get(`${API_URLS.marketPlace}/api/v2/nfts?owner=${walletAddress}`, {
+              "x-bithomp-token": "0b833219-c387-4b3f-9606-0e4bd82e5862"
+            });
             const nfts = response.data.nfts || [];
 
             // Enrich the NFTs by resolving the image URIs
