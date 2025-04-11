@@ -2676,8 +2676,14 @@ const MatrixClientProvider = () => {
             textColor="primary"
             indicatorColor="primary"
           >
-            <Tab label="NFTs" />
-            <Tab label="Offers" />
+            <Tab
+              label="NFTs"
+              className="text-black dark:text-white"
+            />
+            <Tab
+              label="Offers"
+              className="text-black dark:text-white"
+            />
           </Tabs>
           <Box sx={{ p: 2, position: "relative", overflow: "hidden" }}>
             <AnimatePresence mode="wait">
