@@ -125,7 +125,7 @@ const MatrixClientProvider = () => {
     console.log("theme---------------------------------------> : ", themeResponse);
   }
   
-  async function fetchSingleStateEvents() {
+  function fetchSingleStateEvents() {
     const params = widgetApi.widgetParameters;
     console.log("params----------->", params);
 
