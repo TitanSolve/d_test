@@ -101,7 +101,7 @@ const MatrixClientProvider = () => {
     console.log("--------------------------------------------");
 
     widgetApi1.start();
-    widgetApi1.on("org.matrix.msc2871.theme", (ev) => {
+    widgetApi1.on("*", (ev) => {
       console.log("ev : ", ev)
       console.log("ev.data : ", ev.data)
       // const newTheme = ev.data.theme;
