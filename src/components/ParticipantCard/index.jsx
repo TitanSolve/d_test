@@ -292,12 +292,12 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
               </Typography>
 
               {selectedNftForOffer.metadata?.attributes?.length > 0 && (
-                <>
-                  <Typography variant="h6" className="text-white mt-4 mb-2">
+                <div className="mb-6">
+                  <Typography variant="subtitle2" className="text-black dark:text-white font-semibold mb-2">
                     Attributes
                   </Typography>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    {selectedNftForOffer.metadata.attributes.map((attr, index) => (
+                  <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4">
+                    {selectedNftForOffer.metadata.attributes.map((attr, idx) => (
                       <Box
                         key={index}
                         className="bg-[#1c1f26] rounded-md p-3 w-full"
@@ -323,7 +323,7 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
                       </Box>
                     ))}
                   </div>
-                </>
+                </div>
               )}
 
               {!(selectedNftForOffer.userName === wgtParameters.displayName) && (
