@@ -122,18 +122,18 @@ const MatrixClientProvider = () => {
     fetchReactionData();
   }, []);
 
-  useEffect(() => {
-    widgetApi.on("org.matrix.msc2871.theme", (ev) => {
-      console.log("ev : ", ev)
-      console.log("ev.data : ", ev.data)
-      // const newTheme = ev.data.theme;
-      // if (newTheme === "light" || newTheme === "dark") {
-      //   setTheme(newTheme); // React will rerender here
-      //   document.documentElement.classList.remove("light", "dark");
-      //   document.documentElement.classList.add(newTheme);
-      // }
-    });
-  }, []);
+  // useEffect(() => {
+  //   widgetApi.on("org.matrix.msc2871.theme", (ev) => {
+  //     console.log("ev : ", ev)
+  //     console.log("ev.data : ", ev.data)
+  //     // const newTheme = ev.data.theme;
+  //     // if (newTheme === "light" || newTheme === "dark") {
+  //     //   setTheme(newTheme); // React will rerender here
+  //     //   document.documentElement.classList.remove("light", "dark");
+  //     //   document.documentElement.classList.add(newTheme);
+  //     // }
+  //   });
+  // }, []);
 
   useEffect(() => {
     const loadData = async () => {
