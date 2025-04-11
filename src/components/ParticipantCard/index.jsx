@@ -417,17 +417,23 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
                     size="small"
                     className="bg-white dark:bg-gray-800 dark:text-white rounded"
                     sx={{
-                      "& .MuiOutlinedInput-notchedOutline": {
-                        borderColor: "gray", // default border
+                      "& .MuiOutlinedInput-root": {
+                        "& fieldset": {
+                          borderColor: "green",
+                        },
+                        "&:hover fieldset": {
+                          borderColor: "blue",
+                        },
+                        "&.Mui-focused fieldset": {
+                          borderColor: "purple",
+                        },
+                        "& input": {
+                          color: isDarkMode ? "#fff" : "#000",
+                          backgroundColor: isDarkMode ? "#15191E" : "#fff",
+                        },
                       },
-                      "&:hover .MuiOutlinedInput-notchedOutline": {
-                        borderColor: "blue", // hover border
-                      },
-                      "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                        borderColor: "green", // focused border
-                      },
-                      "& .MuiInputBase-input": {
-                        color: "black dark:white", // 👈 text color
+                      "& .MuiInputLabel-root": {
+                        color: isDarkMode ? "#ccc" : "#000",
                       },
                     }}
                   >
@@ -436,25 +442,25 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
                     <MenuItem value="TokenB">TokenB</MenuItem>
                   </Select>
                 </div>
-              )}
-
-              <div className="text-center">
-                <Button
-                  variant="contained"
-                  size="large"
-                  className="rounded-md w-1/2"
-                  onClick={() =>
-                    console.log(state.isSell ? "Selling NFT" : "Transferring NFT")
-                  }
-                >
-                  {state.isSell ? (!(selectedNftForOffer.userName === wgtParameters.displayName) ? "Offer Buy" : "Offer Sell") : "Transfer"}
-                </Button>
-              </div>
-            </Box>
           )}
-        </div>
-      </Modal>
+
+          <div className="text-center">
+            <Button
+              variant="contained"
+              size="large"
+              className="rounded-md w-1/2"
+              onClick={() =>
+                console.log(state.isSell ? "Selling NFT" : "Transferring NFT")
+              }
+            >
+              {state.isSell ? (!(selectedNftForOffer.userName === wgtParameters.displayName) ? "Offer Buy" : "Offer Sell") : "Transfer"}
+            </Button>
+          </div>
+        </Box>
+          )}
     </div>
+      </Modal >
+    </div >
   );
 };
 
