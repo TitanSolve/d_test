@@ -124,6 +124,17 @@ const MatrixClientProvider = () => {
     const themeResponse = widgetApi.observeStateEvents('*');
     console.log("theme---------------------------------------> : ", themeResponse);
   }
+  
+  async function fetchSingleStateEvents() {
+    const capabilities = await widgetApi.getSupportedEventTypes();
+    console.log("capabilities------> ", capabilities);
+
+    const params = widgetApi.widgetParameters;
+    console.log("params----------->", params);
+    
+    const themeResponse = widgetApi.receiveSingleStateEvent('*');
+    console.log("SingleState---------------------------------------> : ", themeResponse);
+  }
 
   useEffect(() => {
     fetchUserData();
@@ -132,9 +143,11 @@ const MatrixClientProvider = () => {
     fetchReactionData();
     fetchRecieveStateEvent();
     fetchObserveStateEvents();
+    fetchSingleStateEvents();
   }, []);
 
-  useEffect(() => {
+  useEffect(() => { 
+
     widgetApi.observeStateEvents("org.matrix.msc2871.theme").subscribe((event) => {
       console.log("Received theme event:", event); // Event data
       const theme = event?.content?.theme;
