@@ -115,8 +115,13 @@ const MatrixClientProvider = () => {
     console.log("reactionsResponse : ", reactionsResponse);
   }
 
-  async function fetchThemeData() {
-    const themeResponse = await widgetApi.receiveStateEvents('org.matrix.msc2871.theme');
+  async function fetchRecieveStateEvent() {
+    const receiveStateEvents = await widgetApi.receiveStateEvents('*');
+    console.log("receiveStateEvents---------------------------------------> : ", receiveStateEvents);
+  }
+  
+  async function fetchObserveStateEvents() {
+    const themeResponse = widgetApi.observeStateEvents('*');
     console.log("theme---------------------------------------> : ", themeResponse);
   }
 
@@ -125,7 +130,8 @@ const MatrixClientProvider = () => {
     fetchMessageData();
     fetchNameData();
     fetchReactionData();
-    fetchThemeData();
+    fetchRecieveStateEvent();
+    fetchObserveStateEvents();
   }, []);
 
   useEffect(() => {
