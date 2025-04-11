@@ -260,7 +260,7 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
         <div>
           {selectedNftForOffer !== null && (
             <Box
-              className="bg-white rounded-xl p-6 shadow-lg max-w-full md:max-w-[500px] w-full mx-auto top-1/2 left-1/2 absolute transform -translate-x-1/2 -translate-y-1/2 overflow-y-auto"
+              className="bg-white rounded-xl p-6 shadow-lg max-h-[90vh] max-w-full md:max-w-[500px] w-full mx-auto top-1/2 left-1/2 absolute transform -translate-x-1/2 -translate-y-1/2 overflow-y-auto"
             >
               <div className="flex justify-between items-center mb-4">
                 <div>
