@@ -39,6 +39,10 @@ const widgetApiPromise = WidgetApiImpl.create({
       EventDirection.Receive,
       'org.matrix.msc2871.theme'
   ),
+  WidgetEventCapability.forStateEvent(
+    EventDirection.Receive,
+    '*'
+),
     // {
     //   type: 'org.matrix.msc2871.theme',
     //   direction: EventDirection.Receive,
