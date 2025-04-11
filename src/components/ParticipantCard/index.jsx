@@ -350,6 +350,9 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
                         "&.Mui-focused fieldset": {
                           borderColor: "purple", // focused border
                         },
+                        "& .MuiInputBase-input": {
+                          color: "black", // 👈 text color
+                        },
                       },
                     }}
                   />
@@ -368,7 +371,10 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
                       },
                       "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
                         borderColor: "green", // focused border
-                      }
+                      },
+                      "& .MuiInputBase-input": {
+                        color: "black", // 👈 text color
+                      },
                     }}
                   >
                     <MenuItem value="XRP">XRP</MenuItem>
