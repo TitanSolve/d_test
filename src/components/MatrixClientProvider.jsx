@@ -119,7 +119,7 @@ const MatrixClientProvider = () => {
     const receiveStateEvents = await widgetApi.receiveStateEvents('*');
     console.log("receiveStateEvents---------------------------------------> : ", receiveStateEvents);
   }
-  
+
   async function fetchObserveStateEvents() {
     const themeResponse = widgetApi.observeStateEvents('*');
     console.log("theme---------------------------------------> : ", themeResponse);
@@ -135,14 +135,11 @@ const MatrixClientProvider = () => {
   }, []);
 
   useEffect(() => {
-    const response = widgetApi.observeStateEvents("org.matrix.msc2871.theme");
-      console.log("observeStateEvents-------------------------> : ", response)
-      // const newTheme = ev.data.theme;
-      // if (newTheme === "light" || newTheme === "dark") {
-      //   setTheme(newTheme); // React will rerender here
-      //   document.documentElement.classList.remove("light", "dark");
-      //   document.documentElement.classList.add(newTheme);
-      // }
+    widgetApi.observeStateEvents("org.matrix.msc2871.theme").subscribe((event) => {
+      console.log("Received theme event:", event); // Event data
+      const theme = event?.content?.theme;
+      console.log("Received theme:", theme); // 'light' or 'dark'
+    });
   }, []);
 
   useEffect(() => {
