@@ -95,6 +95,33 @@ const MatrixClientProvider = () => {
   //   return () => subscription.unsubscribe(); // cleanup on unmount
   // }, [widgetApi]);
 
+  async function fetchUserData() {
+    const userResponse = await widgetApi.receiveStateEvents('m.room.member');
+    console.log("userResponse : ", userResponse);
+  }
+
+  async function fetchMessageData() {
+    let messagesResponse = await widgetApi.receiveRoomEvents('m.room.message', { limit: 200 });
+    console.log("messageResponse : ", messagesResponse);
+  }
+
+  async function fetchNameData() {
+    const response = await widgetApi.receiveStateEvents('m.room.name');
+    setNameResponse(response);
+  }
+
+  async function fetchReactionData() {
+    let reactionsResponse = await widgetApi.receiveRoomEvents('m.reaction', { limit: 20 });
+    setReactions(reactionsResponse);
+  }
+
+  useEffect(() => {
+    fetchUserData();
+    fetchMessageData();
+    fetchNameData();
+    fetchReactionData();
+  }, []);
+
   useEffect(() => {
     widgetApi.on("org.matrix.msc2871.theme", (ev) => {
       console.log("ev : ", ev)
