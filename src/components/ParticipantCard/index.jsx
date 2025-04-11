@@ -118,7 +118,7 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
   const collections = [...new Set(myNftData.groupedNfts.map(group => group.collection))];
 
   return (
-    <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-2xl shadow-lg w-full max-w-5xl bg-white dark:bg-gray-900 text-black dark:text-white transition-colors duration-300">
+    <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-2xl shadow-lg w-full max-w-5xl bg-white dark:bg-[#15191E] text-black dark:text-white transition-colors duration-300">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <Typography variant="h6" className="font-bold text-black dark:text-white">
           {myNftData.name === wgtParameters.displayName ? "My NFTs" : myNftData.name}
@@ -196,7 +196,7 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
         maskClosable={true}
         bodyStyle={{ borderRadius: "10px", padding: "24px" }}
       >
-        <Box className="absolute top-1/2 left-1/2 w-11/12 bg-white dark:bg-gray-900 text-black dark:text-white rounded-2xl shadow-2xl transform -translate-x-1/2 -translate-y-1/2 p-4 sm:p-6 md:p-8 outline-none border border-gray-200 dark:border-gray-700 transition-colors duration-300">
+        <Box className="absolute top-1/2 left-1/2 w-11/12 bg-white dark:bg-[#15191E] text-black dark:text-white rounded-2xl shadow-2xl transform -translate-x-1/2 -translate-y-1/2 p-4 sm:p-6 md:p-8 outline-none border border-gray-200 dark:border-gray-700 transition-colors duration-300">
           <Typography variant="h6" className="font-bold overflow-hidden text-black dark:text-white">
             {selectedNFTGroup && (
               "Issuer : " + selectedNFTGroup.nfts[0].Issuer
@@ -246,7 +246,7 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
         <div>
           {selectedNftForOffer !== null && (
             <Box
-              className="bg-white dark:bg-gray-900 text-black dark:text-white rounded-xl p-6 shadow-lg max-h-[90vh] max-w-full md:max-w-[500px] w-full mx-auto top-1/2 left-1/2 absolute transform -translate-x-1/2 -translate-y-1/2 overflow-y-auto transition-colors duration-300"
+              className="bg-white dark:bg-[#15191E] text-black dark:text-white rounded-xl p-6 shadow-lg max-h-[90vh] max-w-full md:max-w-[500px] w-full mx-auto top-1/2 left-1/2 absolute transform -translate-x-1/2 -translate-y-1/2 overflow-y-auto transition-colors duration-300"
             >
               <div className="flex justify-between items-center mb-4">
                 <div>

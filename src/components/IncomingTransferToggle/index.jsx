@@ -23,7 +23,7 @@ const IncomingListToggle = ({ title, count }) => {
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: "auto" }}
           exit={{ opacity: 0, height: 0 }}
-          className="mt-4 bg-white dark:bg-gray-900 text-black dark:text-white p-5 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 transition-colors"
+          className="mt-4 bg-white dark:bg-[#15191E] text-black dark:text-white p-5 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 transition-colors"
         >
           <div className="flex justify-end sm:justify-between items-center mb-4">
             <span className="text-lg font-semibold text-gray-900 dark:text-white hidden sm:block">Listed Items</span>

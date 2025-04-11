@@ -24,7 +24,7 @@ const OutgoingTransferToggle = ({ title, count }) => {
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: "auto" }}
           exit={{ opacity: 0, height: 0 }}
-          className="mt-4 bg-white dark:bg-gray-900 p-5 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700"
+          className="mt-4 bg-white dark:bg-[#15191E] p-5 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700"
         >
           <div className="flex justify-end sm:justify-between items-center mb-4">
             <span className="text-lg font-semibold text-gray-900 dark:text-white hidden sm:block">
