@@ -126,11 +126,11 @@ const MatrixClientProvider = () => {
   }
   
   async function fetchSingleStateEvents() {
-    const capabilities = await widgetApi.getSupportedEventTypes();
-    console.log("capabilities------> ", capabilities);
-
     const params = widgetApi.widgetParameters;
     console.log("params----------->", params);
+
+    const capabilities = widgetApi.getWidgetConfig();
+    console.log("capabilities------> ", capabilities);
     
     const themeResponse = widgetApi.receiveSingleStateEvent('*');
     console.log("SingleState---------------------------------------> : ", themeResponse);
