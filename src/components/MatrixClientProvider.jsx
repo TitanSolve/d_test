@@ -12,6 +12,7 @@ import nft_default_pic from "../assets/nft.png";
 import { WidgetApi } from "matrix-widget-api";
 import { Tooltip } from "@mui/material";
 import { ThemeProvider, useTheme } from "../context/ThemeContext";
+import "./index.css"
 
 const hexToAscii = (str) => {
   var hexString = str?.toString();
