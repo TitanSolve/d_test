@@ -11,6 +11,8 @@ import xrpl from "xrpl"
 import nft_default_pic from "../assets/nft.png";
 import { WidgetApi } from "matrix-widget-api";
 
+import { ThemeProvider, useTheme } from "../context/ThemeContext";
+
 const hexToAscii = (str) => {
   var hexString = str?.toString();
   var strOut = "";
@@ -82,84 +84,9 @@ const MatrixClientProvider = () => {
   const [loading, setLoading] = useState(true);
   const [membersList, setMembersList] = useState([]);
 
+  const { theme, toggleTheme } = useTheme();
+
   const xrpl = require('xrpl');
-
-  // useEffect(() => {
-  //   const subscription = widgetApi
-  //     .observeWidgetParameters()
-  //     .subscribe((params) => {
-  //       console.log('Widget parameters updated:', params);
-  //       setParameters(params);
-  //     });
-
-  //   return () => subscription.unsubscribe(); // cleanup on unmount
-  // }, [widgetApi]);
-
-  async function fetchUserData() {
-    const userResponse = await widgetApi.receiveStateEvents('m.room.member');
-    console.log("userResponse : ", userResponse);
-  }
-
-  async function fetchMessageData() {
-    let messagesResponse = await widgetApi.receiveRoomEvents('m.room.message', { limit: 200 });
-    console.log("messageResponse : ", messagesResponse);
-  }
-
-  async function fetchNameData() {
-    const nameResponse = await widgetApi.receiveStateEvents('m.room.name');
-    console.log("nameResponse : ", nameResponse);
-  }
-
-  async function fetchReactionData() {
-    let reactionsResponse = await widgetApi.receiveRoomEvents('m.reaction', { limit: 20 });
-    console.log("reactionsResponse : ", reactionsResponse);
-  }
-
-  async function fetchRecieveStateEvent() {
-    const receiveStateEvents = await widgetApi.receiveStateEvents('*');
-    console.log("receiveStateEvents---------------------------------------> : ", receiveStateEvents);
-  }
-
-  async function fetchObserveStateEvents() {
-    const themeResponse = widgetApi.observeStateEvents('*');
-    console.log("theme---------------------------------------> : ", themeResponse);
-  }
-  
-  function fetchSingleStateEvents() {
-    const params = widgetApi.widgetParameters; 
-    console.log("params----------->", params);
-
-    const capabilities = widgetApi.getWidgetConfig();
-    console.log("capabilities------> ", capabilities);
-    
-    const themeResponse = widgetApi.receiveSingleStateEvent('*');
-    console.log("SingleState---------------------------------------> : ", themeResponse);
-  }
-
-  useEffect(() => {
-    const params = widgetApi.widgetParameters; 
-    console.log("params----------->", params);
-
-    const capabilities = widgetApi.getWidgetConfig();
-    console.log("capabilities------> ", capabilities);
-    
-    fetchUserData();
-    fetchMessageData();
-    fetchNameData();
-    fetchReactionData();
-    fetchRecieveStateEvent();
-    fetchObserveStateEvents();
-    fetchSingleStateEvents();
-  }, []);
-
-  useEffect(() => { 
-
-    widgetApi.observeStateEvents("org.matrix.msc2871.theme").subscribe((event) => {
-      console.log("Received theme event:", event); // Event data
-      const theme = event?.content?.theme;
-      console.log("Received theme:", theme); // 'light' or 'dark'
-    });
-  }, []);
 
   useEffect(() => {
     const loadData = async () => {
@@ -238,15 +165,10 @@ const MatrixClientProvider = () => {
 
             const enrichedNfts = await Promise.all(
               nfts.map(async (nft) => {
-                // const imageUriJSON = await getImageData(nft);
                 const userName = member.name;
                 const userId = member.userId;
-                // const originTokenName = imageUriJSON.name;
-                // const imageURI = imageUriJSON.URI;
                 return {
                   ...nft,
-                  // originTokenName,
-                  // imageURI,
                   userName,
                   userId
                 };
@@ -2723,6 +2645,12 @@ const MatrixClientProvider = () => {
         </Box>
       ) : (
         < Box sx={{ width: "100%", borderRadius: 2, boxShadow: 1 }}>
+          <button
+            onClick={toggleTheme}
+            className="fixed top-4 right-4 z-50 p-2 rounded-md bg-gray-200 dark:bg-gray-700 text-black dark:text-white transition"
+          >
+            {theme === "light" ? "🌙 Dark" : "☀️ Light"}
+          </button>
           <Tabs
             value={selectedIndex}
             onChange={(event, newIndex) => setSelectedIndex(newIndex)}

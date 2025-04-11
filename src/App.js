@@ -3,11 +3,13 @@ import { MuiThemeProvider, MuiWidgetApiProvider } from '@matrix-widget-toolkit/m
 import { BrowserRouter } from 'react-router-dom';
 import { WidgetParameter } from '@matrix-widget-toolkit/api';
 import MatrixClientProvider from './components/MatrixClientProvider';
+import { ThemeProvider } from "./context/ThemeContext";
 
 function App({ widgetApiPromise }) {
   return (
     <BrowserRouter>
-      <MuiThemeProvider>
+      {/* <MuiThemeProvider> */}
+      <ThemeProvider>
         <Suspense fallback={<></>}>
           <MuiWidgetApiProvider
             widgetApiPromise={widgetApiPromise}
@@ -21,7 +23,8 @@ function App({ widgetApiPromise }) {
             <MatrixClientProvider />
           </MuiWidgetApiProvider>
         </Suspense>
-      </MuiThemeProvider>
+        </ThemeProvider>
+      {/* </MuiThemeProvider> */}
     </BrowserRouter>
   );
 }
