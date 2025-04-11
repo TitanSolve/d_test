@@ -186,7 +186,7 @@ const MatrixClientProvider = () => {
               })
             );
 
-            // Group by Issuer + Taxon
+            // Group by Collection
             const collectionMap = {};
             enrichedNfts.forEach((nft) => {
               const key = nft.metadata?.collection?.name || nft.collection; // Create a unique key combining Issuer and Taxon
@@ -197,14 +197,13 @@ const MatrixClientProvider = () => {
               collectionMap[key].push(nft);
             });
 
-            // Convert map to array
-            const groupedNfts = Object.entries(collectionMap).map(([key, nfts]) => {
-              const collection = key; // Split the key back into Issuer and Taxon
-              return {
-                collection: String(collection),
+            // Convert map to sorted array
+            const groupedNfts = Object.entries(collectionMap)
+              .map(([key, nfts]) => ({
+                collection: String(key),
                 nfts,
-              };
-            });
+              }))
+              .sort((a, b) => a.collection.localeCompare(b.collection)); // Sort by collection name
 
             return {
               ...member,
