@@ -196,8 +196,8 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
         maskClosable={true}
         bodyStyle={{ borderRadius: "10px", padding: "24px" }}
       >
-        <Box className="absolute top-1/2 left-1/2 w-11/12 bg-white rounded-2xl shadow-2xl transform -translate-x-1/2 -translate-y-1/2 p-4 sm:p-6 md:p-8 outline-none border border-gray-200">
-          <Typography variant="h6" className="font-bold overflow-hidden">
+        <Box className="absolute top-1/2 left-1/2 w-11/12 bg-white dark:bg-gray-900 text-black dark:text-white rounded-2xl shadow-2xl transform -translate-x-1/2 -translate-y-1/2 p-4 sm:p-6 md:p-8 outline-none border border-gray-200 dark:border-gray-700 transition-colors duration-300">
+          <Typography variant="h6" className="font-bold overflow-hidden text-black dark:text-white">
             {selectedNFTGroup && (
               "Issuer : " + selectedNFTGroup.nfts[0].Issuer
             )}
@@ -212,12 +212,12 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
               containerClass="carousel-container"
               itemClass="carousel-item flex justify-center items-center px-2"
               customLeftArrow={
-                <button className="absolute left-2 md:left-4 top-1/2 z-20 -translate-y-1/2 bg-white text-gray-800 shadow-lg p-2 md:p-3 rounded-full hover:bg-gray-100 transition duration-200 ease-in-out">
+                <button className="absolute left-2 md:left-4 top-1/2 z-20 -translate-y-1/2 bg-white dark:bg-gray-800 text-gray-800 dark:text-white shadow-lg p-2 md:p-3 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition duration-200 ease-in-out">
                   <ChevronLeft size={20} />
                 </button>
               }
               customRightArrow={
-                <button className="absolute right-2 md:right-4 top-1/2 z-20 -translate-y-1/2 bg-white text-gray-800 shadow-lg p-2 md:p-3 rounded-full hover:bg-gray-100 transition duration-200 ease-in-out">
+                <button className="absolute right-2 md:right-4 top-1/2 z-20 -translate-y-1/2 bg-white dark:bg-gray-800 text-gray-800 dark:text-white shadow-lg p-2 md:p-3 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition duration-200 ease-in-out">
                   <ChevronRight size={20} />
                 </button>
               }
@@ -246,20 +246,20 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
         <div>
           {selectedNftForOffer !== null && (
             <Box
-              className="bg-white rounded-xl p-6 shadow-lg max-h-[90vh] max-w-full md:max-w-[500px] w-full mx-auto top-1/2 left-1/2 absolute transform -translate-x-1/2 -translate-y-1/2 overflow-y-auto"
+              className="bg-white dark:bg-gray-900 text-black dark:text-white rounded-xl p-6 shadow-lg max-h-[90vh] max-w-full md:max-w-[500px] w-full mx-auto top-1/2 left-1/2 absolute transform -translate-x-1/2 -translate-y-1/2 overflow-y-auto transition-colors duration-300"
             >
               <div className="flex justify-between items-center mb-4">
                 <div>
-                  <Typography variant="subtitle1" className="font-semibold text-black">
+                  <Typography variant="subtitle1" className="font-semibold text-black dark:text-white">
                     {selectedNftForOffer.metadata.name}
                   </Typography>
-                  <Typography variant="subtitle2" className="text-sm text-gray-600">
+                  <Typography variant="subtitle2" className="text-sm text-gray-600 dark:text-gray-300">
                     Issuer: {selectedNftForOffer.issuer} - {selectedNftForOffer.nftokenTaxon}
                   </Typography>
                 </div>
                 <Button
                   onClick={closeOfferModal}
-                  className="min-w-[36px] h-[36px] text-black"
+                  className="min-w-[36px] h-[36px] text-black dark:text-white"
                   sx={{
                     fontSize: "1.2rem",
                     fontWeight: "bold",
@@ -273,25 +273,25 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
               </div>
 
               <NFTCard myNftData={selectedNftForOffer} isGroup={false} isImgOnly={true} />
-              <Typography variant="subtitle2" className="text-center font-semibold text-black" >
+              <Typography variant="subtitle2" className="text-center font-semibold text-black dark:text-white" >
                 TransferFee : {selectedNftForOffer.transferFee * 1 / 1000} %
               </Typography>
 
               {selectedNftForOffer.metadata?.attributes?.length > 0 && (
                 <div className="mb-6">
-                  <Typography variant="subtitle2" className="text-black dark:text-white font-semibold mb-2">
+                  <Typography variant="subtitle2" className="font-semibold mb-2 text-black dark:text-white">
                     Attributes
                   </Typography>
                   <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4">
                     {selectedNftForOffer.metadata.attributes.map((attr, idx) => (
                       <Box
                         key={index}
-                        className="bg-[#1c1f26] rounded-md p-3 w-full"
+                        className="bg-gray-100 dark:bg-[#1c1f26] rounded-md p-3 w-full transition-colors"
                       >
-                        <Typography className="text-sm text-gray-400 mb-1">
+                        <Typography className="text-sm text-gray-600 dark:text-gray-400 mb-1">
                           {attr.trait_type}
                         </Typography>
-                        <Typography className="text-white font-semibold mb-1">
+                        <Typography className="text-black dark:text-white font-semibold mb-1">
                           {attr.value}
                         </Typography>
                         {attr.rarity && (
@@ -315,7 +315,7 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
               {!(selectedNftForOffer.userName === wgtParameters.displayName) && (
                 <Typography
                   variant="h5"
-                  className="text-center font-semibold text-black"
+                  className="text-center font-semibold text-black dark:text-white"
                 >
                   Offer to buy from {selectedNftForOffer.userName}
                 </Typography>
@@ -325,7 +325,7 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
                 <>
                   <div className="flex justify-center items-center gap-4">
                     <Typography
-                      className={`font-medium ${state.isSell ? "text-black" : "text-gray-400"
+                      className={`font-medium ${state.isSell ? "text-black dark:text-white" : "text-gray-400 dark:text-gray-500"
                         }`}
                     >
                       Sell
@@ -336,7 +336,7 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
                       color="primary"
                     />
                     <Typography
-                      className={`font-medium ${!state.isSell ? "text-black " : "text-gray-400"
+                      className={`font-medium ${!state.isSell ? "text-black dark:text-white" : "text-gray-400 dark:text-gray-500"
                         }`}
                     >
                       Transfer
@@ -349,7 +349,21 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
                     fullWidth
                     variant="outlined"
                     size="small"
-                    className="mb-4 bg-white rounded"
+                    className="mb-4 bg-white dark:bg-gray-800 dark:text-white rounded"
+                    sx={{
+                      "& .MuiOutlinedInput-notchedOutline": {
+                        borderColor: "gray",
+                      },
+                      "&:hover .MuiOutlinedInput-notchedOutline": {
+                        borderColor: "blue",
+                      },
+                      "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                        borderColor: "green",
+                      },
+                      "& .MuiInputBase-input": {
+                        color: "black",
+                      },
+                    }}
                   >
                     {membersList.map(user => (
                       <MenuItem key={user.userId} value={user.name}>
@@ -397,7 +411,7 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
                     onChange={e => updateField("token", e.target.value)}
                     fullWidth
                     size="small"
-                    className="bg-white rounded"
+                    className="bg-white dark:bg-gray-800 dark:text-white rounded"
                     sx={{
                       "& .MuiOutlinedInput-notchedOutline": {
                         borderColor: "gray", // default border
