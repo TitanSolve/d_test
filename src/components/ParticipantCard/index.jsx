@@ -400,23 +400,8 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
                         "&.Mui-focused fieldset": {
                           borderColor: "purple", // focused border
                         },
-                        backgroundColor: "white",
-                        color: "black",
-                        "@media (prefers-color-scheme: dark)": {
-                          backgroundColor: "#1f2937", // Tailwind's gray-800
-                          color: "#f9fafb", // Tailwind's gray-50
-                        },
-                      },
-                      "& .MuiInputBase-input": {
-                        color: "black",
-                        "@media (prefers-color-scheme: dark)": {
-                          color: "#f9fafb",
-                        },
-                      },
-                      "& .MuiInputLabel-root": {
-                        color: "black",
-                        "@media (prefers-color-scheme: dark)": {
-                          color: "#f9fafb",
+                        "& .MuiInputBase-input": {
+                          color: "black", // 👈 text color
                         },
                       },
                     }}
