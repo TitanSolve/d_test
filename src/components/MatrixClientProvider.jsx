@@ -126,7 +126,7 @@ const MatrixClientProvider = () => {
   }
   
   function fetchSingleStateEvents() {
-    const params = widgetApi.widgetParameters;
+    const params = widgetApi.widgetParameters; 
     console.log("params----------->", params);
 
     const capabilities = widgetApi.getWidgetConfig();
