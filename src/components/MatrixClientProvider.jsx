@@ -97,6 +97,9 @@ const MatrixClientProvider = () => {
   // }, [widgetApi]);
 
   useEffect(() => {
+
+    console.log("--------------------------------------------");
+
     widgetApi1.start();
     widgetApi1.on("org.matrix.msc2871.theme", (ev) => {
       console.log("ev : ", ev)
