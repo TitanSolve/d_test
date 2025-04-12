@@ -388,7 +388,13 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
                     InputProps={{
                       startAdornment: (
                         <InputAdornment position="start">🪙</InputAdornment>
-                      )
+                      ),
+                      classes: {
+                        input: "text-black dark:text-white", // ✅ Tailwind text color for input
+                      },
+                    }}
+                    InputLabelProps={{
+                      className: "text-gray-700 dark:text-gray-300", // ✅ Tailwind text color for label
                     }}
                     sx={{
                       "& .MuiOutlinedInput-root": {
@@ -401,13 +407,6 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
                         "&.Mui-focused fieldset": {
                           borderColor: "purple",
                         },
-                        "& .MuiInputBase-input": {
-                          color: isDark ? "#fff" : "#000", // ✅ Dynamic text color
-                          backgroundColor: isDark ? "#15191E" : "#fff", // optional consistency
-                        },
-                      },
-                      "& .MuiInputLabel-root": {
-                        color: isDark ? "#aaa" : "#000", // ✅ Dynamic label color
                       },
                     }}
                   />
