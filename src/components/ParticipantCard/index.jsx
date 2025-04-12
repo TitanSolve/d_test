@@ -402,11 +402,12 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
                           borderColor: "purple",
                         },
                         "& .MuiInputBase-input": {
-                          color: "black dark:white", // 👈 text color
+                          color: isDark ? "#fff" : "#000", // ✅ Dynamic text color
+                          backgroundColor: isDark ? "#15191E" : "#fff", // optional consistency
                         },
                       },
                       "& .MuiInputLabel-root": {
-                        color: "inherit", // Inherit from Tailwind too
+                        color: isDark ? "#aaa" : "#000", // ✅ Dynamic label color
                       },
                     }}
                   />
