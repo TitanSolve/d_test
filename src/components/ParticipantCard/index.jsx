@@ -401,8 +401,8 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
                         "&.Mui-focused fieldset": {
                           borderColor: "purple",
                         },
-                        "& input": {
-                          color: "inherit", // Inherit Tailwind-applied text color
+                        "& .MuiInputBase-input": {
+                          color: "black dark:white", // 👈 text color
                         },
                       },
                       "& .MuiInputLabel-root": {
