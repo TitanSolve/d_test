@@ -72,41 +72,6 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
 
   const openOfferModal = async (nft) => {
     setSelectedNftForOffer(nft);
-
-    // const client = new xrpl.Client("wss://xrplcluster.com/");
-    // await client.connect();
-    // console.log("Connected to wss://xrplcluster.com/, nftID:", nft.NFTokenID);
-
-    // const response = await client.request({
-    //   command: 'nft_info',
-    //   nft_id: nft.NFTokenID
-    // });
-
-    // console.log("response------->", response);
-
-    // const nftData = response.result;
-    // console.log("nftData------->", nftData);
-    // const uriHex = nftData.URI;
-    // console.log("uriHex------->", uriHex);
-
-    // if (!uriHex) {
-    //   throw new Error('No URI found for this NFT');
-    // }
-
-    // // Step 3: Decode the URI from hexadecimal
-    // const uri = xrpl.convertHexToString(uriHex);
-    // console.log("------------>URI", uri);
-
-    // // Step 4: Fetch the metadata (assuming an HTTP URL)
-    // const metadataResponse = await axios.get(uri);
-    // console.log("metadataResponse------>", metadataResponse);
-    // const metadata = metadataResponse.data;
-    // console.log("metadataResponse.data------>", metadataResponse.data);
-
-    // // Step 5: Extract traits (assuming ERC-721-like standard)
-    // const traits = metadata.attributes;
-    // console.log("traits------>", traits);
-
     setOfferModalOpen(true);
   };
 

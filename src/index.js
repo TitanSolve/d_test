@@ -8,45 +8,41 @@ import App from './App';
 const widgetApiPromise = WidgetApiImpl.create({
   capabilities: [
     WidgetEventCapability.forStateEvent(
-        EventDirection.Receive,
-        'm.room.member'
+      EventDirection.Receive,
+      'm.room.member'
     ),
     WidgetEventCapability.forStateEvent(
-        EventDirection.Receive,
-        'm.room.name'
+      EventDirection.Receive,
+      'm.room.name'
     ),
     WidgetEventCapability.forRoomEvent(
-        EventDirection.Receive,
-        'm.room.message'
+      EventDirection.Receive,
+      'm.room.message'
     ),
     WidgetEventCapability.forRoomEvent(
-        EventDirection.Receive,
-        'm.reaction'
+      EventDirection.Receive,
+      'm.reaction'
     ),
     WidgetEventCapability.forRoomEvent(
-        EventDirection.Send,
-        'm.room.message'
+      EventDirection.Send,
+      'm.room.message'
     ),
     WidgetEventCapability.forRoomEvent(
-        EventDirection.Send,
-        'm.room.redaction'
+      EventDirection.Send,
+      'm.room.redaction'
     ),
     WidgetEventCapability.forStateEvent(
-        EventDirection.Send,
-        'm.room.name'
+      EventDirection.Send,
+      'm.room.name'
     ),
     WidgetEventCapability.forStateEvent(
       EventDirection.Receive,
       'org.matrix.msc2871.theme'
-  ),
-  WidgetEventCapability.forStateEvent(
-    EventDirection.Receive,
-    '*'
-),
-    // {
-    //   type: 'org.matrix.msc2871.theme',
-    //   direction: EventDirection.Receive,
-    // },
+    ),
+    WidgetEventCapability.forStateEvent(
+      EventDirection.Receive,
+      '*'
+    ),
   ],
 });
 

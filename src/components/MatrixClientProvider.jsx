@@ -27,7 +27,6 @@ const getImageData = async (nft) => {
   let URI = "";
   let name = nft.name;
 
-  // if (URI === "") {
   try {
     const metadataUrl = `${API_URLS.marketPlace}/api/metadata/${nft?.NFTokenID}`;
     const response = await axios.get(metadataUrl);
@@ -36,45 +35,6 @@ const getImageData = async (nft) => {
   } catch (error) {
     console.log("Error fetching metadata:", error);
   }
-  // }
-
-  // if (URI === "" || URI === undefined || URI === null) {
-  //   URI = nft_default_pic.toString();
-  //   return URI;
-  // }
-
-  // const httpNftImageUrl = URI.replace("ipfs://", "https://ipfs.io/ipfs/");
-
-  // if (URI.includes("ipfs")) {
-  //   await axios
-  //     .get(httpNftImageUrl)
-  //     .then((response) => {
-  //       const nftImageUrl = response.data.image || URI;
-  //       const imageUrl = nftImageUrl.replace(
-  //         "ipfs://",
-  //         "https://ipfs.io/ipfs/"
-  //       );
-  //       name = response.data.name || name;
-  //       URI = imageUrl;
-  //     })
-  //     .catch((error) => console.error("Error fetching NFT data:", error));
-  // }
-
-  // if (URI.includes("json")) {
-  //   await axios
-  //     .get(httpNftImageUrl)
-  //     .then((response) => {
-  //       const nftImageUrl = response.data.image || URI;
-  //       name = response.data.name || name;
-  //       URI = nftImageUrl.replace(
-  //         "ipfs://",
-  //         "https://ipfs.io/ipfs/"
-  //       );
-  //     })
-  //     .catch((error) => console.error("Error umang fetching NFT data:", error));
-  // }
-  // nft.URI = URI;
-  // nft.name = name;
   return { name: name, URI: URI };
 };
 
@@ -90,6 +50,7 @@ const MatrixClientProvider = () => {
   const [myNftData, setMyNftData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [membersList, setMembersList] = useState([]);
+  const lodingBoxControls = useAnimation();
 
   const { theme, toggleTheme } = useTheme();
 
@@ -2608,6 +2569,10 @@ const MatrixClientProvider = () => {
     exit: { opacity: 0, x: -50 }
   };
 
+  useEffect(() => {
+    lodingBoxControls.start({ rotate: 360 });
+  }, [lodingBoxControls]);
+
   return (
     <>
       {loading ? (
@@ -2620,34 +2585,68 @@ const MatrixClientProvider = () => {
             height: "60vh",
             width: "100%",
             textAlign: "center",
-            gap: 2,
+            gap: 3,
+            bgcolor: "white",
           }}
+          className="dark:bg-[#15191E] transition-all duration-500 ease-in-out"
         >
           <motion.div
-            animate={{ rotate: 360 }}
+            animate={lodingBoxControls}
             transition={{
               repeat: Infinity,
-              duration: 1.2,
+              duration: 1.5,
               ease: "linear",
             }}
+            className="relative"
           >
-            <CircularProgress
-              size={48}
-              thickness={2}
+            <Box
               sx={{
-                color: "#1976d2", // your primary color or theme
+                position: "relative",
+                width: 64,
+                height: 64,
+                borderRadius: "50%",
+                border: "5px solid transparent",
+                borderTopColor: "#3b82f6",
               }}
+              className="dark:border-t-white animate-spin"
             />
+            <Box
+              sx={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+              }}
+            >
+              <Box
+                sx={{
+                  width: 24,
+                  height: 24,
+                  bgcolor: "#3b82f6",
+                  borderRadius: "50%",
+                }}
+                className="dark:bg-white"
+              />
+            </Box>
           </motion.div>
+
           <Typography
-            variant="body1"
+            variant="h6"
             sx={{
               fontWeight: 600,
-              color: "#555",
-              mt: 1,
+              color: "#444",
             }}
+            className="dark:text-white text-center text-base sm:text-lg tracking-wide"
           >
-            Loading...
+            Loading your experience...
+          </Typography>
+
+          <Typography
+            variant="body2"
+            sx={{ color: "#888" }}
+            className="dark:text-gray-400 max-w-xs text-sm"
+          >
+            Please wait a moment while we fetch everything you need.
           </Typography>
         </Box>
       ) : (

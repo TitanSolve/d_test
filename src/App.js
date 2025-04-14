@@ -1,5 +1,5 @@
 import React, { Suspense } from "react";
-import { MuiThemeProvider, MuiWidgetApiProvider } from '@matrix-widget-toolkit/mui';
+import { MuiWidgetApiProvider } from '@matrix-widget-toolkit/mui';
 import { BrowserRouter } from 'react-router-dom';
 import { WidgetParameter } from '@matrix-widget-toolkit/api';
 import MatrixClientProvider from './components/MatrixClientProvider';
@@ -8,7 +8,6 @@ import { ThemeProvider } from "./context/ThemeContext";
 function App({ widgetApiPromise }) {
   return (
     <BrowserRouter>
-      {/* <MuiThemeProvider> */}
       <ThemeProvider>
         <Suspense fallback={<></>}>
           <MuiWidgetApiProvider
@@ -24,7 +23,6 @@ function App({ widgetApiPromise }) {
           </MuiWidgetApiProvider>
         </Suspense>
         </ThemeProvider>
-      {/* </MuiThemeProvider> */}
     </BrowserRouter>
   );
 }
