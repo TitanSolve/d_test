@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useWidgetApi } from '@matrix-widget-toolkit/react';
 import { Tabs, Tab, Box, Typography, CircularProgress } from "@mui/material";
-import { motion, AnimatePresence, useAnimation } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { STATE_EVENT_ROOM_MEMBER } from "@matrix-widget-toolkit/api";
 import axios from "axios";
 import NFTs from "../pages/NFTs";
@@ -50,7 +50,6 @@ const MatrixClientProvider = () => {
   const [myNftData, setMyNftData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [membersList, setMembersList] = useState([]);
-  const lodingBoxControls = useAnimation();
 
   const { theme, toggleTheme } = useTheme();
 
@@ -2569,10 +2568,6 @@ const MatrixClientProvider = () => {
     exit: { opacity: 0, x: -50 }
   };
 
-  useEffect(() => {
-    lodingBoxControls.start({ rotate: 360 });
-  }, [lodingBoxControls]);
-
   return (
     <>
       {loading ? (
@@ -2585,68 +2580,34 @@ const MatrixClientProvider = () => {
             height: "60vh",
             width: "100%",
             textAlign: "center",
-            gap: 3,
-            bgcolor: "white",
+            gap: 2,
           }}
-          className="dark:bg-[#15191E] transition-all duration-500 ease-in-out"
         >
           <motion.div
-            animate={lodingBoxControls}
+            animate={{ rotate: 360 }}
             transition={{
               repeat: Infinity,
-              duration: 1.5,
+              duration: 1.2,
               ease: "linear",
             }}
-            className="relative"
           >
-            <Box
+            <CircularProgress
+              size={48}
+              thickness={2}
               sx={{
-                position: "relative",
-                width: 64,
-                height: 64,
-                borderRadius: "50%",
-                border: "5px solid transparent",
-                borderTopColor: "#3b82f6",
+                color: "#1976d2", // your primary color or theme
               }}
-              className="dark:border-t-white animate-spin"
             />
-            <Box
-              sx={{
-                position: "absolute",
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
-              }}
-            >
-              <Box
-                sx={{
-                  width: 24,
-                  height: 24,
-                  bgcolor: "#3b82f6",
-                  borderRadius: "50%",
-                }}
-                className="dark:bg-white"
-              />
-            </Box>
           </motion.div>
-
           <Typography
-            variant="h6"
+            variant="body1"
             sx={{
               fontWeight: 600,
-              color: "#444",
+              color: "#555",
+              mt: 1,
             }}
-            className="dark:text-white text-center text-base sm:text-lg tracking-wide"
           >
-            Loading your experience...
-          </Typography>
-
-          <Typography
-            variant="body2"
-            sx={{ color: "#888" }}
-            className="dark:text-gray-400 max-w-xs text-sm"
-          >
-            Please wait a moment while we fetch everything you need.
+            Loading...
           </Typography>
         </Box>
       ) : (
