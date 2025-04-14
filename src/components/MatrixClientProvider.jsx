@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useWidgetApi } from '@matrix-widget-toolkit/react';
 import { Tabs, Tab, Box, Typography, CircularProgress } from "@mui/material";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useAnimation } from "framer-motion";
 import { STATE_EVENT_ROOM_MEMBER } from "@matrix-widget-toolkit/api";
 import axios from "axios";
 import NFTs from "../pages/NFTs";
