@@ -27,10 +27,11 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
     sortOrder: "newest",
     isSell: true,
     isOldest: true,
-    selectedUser: "Alice @rPdshidjjore",
+    selectedUser: "",
     amount: "",
     collection: "collection",
-    selectedCollection: ""
+    selectedCollection: "",
+    token : "XRP"
   });
 
   const xrpl = require('xrpl');
@@ -79,6 +80,17 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
     setOfferModalOpen(false);
     setSelectedNftForOffer(null);
   };
+
+  const makeOffer = ( isSell, selectedNftForOffer) => {
+    console.log("isSell : ", isSell);
+    const own = (selectedNftForOffer.userName === wgtParameters.displayName);
+    console.log("own : ", own);
+    console.log("selected user : ", state.selectedUser);
+    console.log("selected token : ", state.token);
+    console.log("selected amount : ", state.amount);
+    // membersList
+
+  }
 
   const collections = [...new Set(myNftData.groupedNfts.map(group => group.collection))];
 
@@ -330,6 +342,9 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
                       },
                     }}
                   >
+                    <MenuItem key={"empty"} value={""}>
+                        Select User (Optinal)
+                    </MenuItem>
                     {membersList.map(user => (
                       <MenuItem key={user.userId} value={user.name}>
                         {user.name}
@@ -397,8 +412,7 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
                     }}
                   >
                     <MenuItem value="XRP">XRP</MenuItem>
-                    <MenuItem value="TokenA">TokenA</MenuItem>
-                    <MenuItem value="TokenB">TokenB</MenuItem>
+                    <MenuItem value="TokenA">TXT</MenuItem>
                   </Select>
                 </div>
               )}
@@ -408,9 +422,7 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
                   variant="contained"
                   size="large"
                   className="rounded-md w-1/2"
-                  onClick={() =>
-                    console.log(state.isSell ? "Selling NFT" : "Transferring NFT")
-                  }
+                  onClick={() => makeOffer(state.isSell, selectedNftForOffer)}
                 >
                   {state.isSell ? (!(selectedNftForOffer.userName === wgtParameters.displayName) ? "Offer Buy" : "Offer Sell") : "Transfer"}
                 </Button>

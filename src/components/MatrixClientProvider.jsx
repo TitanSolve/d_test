@@ -38,12 +38,6 @@ const getImageData = async (nft) => {
   return { name: name, URI: URI };
 };
 
-const panelVariants = {
-  hidden: { opacity: 0, x: 50 },
-  visible: { opacity: 1, x: 0 },
-  exit: { opacity: 0, x: -50 },
-};
-
 const MatrixClientProvider = () => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const widgetApi = useWidgetApi();
