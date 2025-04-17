@@ -27,7 +27,7 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
     sortOrder: "newest",
     isSell: true,
     isOldest: true,
-    selectedUser: "",
+    selectedUser: "all",
     amount: "",
     collection: "collection",
     selectedCollection: "",
@@ -342,9 +342,7 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
                       },
                     }}
                   >
-                    <MenuItem key={"empty"} value={""}>
-                        Select User (Optinal)
-                    </MenuItem>
+                    <MenuItem key={"all"} value={"all"}>All Others</MenuItem>
                     {membersList.map(user => (
                       <MenuItem key={user.userId} value={user.name}>
                         {user.name}
@@ -412,7 +410,7 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
                     }}
                   >
                     <MenuItem value="XRP">XRP</MenuItem>
-                    <MenuItem value="TokenA">TXT</MenuItem>
+                    <MenuItem value="TXT">TXT</MenuItem>
                   </Select>
                 </div>
               )}
