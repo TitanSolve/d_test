@@ -38,6 +38,38 @@ const getImageData = async (nft) => {
   return { name: name, URI: URI };
 };
 
+async function getTrustLinesAsArray(wallets) {
+  const client = new xrpl.Client(API_URLS.REACT_APP_XRPL_MAIN_NET_URL) // testnet
+  await client.connect()
+
+  const trustLinesArray = []
+
+  for (const address of wallets) {
+    try {
+      const response = await client.request({
+        command: "account_lines",
+        account: address,
+      })
+
+      trustLinesArray.push({
+        wallet: address,
+        trustLines: response.result.lines
+      })
+    } catch (err) {
+      trustLinesArray.push({
+        wallet: address,
+        error: err.data?.error_message || err.message,
+        trustLines: []
+      })
+    }
+  }
+
+  await client.disconnect()
+
+  console.log("trustLinesArray : ", trustLinesArray);
+  return trustLinesArray;
+}
+
 const MatrixClientProvider = () => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const widgetApi = useWidgetApi();
@@ -63,6 +95,9 @@ const MatrixClientProvider = () => {
         setMembersList(usersList);
 
         const userIds = usersList.map(member => member.userId.split(":")[0].replace("@", ""));
+        console.log("userIds : ", userIds);
+        getTrustLinesAsArray(userIds);
+
         const nft_list = {}; // Use object to group by wallet
 
         for (const walletAddress of userIds) {
