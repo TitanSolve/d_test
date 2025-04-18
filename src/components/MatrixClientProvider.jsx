@@ -39,20 +39,26 @@ const getImageData = async (nft) => {
   return { name: name, URI: URI };
 };
 
-const decodeCurrency = (hex) => {
-  console.log('Decoding currency:', hex, "length:", hex.length, hex.length === 40);
+const decodeCurrency = (currency) => {
   try {
-    if (hex.length === 40) { // Custom 20-byte currency code
-      console.log("---------------------------------")
-      const buf = Buffer.from(hex, 'hex')
-      console.log('Custom 20-byte currency code:', buf.toString('ascii').replace(/\0/g, ''));
-      return buf.toString('ascii').replace(/\0/g, '')
-    }
-    return hex // already readable (like XRP or USD)
+    // Return standard 3-letter codes directly
+    if (currency.length <= 3) return currency
+
+    // Check if it's a 40-char hex string
+    const isHex = /^[A-Fa-f0-9]{40}$/.test(currency)
+    if (!isHex) return currency
+
+    // Attempt to decode buffer to ASCII
+    const buf = Buffer.from(currency, 'hex')
+    const ascii = buf.toString('ascii').replace(/\0/g, '').trim()
+
+    // If the decoded value is printable ASCII, return it
+    const isPrintable = /^[\x20-\x7E]+$/.test(ascii)
+    return isPrintable ? ascii : currency
   } catch (e) {
-    return hex // fallback
+    return currency
   }
-};
+}
 
 async function getTrustLinesAsArray(wallets) {
   const xrpl = require('xrpl');
