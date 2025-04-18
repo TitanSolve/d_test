@@ -82,7 +82,7 @@ const ParticipantCard = ({
 
   const openOfferModal = async (nft) => {
     const myName = wgtParameters.displayName;
-    const own = membersList.find((u) => u.name === /*myName*/ "This Guy");
+    const own = membersList.find((u) => u.name === myName /*"This Guy"*/);
     const currentUser = membersList.find((u) => u.name === nft.userName);
     const myTrustLines = own.trustLines;
     const currentUserTrustLines = currentUser.trustLines;
