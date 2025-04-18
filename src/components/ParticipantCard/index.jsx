@@ -34,7 +34,7 @@ const ParticipantCard = ({
     isSell: true,
     isOldest: true,
     selectedUser: "all",
-    amount: "",
+    amount: "1",
     collection: "collection",
     selectedCollection: "",
     token: "XRP",
@@ -86,10 +86,10 @@ const ParticipantCard = ({
     const currentUser = membersList.find((u) => u.name === nft.userName);
     const myTrustLines = own.trustLines;
     const currentUserTrustLines = currentUser.trustLines;
-    console.log("me", own);
-    console.log("MyTrustLines", myTrustLines);
-    console.log("currentUser", currentUser);
-    console.log("currentUserTrustLines", currentUserTrustLines);
+    // console.log("me", own);
+    // console.log("MyTrustLines", myTrustLines);
+    // console.log("currentUser", currentUser);
+    // console.log("currentUserTrustLines", currentUserTrustLines);
 
     const sharedTrustLines = myTrustLines.filter((myLine) =>
       currentUserTrustLines.some(
@@ -113,15 +113,14 @@ const ParticipantCard = ({
       ).values()
     );
 
-    const hasXRP = unique.some(item => item.decodedCurrency === "XRP");
+    const hasXRP = unique.some((item) => item.decodedCurrency === "XRP");
     if (!hasXRP) {
-      unique.push({ currency: "XRP", decodedCurrency: "XRP" })
+      unique.push({ currency: "XRP", decodedCurrency: "XRP" });
     }
 
-    console.log("uniqueCurrencies : ", unique);
+    // console.log("uniqueCurrencies : ", unique);
 
     setUniqueCurrencies(unique);
-
     setSelectedNftForOffer(nft);
     setOfferModalOpen(true);
   };
@@ -133,7 +132,9 @@ const ParticipantCard = ({
 
   const makeOffer = async (isSell, selectedNftForOffer) => {
     console.log("isSell : ", isSell);
-    const own = selectedNftForOffer.userName === wgtParameters.displayName;
+    const myName = wgtParameters.displayName;
+    const own = membersList.find((u) => u.name === myName /*"This Guy"*/);
+    const ownWalletAddress = own.userId?.split(":")[0].replace("@", "");
     console.log("own : ", own);
     console.log("selected user : ", state.selectedUser);
     console.log("selected token : ", state.token);
@@ -143,9 +144,39 @@ const ParticipantCard = ({
     const client = new xrpl.Client(API_URLS.xrplMainnetUrl);
     await client.connect();
 
-    const sellerWallet = xrpl.Wallet.fromSeed();
+    const sellerWallet = xrpl.Wallet.fromSeed(ownWalletAddress);
+    const nftokenID = selectedNftForOffer.nftokenID;
+    const amount = state.amount;
+    const brokerAddress = API_URLS.brokerWalletAddress;
 
-    // membersList
+    // 📝 Sell offer with broker as destination
+    const tx = {
+      TransactionType: "NFTokenCreateOffer",
+      Account: sellerWallet.classicAddress,
+      NFTokenID: nftokenID,
+      Amount: amount,
+      Flags: xrpl.NFTokenCreateOfferFlags.tfSellNFToken,
+      Destination: brokerAddress,
+    };
+
+    console.log("tx : ", tx);
+
+    // ✍️ Sign and submit
+    const prepared = await client.autofill(tx);
+    console.log("prepared : ", prepared);
+    const signed = sellerWallet.sign(prepared);
+    console.log("signed : ", signed);
+    const result = await client.submitAndWait(signed.tx_blob);
+    console.log("result : ", result);
+
+    // 📦 Log results
+    console.log("Sell Offer submitted.");
+    console.log(JSON.stringify(result, null, 2));
+
+    const sellOfferId = result.result?.meta?.nftoken_offers?.[0]?.index;
+    console.log("Sell Offer ID:", sellOfferId);
+
+    await client.disconnect();
   };
 
   const collections = [
@@ -525,7 +556,10 @@ const ParticipantCard = ({
                     }}
                   >
                     {uniqueCurrencies.map((trustLine) => (
-                      <MenuItem key={trustLine.currency} value={trustLine.decodedCurrency}>
+                      <MenuItem
+                        key={trustLine.currency}
+                        value={trustLine.decodedCurrency}
+                      >
                         {trustLine.decodedCurrency}
                       </MenuItem>
                     ))}

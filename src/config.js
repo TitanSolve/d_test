@@ -6,6 +6,9 @@ const API_URLS = {
   elementsUrl: process.env.REACT_APP_ELEMENTS_URL,
   xrplMainnetUrl: process.env.REACT_APP_XRPL_MAIN_NET_URL,
   xrplTestnetUrl: process.env.REACT_APP_XRPL_TEST_NET_URL,
+  brokerWalletAddress: process.env.REACT_APP_BROKER_WALLET_ADDRESS,
+  systemWalletAddress: process.env.REACT_APP_SYSTEM_WALLET_ADDRESS,
+  systemWalletSeed: process.env.REACT_APP_SYSTEM_WALLET_SEED
 };
 
 export default API_URLS;
