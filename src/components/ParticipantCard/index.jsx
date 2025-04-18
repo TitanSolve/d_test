@@ -13,16 +13,21 @@ import {
   TextField,
   Chip,
   Button,
-  InputAdornment
+  InputAdornment,
 } from "@mui/material";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import NFTCard from "../NFT-Card";
-import './index.css';
-import xrpl from "xrpl"
+import "./index.css";
+import xrpl from "xrpl";
 
-
-const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImageData }) => {
+const ParticipantCard = ({
+  index,
+  membersList,
+  myNftData,
+  wgtParameters,
+  getImageData,
+}) => {
   const [state, setState] = useState({
     sortOrder: "newest",
     isSell: true,
@@ -31,22 +36,51 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
     amount: "",
     collection: "collection",
     selectedCollection: "",
-    token : "XRP"
+    token: "XRP",
   });
 
-  const xrpl = require('xrpl');
+  const xrpl = require("xrpl");
 
   const [previewModalOpen, setPreviewModalOpen] = useState(false);
   const [selectedNFTGroup, setSelectedNFTGroup] = useState(null);
   const [offerModalOpen, setOfferModalOpen] = useState(false);
   const [selectedNftForOffer, setSelectedNftForOffer] = useState(null);
+  const [uniqueCurrencies, setUniqueCurrencies] = useState([]);
 
-  const toggleSellMode = () => setState(prev => ({ ...prev, isSell: !prev.isSell }));
+  useEffect(() => {
+    const userName = wgtParameters.displayName;
+    const user = membersList.find((u) => u.name === userName);
+
+    if (!user || !user.trustLines?.length) {
+      console.warn(`No trust lines found for ${userName}`);
+      setUniqueCurrencies([]);
+      return;
+    }
+
+    const newLines = user.trustLines.filter((line) => {
+      return !uniqueCurrencies.some(
+        (existing) =>
+          existing.currency === line.currency &&
+          existing.account === line.account // issuer
+      );
+    });
+
+    console.log("newLines : ", newLines);
+
+    if (newLines.length > 0) {
+      setUniqueCurrencies((prev) => [...prev, ...newLines]);
+    }
+  }, [membersList, wgtParameters.displayName]);
+
+  const toggleSellMode = () =>
+    setState((prev) => ({ ...prev, isSell: !prev.isSell }));
   const updateField = (field, value) =>
     setState((prev) => ({ ...prev, [field]: value }));
 
-  const filteredNfts = myNftData.groupedNfts.filter((group) =>
-    group.collection === state.selectedCollection || state.selectedCollection === ""
+  const filteredNfts = myNftData.groupedNfts.filter(
+    (group) =>
+      group.collection === state.selectedCollection ||
+      state.selectedCollection === ""
   );
 
   const responsive = {
@@ -60,8 +94,7 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
     if (group.nfts.length > 1) {
       setSelectedNFTGroup(group);
       setPreviewModalOpen(true);
-    }
-    else {
+    } else {
       openOfferModal(group.nfts[0]);
     }
   };
@@ -81,30 +114,41 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
     setSelectedNftForOffer(null);
   };
 
-  const makeOffer = ( isSell, selectedNftForOffer) => {
+  const makeOffer = (isSell, selectedNftForOffer) => {
     console.log("isSell : ", isSell);
-    const own = (selectedNftForOffer.userName === wgtParameters.displayName);
+    const own = selectedNftForOffer.userName === wgtParameters.displayName;
     console.log("own : ", own);
     console.log("selected user : ", state.selectedUser);
     console.log("selected token : ", state.token);
     console.log("selected amount : ", state.amount);
 
-
     // membersList
+  };
 
-  }
-
-  const collections = [...new Set(myNftData.groupedNfts.map(group => group.collection))];
+  const collections = [
+    ...new Set(myNftData.groupedNfts.map((group) => group.collection)),
+  ];
 
   return (
     <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-2xl shadow-lg w-full max-w-5xl bg-white dark:bg-[#15191E] text-black dark:text-white transition-colors duration-300">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <Typography variant="h6" className="font-bold text-black dark:text-white">
-          {myNftData.name === wgtParameters.displayName ? "My NFTs" : myNftData.name}
+        <Typography
+          variant="h6"
+          className="font-bold text-black dark:text-white"
+        >
+          {myNftData.name === wgtParameters.displayName
+            ? "My NFTs"
+            : myNftData.name}
         </Typography>
 
-        <FormControl variant="outlined" size="small" className="text-black dark:text-white">
-          <InputLabel className="text-black dark:text-white">Collection</InputLabel>
+        <FormControl
+          variant="outlined"
+          size="small"
+          className="text-black dark:text-white"
+        >
+          <InputLabel className="text-black dark:text-white">
+            Collection
+          </InputLabel>
           <Select
             value={state.selectedCollection}
             onChange={(e) => updateField("selectedCollection", e.target.value)}
@@ -112,7 +156,8 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
             className="bg-white dark:bg-gray-800 text-black dark:text-white"
             MenuProps={{
               PaperProps: {
-                className: 'bg-white dark:bg-gray-800 text-black dark:text-white',
+                className:
+                  "bg-white dark:bg-gray-800 text-black dark:text-white",
               },
             }}
           >
@@ -155,8 +200,16 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
         >
           {filteredNfts.length > 0 ? (
             filteredNfts.map((groupedNft, idx) => (
-              <div key={idx} onClick={() => openPreviewModal(groupedNft)} className="cursor-pointer">
-                <NFTCard myNftData={groupedNft} isGroup={true} isImgOnly={false} />
+              <div
+                key={idx}
+                onClick={() => openPreviewModal(groupedNft)}
+                className="cursor-pointer"
+              >
+                <NFTCard
+                  myNftData={groupedNft}
+                  isGroup={true}
+                  isImgOnly={false}
+                />
               </div>
             ))
           ) : (
@@ -176,10 +229,11 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
         bodyStyle={{ borderRadius: "10px", padding: "24px" }}
       >
         <Box className="absolute top-1/2 left-1/2 w-11/12 bg-white dark:bg-[#15191E] text-black dark:text-white rounded-2xl shadow-2xl transform -translate-x-1/2 -translate-y-1/2 p-4 sm:p-6 md:p-8 outline-none border border-gray-200 dark:border-gray-700 transition-colors duration-300">
-          <Typography variant="h6" className="font-bold overflow-hidden text-black dark:text-white">
-            {selectedNFTGroup && (
-              "Issuer : " + selectedNFTGroup.nfts[0].Issuer
-            )}
+          <Typography
+            variant="h6"
+            className="font-bold overflow-hidden text-black dark:text-white"
+          >
+            {selectedNFTGroup && "Issuer : " + selectedNFTGroup.nfts[0].Issuer}
           </Typography>
           <div className="relative">
             <Carousel
@@ -203,15 +257,22 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
             >
               {selectedNFTGroup &&
                 selectedNFTGroup.nfts.map((nft, idx) => (
-                  <div key={idx} onClick={() => openOfferModal(nft)} className="cursor-pointer hover:scale-105 transition-transform duration-300">
-                    <NFTCard myNftData={nft} isGroup={false} isImgOnly={false} />
+                  <div
+                    key={idx}
+                    onClick={() => openOfferModal(nft)}
+                    className="cursor-pointer hover:scale-105 transition-transform duration-300"
+                  >
+                    <NFTCard
+                      myNftData={nft}
+                      isGroup={false}
+                      isImgOnly={false}
+                    />
                   </div>
                 ))}
             </Carousel>
           </div>
         </Box>
       </Modal>
-
 
       <Modal
         open={offerModalOpen}
@@ -224,16 +285,21 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
       >
         <div>
           {selectedNftForOffer !== null && (
-            <Box
-              className="bg-white dark:bg-[#15191E] text-black dark:text-white rounded-xl p-6 shadow-lg max-h-[90vh] max-w-full md:max-w-[500px] w-full mx-auto top-1/2 left-1/2 absolute transform -translate-x-1/2 -translate-y-1/2 overflow-y-auto transition-colors duration-300"
-            >
+            <Box className="bg-white dark:bg-[#15191E] text-black dark:text-white rounded-xl p-6 shadow-lg max-h-[90vh] max-w-full md:max-w-[500px] w-full mx-auto top-1/2 left-1/2 absolute transform -translate-x-1/2 -translate-y-1/2 overflow-y-auto transition-colors duration-300">
               <div className="flex justify-between items-center mb-4">
                 <div>
-                  <Typography variant="subtitle1" className="font-semibold text-black dark:text-white">
+                  <Typography
+                    variant="subtitle1"
+                    className="font-semibold text-black dark:text-white"
+                  >
                     {selectedNftForOffer.metadata.name}
                   </Typography>
-                  <Typography variant="subtitle2" className="text-sm text-gray-600 dark:text-gray-300">
-                    Issuer: {selectedNftForOffer.issuer} - {selectedNftForOffer.nftokenTaxon}
+                  <Typography
+                    variant="subtitle2"
+                    className="text-sm text-gray-600 dark:text-gray-300"
+                  >
+                    Issuer: {selectedNftForOffer.issuer} -{" "}
+                    {selectedNftForOffer.nftokenTaxon}
                   </Typography>
                 </div>
                 <Button
@@ -244,54 +310,68 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
                     fontWeight: "bold",
                     lineHeight: 1,
                     padding: 0,
-                    minHeight: "auto"
+                    minHeight: "auto",
                   }}
                 >
                   ✕
                 </Button>
               </div>
 
-              <NFTCard myNftData={selectedNftForOffer} isGroup={false} isImgOnly={true} />
-              <Typography variant="subtitle2" className="text-center font-semibold text-black dark:text-white" >
-                IssuerFee : {selectedNftForOffer.transferFee * 1 / 1000} %
+              <NFTCard
+                myNftData={selectedNftForOffer}
+                isGroup={false}
+                isImgOnly={true}
+              />
+              <Typography
+                variant="subtitle2"
+                className="text-center font-semibold text-black dark:text-white"
+              >
+                IssuerFee : {(selectedNftForOffer.transferFee * 1) / 1000} %
               </Typography>
 
               {selectedNftForOffer.metadata?.attributes?.length > 0 && (
                 <div className="mb-6">
-                  <Typography variant="subtitle2" className="font-semibold mb-2 text-black dark:text-white">
+                  <Typography
+                    variant="subtitle2"
+                    className="font-semibold mb-2 text-black dark:text-white"
+                  >
                     Attributes
                   </Typography>
                   <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4">
-                    {selectedNftForOffer.metadata.attributes.map((attr, idx) => (
-                      <Box
-                        key={index}
-                        className="bg-gray-100 dark:bg-[#1c1f26] rounded-md p-3 w-full transition-colors"
-                      >
-                        <Typography className="text-sm text-gray-600 dark:text-gray-400 mb-1">
-                          {attr.trait_type}
-                        </Typography>
-                        <Typography className="text-black dark:text-white font-semibold mb-1">
-                          {attr.value}
-                        </Typography>
-                        {attr.rarity && (
-                          <Chip
-                            label={`${attr.rarity}%`}
-                            size="small"
-                            sx={{
-                              backgroundColor: "#6c3df4",
-                              color: "white",
-                              fontSize: "0.75rem",
-                              fontWeight: 600,
-                            }}
-                          />
-                        )}
-                      </Box>
-                    ))}
+                    {selectedNftForOffer.metadata.attributes.map(
+                      (attr, idx) => (
+                        <Box
+                          key={index}
+                          className="bg-gray-100 dark:bg-[#1c1f26] rounded-md p-3 w-full transition-colors"
+                        >
+                          <Typography className="text-sm text-gray-600 dark:text-gray-400 mb-1">
+                            {attr.trait_type}
+                          </Typography>
+                          <Typography className="text-black dark:text-white font-semibold mb-1">
+                            {attr.value}
+                          </Typography>
+                          {attr.rarity && (
+                            <Chip
+                              label={`${attr.rarity}%`}
+                              size="small"
+                              sx={{
+                                backgroundColor: "#6c3df4",
+                                color: "white",
+                                fontSize: "0.75rem",
+                                fontWeight: 600,
+                              }}
+                            />
+                          )}
+                        </Box>
+                      )
+                    )}
                   </div>
                 </div>
               )}
 
-              {!(selectedNftForOffer.userName === wgtParameters.displayName) && (
+              {!(
+                selectedNftForOffer.userName === wgtParameters.displayName
+              ) && (
                 <Typography
                   variant="h5"
                   className="text-center font-semibold text-black dark:text-white"
@@ -300,12 +380,15 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
                 </Typography>
               )}
 
-              {(selectedNftForOffer.userName === wgtParameters.displayName) && (
+              {selectedNftForOffer.userName === wgtParameters.displayName && (
                 <>
                   <div className="flex justify-center items-center gap-4">
                     <Typography
-                      className={`font-medium ${state.isSell ? "text-black dark:text-white" : "text-gray-400 dark:text-gray-500"
-                        }`}
+                      className={`font-medium ${
+                        state.isSell
+                          ? "text-black dark:text-white"
+                          : "text-gray-400 dark:text-gray-500"
+                      }`}
                     >
                       Sell
                     </Typography>
@@ -315,8 +398,11 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
                       color="primary"
                     />
                     <Typography
-                      className={`font-medium ${!state.isSell ? "text-black dark:text-white" : "text-gray-400 dark:text-gray-500"
-                        }`}
+                      className={`font-medium ${
+                        !state.isSell
+                          ? "text-black dark:text-white"
+                          : "text-gray-400 dark:text-gray-500"
+                      }`}
                     >
                       Transfer
                     </Typography>
@@ -324,7 +410,9 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
 
                   <Select
                     value={state.selectedUser}
-                    onChange={e => updateField("selectedUser", e.target.value)}
+                    onChange={(e) =>
+                      updateField("selectedUser", e.target.value)
+                    }
                     fullWidth
                     variant="outlined"
                     size="small"
@@ -344,8 +432,10 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
                       },
                     }}
                   >
-                    <MenuItem key={"all"} value={"all"}>All Others</MenuItem>
-                    {membersList.map(user => (
+                    <MenuItem key={"all"} value={"all"}>
+                      All Others
+                    </MenuItem>
+                    {membersList.map((user) => (
                       <MenuItem key={user.userId} value={user.name}>
                         {user.name}
                       </MenuItem>
@@ -361,7 +451,7 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
                     label="Amount"
                     value={state.amount}
                     inputProps={{ min: 1 }}
-                    onChange={e => updateField("amount", e.target.value)}
+                    onChange={(e) => updateField("amount", e.target.value)}
                     fullWidth
                     size="small"
                     className="bg-white text-black dark:bg-[#15191E] dark:text-white rounded-md"
@@ -392,7 +482,7 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
                   />
                   <Select
                     value={state.token}
-                    onChange={e => updateField("token", e.target.value)}
+                    onChange={(e) => updateField("token", e.target.value)}
                     fullWidth
                     size="small"
                     className="bg-white dark:bg-gray-800 dark:text-white rounded"
@@ -413,6 +503,11 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
                   >
                     <MenuItem value="XRP">XRP</MenuItem>
                     <MenuItem value="TXT">TXT</MenuItem>
+                    {uniqueCurrencies.map((currency) => (
+                      <MenuItem key={currency} value={currency}>
+                        {currency}
+                      </MenuItem>
+                    ))}
                   </Select>
                 </div>
               )}
@@ -424,7 +519,14 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
                   className="rounded-md w-1/2"
                   onClick={() => makeOffer(state.isSell, selectedNftForOffer)}
                 >
-                  {state.isSell ? (!(selectedNftForOffer.userName === wgtParameters.displayName) ? "Offer Buy" : "Offer Sell") : "Transfer"}
+                  {state.isSell
+                    ? !(
+                        selectedNftForOffer.userName ===
+                        wgtParameters.displayName
+                      )
+                      ? "Offer Buy"
+                      : "Offer Sell"
+                    : "Transfer"}
                 </Button>
               </div>
             </Box>
@@ -436,4 +538,3 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
 };
 
 export default ParticipantCard;
-

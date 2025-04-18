@@ -94,8 +94,6 @@ async function getTrustLinesAsArray(wallets) {
   }
 
   await client.disconnect()
-
-  console.log("trustLinesArray : ", trustLinesArray);
   return trustLinesArray;
 }
 
