@@ -76,7 +76,8 @@ async function getTrustLinesAsArray(wallets) {
 
       const decodedLines = response.result.lines.map(line => ({
         ...line,
-        currency: decodeCurrency(line.currency)
+        currency: line.currency,
+        decodedCurrency: decodeCurrency(line.currency)
       }))
 
       trustLinesArray.push({
@@ -117,12 +118,25 @@ const MatrixClientProvider = () => {
         const usersList = events.map(item => ({
           name: item.content.displayname,
           userId: item.sender
-        }));
-        setMembersList(usersList);
+        }));        
 
         const userIds = usersList.map(member => member.userId.split(":")[0].replace("@", ""));
         console.log("userIds : ", userIds);
-        getTrustLinesAsArray(userIds);
+        const trustLinesArray = await getTrustLinesAsArray(userIds);
+
+        const usersWithTrustLines = usersList.map(user => {
+          const walletAddress = user.userId.split(":")[0].replace("@", "")
+          const trustData = trustLinesArray.find(t => t.wallet === walletAddress)
+          return {
+            ...user,
+            trustLines: trustData?.trustLines || [],
+            trustLineError: trustData?.error || null
+          }
+        })
+
+        console.log("usersWithTrustLines : ", usersWithTrustLines);
+
+        setMembersList(usersWithTrustLines);
 
         const nft_list = {}; // Use object to group by wallet
 
