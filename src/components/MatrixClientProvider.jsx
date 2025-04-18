@@ -42,6 +42,7 @@ const decodeCurrency = (hex) => {
   try {
     if (hex.length === 40) { // Custom 20-byte currency code
       const buf = Buffer.from(hex, 'hex')
+      console.log('Custom 20-byte currency code:', buf.toString('ascii').replace(/\0/g, ''));
       return buf.toString('ascii').replace(/\0/g, '')
     }
     return hex // already readable (like XRP or USD)
