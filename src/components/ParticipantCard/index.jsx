@@ -20,6 +20,7 @@ import "react-multi-carousel/lib/styles.css";
 import NFTCard from "../NFT-Card";
 import "./index.css";
 import xrpl from "xrpl";
+import API_URLS from "../../config";
 
 const ParticipantCard = ({
   index,
@@ -46,32 +47,6 @@ const ParticipantCard = ({
   const [offerModalOpen, setOfferModalOpen] = useState(false);
   const [selectedNftForOffer, setSelectedNftForOffer] = useState(null);
   const [uniqueCurrencies, setUniqueCurrencies] = useState([]);
-
-  useEffect(() => {
-    const userName = wgtParameters.displayName;
-    const user = membersList.find((u) => u.name === userName);
-    console.log("usr : ", user);
-
-    if (!user || !user.trustLines?.length) {
-      console.warn(`No trust lines found for ${userName}`);
-      setUniqueCurrencies([]);
-      return;
-    }
-
-    const newLines = user.trustLines.filter((line) => {
-      return !uniqueCurrencies.some(
-        (existing) =>
-          existing.currency === line.currency &&
-          existing.account === line.account
-      );
-    });
-
-    console.log("newLines : ", newLines);
-
-    if (newLines.length > 0) {
-      setUniqueCurrencies((prev) => [...prev, ...newLines]);
-    }
-  }, [membersList, wgtParameters.displayName]);
 
   const toggleSellMode = () =>
     setState((prev) => ({ ...prev, isSell: !prev.isSell }));
@@ -106,6 +81,38 @@ const ParticipantCard = ({
   };
 
   const openOfferModal = async (nft) => {
+
+    const myName = wgtParameters.displayName;
+    const own = membersList.find((u) => u.name === /*myName*/ "This Guy" );
+    const currentUser = membersList.find((u) => u.name === nft.userName);
+    const myTrustLines = own.trustLines;
+    const currentUserTrustLines = currentUser.trustLines;
+    console.log("me", own);
+    console.log("MyTrustLines", myTrustLines);
+    console.log("currentUser", currentUser);
+    console.log("currentUserTrustLines", currentUserTrustLines);
+
+    // if (!user || !user.trustLines?.length) {
+    //   console.warn(`No trust lines found for ${userName}`);
+    //   setUniqueCurrencies([]);
+    //   return;
+    // }
+
+    // const newLines = user.trustLines.filter((line) => {
+    //   return !uniqueCurrencies.some(
+    //     (existing) =>
+    //       existing.currency === line.currency &&
+    //       existing.account === line.account
+    //   );
+    // });
+
+    // console.log("newLines : ", newLines);
+
+    // if (newLines.length > 0) {
+    //   setUniqueCurrencies((prev) => [...prev, ...newLines]);
+    // }
+
+
     setSelectedNftForOffer(nft);
     setOfferModalOpen(true);
   };
@@ -115,13 +122,19 @@ const ParticipantCard = ({
     setSelectedNftForOffer(null);
   };
 
-  const makeOffer = (isSell, selectedNftForOffer) => {
+  const makeOffer = async (isSell, selectedNftForOffer) => {
     console.log("isSell : ", isSell);
     const own = selectedNftForOffer.userName === wgtParameters.displayName;
     console.log("own : ", own);
     console.log("selected user : ", state.selectedUser);
     console.log("selected token : ", state.token);
     console.log("selected amount : ", state.amount);
+    console.log("selected nftID : ", selectedNftForOffer.nftokenID);
+    
+    const client = new xrpl.Client(API_URLS.xrplMainnetUrl);
+    await client.connect();
+
+    const sellerWallet = xrpl.Wallet.fromSeed()
 
     // membersList
   };
