@@ -143,8 +143,9 @@ const ParticipantCard = ({
 
     const client = new xrpl.Client(API_URLS.xrplMainnetUrl);
     await client.connect();
-
+    console.log("Connected to ", API_URLS.xrplMainnetUrl);
     const sellerWallet = xrpl.Wallet.fromSeed(ownWalletAddress);
+    console.log("sellerWallet : ", sellerWallet);
     const nftokenID = selectedNftForOffer.nftokenID;
     const amount = state.amount;
     const brokerAddress = API_URLS.brokerWalletAddress;
