@@ -38,6 +38,18 @@ const getImageData = async (nft) => {
   return { name: name, URI: URI };
 };
 
+const decodeCurrency = (hex) => {
+  try {
+    if (hex.length === 40) { // Custom 20-byte currency code
+      const buf = Buffer.from(hex, 'hex')
+      return buf.toString('ascii').replace(/\0/g, '')
+    }
+    return hex // already readable (like XRP or USD)
+  } catch (e) {
+    return hex // fallback
+  }
+};
+
 async function getTrustLinesAsArray(wallets) {
   const xrpl = require('xrpl');
   const client = new xrpl.Client(API_URLS.xrplMainnetUrl) // mainnet
@@ -52,9 +64,14 @@ async function getTrustLinesAsArray(wallets) {
         account: address,
       })
 
+      const decodedLines = response.result.lines.map(line => ({
+        ...line,
+        currency: decodeCurrency(line.currency)
+      }))
+
       trustLinesArray.push({
         wallet: address,
-        trustLines: response.result.lines
+        trustLines: decodedLines
       })
     } catch (err) {
       trustLinesArray.push({
