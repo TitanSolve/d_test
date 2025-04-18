@@ -81,9 +81,8 @@ const ParticipantCard = ({
   };
 
   const openOfferModal = async (nft) => {
-
     const myName = wgtParameters.displayName;
-    const own = membersList.find((u) => u.name === /*myName*/ "This Guy" );
+    const own = membersList.find((u) => u.name === /*myName*/ "This Guy");
     const currentUser = membersList.find((u) => u.name === nft.userName);
     const myTrustLines = own.trustLines;
     const currentUserTrustLines = currentUser.trustLines;
@@ -93,13 +92,35 @@ const ParticipantCard = ({
     console.log("currentUserTrustLines", currentUserTrustLines);
 
     const sharedTrustLines = myTrustLines.filter((myLine) =>
-      currentUserTrustLines.some((theirLine) =>
-        theirLine.currency === myLine.currency &&
-        theirLine.account === myLine.account
+      currentUserTrustLines.some(
+        (theirLine) =>
+          theirLine.currency === myLine.currency &&
+          theirLine.account === myLine.account
       )
-    )
+    );
 
     console.log("sharedTrustLines", sharedTrustLines);
+
+    let unique = Array.from(
+      new Map(
+        sharedTrustLines.map((line) => [
+          `${line.account}_${line.currency}`,
+          {
+            currency: line.currency,
+            decodedCurrency: line.decodedCurrency,
+          },
+        ])
+      ).values()
+    );
+
+    const hasXRP = unique.some(item => item.decodedCurrency === "XRP");
+    if (!hasXRP) {
+      unique.push({ currency: "XRP", decodedCurrency: "XRP" })
+    }
+
+    console.log("uniqueCurrencies : ", unique);
+
+    setUniqueCurrencies(unique);
 
     setSelectedNftForOffer(nft);
     setOfferModalOpen(true);
@@ -118,11 +139,11 @@ const ParticipantCard = ({
     console.log("selected token : ", state.token);
     console.log("selected amount : ", state.amount);
     console.log("selected nftID : ", selectedNftForOffer.nftokenID);
-    
+
     const client = new xrpl.Client(API_URLS.xrplMainnetUrl);
     await client.connect();
 
-    const sellerWallet = xrpl.Wallet.fromSeed()
+    const sellerWallet = xrpl.Wallet.fromSeed();
 
     // membersList
   };
@@ -503,11 +524,9 @@ const ParticipantCard = ({
                       },
                     }}
                   >
-                    <MenuItem value="XRP">XRP</MenuItem>
-                    <MenuItem value="TXT">TXT</MenuItem>
-                    {uniqueCurrencies.map((currency) => (
-                      <MenuItem key={currency} value={currency}>
-                        {currency}
+                    {uniqueCurrencies.map((trustLine) => (
+                      <MenuItem key={trustLine.currency} value={trustLine.decodedCurrency}>
+                        {trustLine.decodedCurrency}
                       </MenuItem>
                     ))}
                   </Select>
