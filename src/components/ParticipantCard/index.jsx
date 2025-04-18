@@ -92,26 +92,14 @@ const ParticipantCard = ({
     console.log("currentUser", currentUser);
     console.log("currentUserTrustLines", currentUserTrustLines);
 
-    // if (!user || !user.trustLines?.length) {
-    //   console.warn(`No trust lines found for ${userName}`);
-    //   setUniqueCurrencies([]);
-    //   return;
-    // }
+    const sharedTrustLines = myTrustLines.filter((myLine) =>
+      currentUserTrustLines.some((theirLine) =>
+        theirLine.currency === myLine.currency &&
+        theirLine.account === myLine.account
+      )
+    )
 
-    // const newLines = user.trustLines.filter((line) => {
-    //   return !uniqueCurrencies.some(
-    //     (existing) =>
-    //       existing.currency === line.currency &&
-    //       existing.account === line.account
-    //   );
-    // });
-
-    // console.log("newLines : ", newLines);
-
-    // if (newLines.length > 0) {
-    //   setUniqueCurrencies((prev) => [...prev, ...newLines]);
-    // }
-
+    console.log("sharedTrustLines", sharedTrustLines);
 
     setSelectedNftForOffer(nft);
     setOfferModalOpen(true);
