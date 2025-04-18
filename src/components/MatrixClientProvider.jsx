@@ -39,9 +39,10 @@ const getImageData = async (nft) => {
 };
 
 const decodeCurrency = (hex) => {
-  console.log('Decoding currency:', hex, "length:", hex.length);
+  console.log('Decoding currency:', hex, "length:", hex.length, hex.length === 40);
   try {
     if (hex.length === 40) { // Custom 20-byte currency code
+      console.log("---------------------------------")
       const buf = Buffer.from(hex, 'hex')
       console.log('Custom 20-byte currency code:', buf.toString('ascii').replace(/\0/g, ''));
       return buf.toString('ascii').replace(/\0/g, '')
