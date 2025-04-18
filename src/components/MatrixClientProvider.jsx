@@ -39,7 +39,8 @@ const getImageData = async (nft) => {
 };
 
 async function getTrustLinesAsArray(wallets) {
-  const client = new xrpl.Client(API_URLS.REACT_APP_XRPL_MAIN_NET_URL) // testnet
+  const xrpl = require('xrpl');
+  const client = new xrpl.Client(API_URLS.xrplMainnetUrl) // mainnet
   await client.connect()
 
   const trustLinesArray = []
@@ -78,8 +79,6 @@ const MatrixClientProvider = () => {
   const [membersList, setMembersList] = useState([]);
 
   const { theme, toggleTheme } = useTheme();
-
-  const xrpl = require('xrpl');
 
   useEffect(() => {
     const loadData = async () => {
