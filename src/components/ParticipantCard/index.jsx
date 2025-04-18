@@ -50,6 +50,7 @@ const ParticipantCard = ({
   useEffect(() => {
     const userName = wgtParameters.displayName;
     const user = membersList.find((u) => u.name === userName);
+    console.log("usr : ", user);
 
     if (!user || !user.trustLines?.length) {
       console.warn(`No trust lines found for ${userName}`);
@@ -61,7 +62,7 @@ const ParticipantCard = ({
       return !uniqueCurrencies.some(
         (existing) =>
           existing.currency === line.currency &&
-          existing.account === line.account // issuer
+          existing.account === line.account
       );
     });
 
