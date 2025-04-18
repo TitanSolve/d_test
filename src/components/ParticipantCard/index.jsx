@@ -88,6 +88,8 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
     console.log("selected user : ", state.selectedUser);
     console.log("selected token : ", state.token);
     console.log("selected amount : ", state.amount);
+
+
     // membersList
 
   }
@@ -251,7 +253,7 @@ const ParticipantCard = ({ index, membersList, myNftData, wgtParameters, getImag
 
               <NFTCard myNftData={selectedNftForOffer} isGroup={false} isImgOnly={true} />
               <Typography variant="subtitle2" className="text-center font-semibold text-black dark:text-white" >
-                TransferFee : {selectedNftForOffer.transferFee * 1 / 1000} %
+                IssuerFee : {selectedNftForOffer.transferFee * 1 / 1000} %
               </Typography>
 
               {selectedNftForOffer.metadata?.attributes?.length > 0 && (
