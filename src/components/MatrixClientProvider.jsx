@@ -175,15 +175,15 @@ const MatrixClientProvider = () => {
         console.log("Grouped NFT list by wallet:", nft_list);
 
 
-        // const response = await fetch(`${API_URLS.backendUrl}/get-users-nfts`, {
-        //   method: "POST",
-        //   headers: {
-        //     "Content-Type": "application/json",
-        //   },
-        //   body: JSON.stringify({
-        //     addresses: userIds
-        //   }),
-        // });
+        const response = await fetch(`${API_URLS.backendUrl}/get-users-nfts`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            addresses: userIds
+          }),
+        });
 
         // if (!response.ok) {
         //   throw new Error("Failed to fetch NFT data");
