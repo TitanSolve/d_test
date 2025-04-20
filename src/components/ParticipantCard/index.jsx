@@ -631,7 +631,7 @@ const ParticipantCard = ({
         bodyStyle={{ borderRadius: "10px", padding: "16px" }}
       >
         {qrCodeUrl !== "" ? (
-          <div className="qr-code-container">
+          <div className="">
             <img
               src={qrCodeUrl}
               alt="Scan this QR code with XUMM to sign the transaction"
