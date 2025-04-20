@@ -630,7 +630,7 @@ const ParticipantCard = ({
         closeAfterTransition
         bodyStyle={{ borderRadius: "10px", padding: "16px" }}
       >
-        <p>Transaction Status: {transactionStatus}</p>
+        <p>Transaction Status:</p>
       </Modal>
     </div>
   );
