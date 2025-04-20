@@ -621,25 +621,27 @@ const ParticipantCard = ({
       </Modal>
       {/* this modal is for the qr code */}
       <Modal
-        // title="Transaction QR Code"
+        title="Transaction QR Code"
         open={isQrModalVisible}
-        // onClose={() => setIsQrModalVisible(false)}
+        onClose={() => setIsQrModalVisible(false)}
         footer={null}
         closable={true}
         maskClosable={true}
         closeAfterTransition
         bodyStyle={{ borderRadius: "10px", padding: "16px" }}
       >
-        <div className="flex flex-row ">
-          {qrCodeUrl && (
-            <div className="">
-              <img
-                src={qrCodeUrl}
-                alt="Scan this QR code with XUMM to sign the transaction"
-              />
-            </div>
-          )}
-          <p>Transaction Status: {transactionStatus}</p>
+        <div>
+          <Box className="bg-white dark:bg-[#15191E] text-black dark:text-white rounded-xl p-6 shadow-lg max-h-[90vh] max-w-full md:max-w-[500px] w-full mx-auto top-1/2 left-1/2 absolute transform -translate-x-1/2 -translate-y-1/2 overflow-y-auto transition-colors duration-300">
+            {qrCodeUrl && (
+              <div className="">
+                <img
+                  src={qrCodeUrl}
+                  alt="Scan this QR code with XUMM to sign the transaction"
+                />
+              </div>
+            )}
+            <p>Transaction Status: {transactionStatus}</p>
+          </Box>
         </div>
       </Modal>
     </div>
