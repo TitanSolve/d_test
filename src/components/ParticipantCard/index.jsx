@@ -52,6 +52,7 @@ const ParticipantCard = ({
   const [qrCodeUrl, setQrCodeUrl] = useState("");
   const [isQrModalVisible, setIsQrModalVisible] = useState(false);
   const [sell, setSell] = useState(false);
+  const [transfer, setTransfer] = useState(false);
 
   const toggleSellMode = () =>
     setState((prev) => ({ ...prev, isSell: !prev.isSell }));
@@ -162,27 +163,53 @@ const ParticipantCard = ({
     // const brokerAddress = API_URLS.brokerWalletAddress;
 
 
-    const payload = {
-      nft: selectedNftForOffer.nftokenID,
-      amount: state.amount,
-      owner: selectedNftForOffer.issuer,
-      receiver: destination,
-    };
-    console.log("payload for sell", payload);
-    console.log("Current destination:", destination);
+    if (isSell) {
+      const payload = {
+        nft: selectedNftForOffer.nftokenID,
+        amount: state.amount,
+        owner: selectedNftForOffer.issuer,
+        receiver: destination,
+      };
+      console.log("payload for sell", payload);
+      console.log("Current destination:", destination);
 
-    try {
-      const response = await axios.post(
-        `${API_URLS.backendUrl}/create-nft-offer`,
-        payload
-      );
-      console.log("Offer created:", response.data);
-      setQrCodeUrl(response.data.refs.qr_png);
-      setWebsocketUrl(response.data.refs.websocket_status);
-      setIsQrModalVisible(true);
-      setSell(false);
-    } catch (error) {
-      console.error("Error creating offer:", error);
+      try {
+        const response = await axios.post(
+          `${API_URLS.backendUrl}/create-nft-offer`,
+          payload
+        );
+        console.log("Offer created:", response.data);
+        setQrCodeUrl(response.data.refs.qr_png);
+        setWebsocketUrl(response.data.refs.websocket_status);
+        setIsQrModalVisible(true);
+        setSell(false);
+      } catch (error) {
+        console.error("Error creating offer:", error);
+      }
+    }
+    else {
+      const payload = {
+        nft: selectedNftForOffer.nftokenID,
+        amount: "0",
+        owner: selectedNftForOffer.issuer,
+        receiver: destination,
+      };
+      console.log("Transfer payload:", payload);
+
+      try {
+        const response = await axios.post(
+          `${API_URLS.backendUrl}/create-nft-offer`,
+          payload
+        );
+        console.log(response, "response aman in user card");
+        setQrCodeUrl(response.data.refs.qr_png);
+        setWebsocketUrl(response.data.refs.websocket_status);
+        setIsQrModalVisible(true);
+        setTransfer(false);
+        console.log("Transfer initiated:", response.data);
+      } catch (error) {
+        console.error("Error initiating transfer:", error);
+      }
     }
   };
 
