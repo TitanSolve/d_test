@@ -623,7 +623,7 @@ const ParticipantCard = ({
       <Modal
         // title="Transaction QR Code"
         open={isQrModalVisible}
-        onClose={() => setIsQrModalVisible(false)}
+        // onClose={() => setIsQrModalVisible(false)}
         footer={null}
         closable={true}
         maskClosable={true}
