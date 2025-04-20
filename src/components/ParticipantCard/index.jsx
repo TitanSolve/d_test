@@ -620,7 +620,7 @@ const ParticipantCard = ({
         </div>
       </Modal>
       {/* this modal is for the qr code */}
-      <Modal
+      {/* <Modal
         title="Transaction QR Code"
         open={isQrModalVisible}
         onClose={() => setIsQrModalVisible(false)}
@@ -635,7 +635,7 @@ const ParticipantCard = ({
           </div>
         )}
         <p>Transaction Status: {transactionStatus}</p>
-      </Modal>
+      </Modal> */}
     </div>
   );
 };
