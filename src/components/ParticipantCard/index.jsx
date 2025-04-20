@@ -186,31 +186,31 @@ const ParticipantCard = ({
     }
   };
 
-  // useEffect(() => {
-  //   if (websocketUrl) {
-  //     const ws = new WebSocket(websocketUrl);
+  useEffect(() => {
+    if (websocketUrl) {
+      const ws = new WebSocket(websocketUrl);
 
-  //     ws.onmessage = (event) => {
-  //       const data = JSON.parse(event.data);
-  //       console.log(data, "data aman in user card qr code");
-  //       if (data.signed) {
-  //         setTransactionStatus(`Transaction signed. TXID: ${data.txid}`);
-  //         console.log(data.txid, "qr code completion");
-  //         console.log(
-  //           transactionStatus,
-  //           "transaction status aman in user card qr code"
-  //         );
-  //         //  setIsModalVisible(false);
-  //       } else if (data.rejected) {
-  //         setTransactionStatus("Transaction rejected");
-  //       }
-  //     };
+      ws.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        console.log(data, "data aman in user card qr code");
+        if (data.signed) {
+          setTransactionStatus(`Transaction signed. TXID: ${data.txid}`);
+          console.log(data.txid, "qr code completion");
+          console.log(
+            transactionStatus,
+            "transaction status aman in user card qr code"
+          );
+          //  setIsModalVisible(false);
+        } else if (data.rejected) {
+          setTransactionStatus("Transaction rejected");
+        }
+      };
 
-  //     return () => {
-  //       ws.close();
-  //     };
-  //   }
-  // }, [websocketUrl]);
+      return () => {
+        ws.close();
+      };
+    }
+  }, [websocketUrl]);
 
   const collections = [
     ...new Set(myNftData.groupedNfts.map((group) => group.collection)),
@@ -620,11 +620,15 @@ const ParticipantCard = ({
         </div>
       </Modal>
       {/* this modal is for the qr code */}
-      {/* <Modal
-        title="Transaction QR Code"
+      <Modal
+        // title="Transaction QR Code"
         open={isQrModalVisible}
         onClose={() => setIsQrModalVisible(false)}
         footer={null}
+        closable={true}
+        maskClosable={true}
+        closeAfterTransition
+        bodyStyle={{ borderRadius: "10px", padding: "16px" }}
       >
         {qrCodeUrl && (
           <div className="qr-code-container">
@@ -635,7 +639,7 @@ const ParticipantCard = ({
           </div>
         )}
         <p>Transaction Status: {transactionStatus}</p>
-      </Modal> */}
+      </Modal>
     </div>
   );
 };
