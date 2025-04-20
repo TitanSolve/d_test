@@ -135,49 +135,47 @@ const ParticipantCard = ({
     const myName = wgtParameters.displayName;
     const own = membersList.find((u) => u.name === myName /*"This Guy"*/);
     const ownWalletAddress = own.userId?.split(":")[0].replace("@", "");
+    const tempReceiver = state.selectedUser;
+    
     console.log("own : ", own);
     console.log("selected user : ", state.selectedUser);
     console.log("selected token : ", state.token);
     console.log("selected amount : ", state.amount);
     console.log("selected nftID : ", selectedNftForOffer.nftokenID);
+    console.log("selected issuer : ", selectedNftForOffer.issuer);
+    console.log("tempReceiver : ", tempReceiver);
 
-    const client = new xrpl.Client(API_URLS.xrplMainnetUrl);
-    await client.connect();
-    console.log("Connected to ", API_URLS.xrplMainnetUrl);
-    const sellerWallet = xrpl.Wallet.fromSeed(ownWalletAddress);
-    console.log("sellerWallet : ", sellerWallet);
-    const nftokenID = selectedNftForOffer.nftokenID;
-    const amount = state.amount;
-    const brokerAddress = API_URLS.brokerWalletAddress;
+    // const client = new xrpl.Client(API_URLS.xrplMainnetUrl);
+    // await client.connect();
+    // console.log("Connected to ", API_URLS.xrplMainnetUrl);
+    // const sellerWallet = xrpl.Wallet.fromSeed(ownWalletAddress);
+    // console.log("sellerWallet : ", sellerWallet);
+    // const brokerAddress = API_URLS.brokerWalletAddress;
 
-    // 📝 Sell offer with broker as destination
-    const tx = {
-      TransactionType: "NFTokenCreateOffer",
-      Account: sellerWallet.classicAddress,
-      NFTokenID: nftokenID,
-      Amount: amount,
-      Flags: xrpl.NFTokenCreateOfferFlags.tfSellNFToken,
-      Destination: brokerAddress,
-    };
+    // const receiver = membersList.find((u) => u.name === tempReceiver);
 
-    console.log("tx : ", tx);
+    // const payload = {
+    //   nft: nftokenID,
+    //   amount: amount,
+    //   owner: selectedNftForOffer.issuer,
+    //   receiver: tempReceiver,
+    // };
+    // console.log("payload for sell", payload);
+    // console.log("Current receiver:", receiver);
 
-    // ✍️ Sign and submit
-    const prepared = await client.autofill(tx);
-    console.log("prepared : ", prepared);
-    const signed = sellerWallet.sign(prepared);
-    console.log("signed : ", signed);
-    const result = await client.submitAndWait(signed.tx_blob);
-    console.log("result : ", result);
-
-    // 📦 Log results
-    console.log("Sell Offer submitted.");
-    console.log(JSON.stringify(result, null, 2));
-
-    const sellOfferId = result.result?.meta?.nftoken_offers?.[0]?.index;
-    console.log("Sell Offer ID:", sellOfferId);
-
-    await client.disconnect();
+    // try {
+    //   const response = await axios.post(
+    //     `${API_URLS.backendUrl}/create-nft-offer`,
+    //     payload
+    //   );
+    //   console.log("Offer created:", response.data);
+    //   setQrCodeUrl(response.data.refs.qr_png);
+    //   setWebsocketUrl(response.data.refs.websocket_status);
+    //   setIsModalVisible(true);
+    //   setSell(false);
+    // } catch (error) {
+    //   console.error("Error creating offer:", error);
+    // }
   };
 
   const collections = [
@@ -427,23 +425,22 @@ const ParticipantCard = ({
               {!(
                 selectedNftForOffer.userName === wgtParameters.displayName
               ) && (
-                <Typography
-                  variant="h5"
-                  className="text-center font-semibold text-black dark:text-white"
-                >
-                  Offer to buy from {selectedNftForOffer.userName}
-                </Typography>
-              )}
+                  <Typography
+                    variant="h5"
+                    className="text-center font-semibold text-black dark:text-white"
+                  >
+                    Offer to buy from {selectedNftForOffer.userName}
+                  </Typography>
+                )}
 
               {selectedNftForOffer.userName === wgtParameters.displayName && (
                 <>
                   <div className="flex justify-center items-center gap-4">
                     <Typography
-                      className={`font-medium ${
-                        state.isSell
+                      className={`font-medium ${state.isSell
                           ? "text-black dark:text-white"
                           : "text-gray-400 dark:text-gray-500"
-                      }`}
+                        }`}
                     >
                       Sell
                     </Typography>
@@ -453,11 +450,10 @@ const ParticipantCard = ({
                       color="primary"
                     />
                     <Typography
-                      className={`font-medium ${
-                        !state.isSell
+                      className={`font-medium ${!state.isSell
                           ? "text-black dark:text-white"
                           : "text-gray-400 dark:text-gray-500"
-                      }`}
+                        }`}
                     >
                       Transfer
                     </Typography>
@@ -577,9 +573,9 @@ const ParticipantCard = ({
                 >
                   {state.isSell
                     ? !(
-                        selectedNftForOffer.userName ===
-                        wgtParameters.displayName
-                      )
+                      selectedNftForOffer.userName ===
+                      wgtParameters.displayName
+                    )
                       ? "Offer Buy"
                       : "Offer Sell"
                     : "Transfer"}
