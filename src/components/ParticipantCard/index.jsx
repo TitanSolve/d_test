@@ -136,6 +136,12 @@ const ParticipantCard = ({
     const own = membersList.find((u) => u.name === myName /*"This Guy"*/);
     const ownWalletAddress = own.userId?.split(":")[0].replace("@", "");
     const tempReceiver = state.selectedUser;
+    let receiver = "all";
+
+    if( tempReceiver !== "all") {
+       receiver = membersList.find((u) => u.name === tempReceiver).userId?.split(":")[0].replace("@", "");
+      console.log("receiver : ", receiver);
+    }
     
     console.log("own : ", own);
     console.log("selected user : ", state.selectedUser);
