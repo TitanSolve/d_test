@@ -630,7 +630,17 @@ const ParticipantCard = ({
         closeAfterTransition
         bodyStyle={{ borderRadius: "10px", padding: "16px" }}
       >
-        <p>Transaction Status:</p>
+        <div className="flex flex-row ">
+          {qrCodeUrl && (
+            <div className="">
+              <img
+                src={qrCodeUrl}
+                alt="Scan this QR code with XUMM to sign the transaction"
+              />
+            </div>
+          )}
+          <p>Transaction Status: {transactionStatus}</p>
+        </div>
       </Modal>
     </div>
   );
