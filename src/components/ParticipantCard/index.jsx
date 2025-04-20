@@ -47,6 +47,11 @@ const ParticipantCard = ({
   const [offerModalOpen, setOfferModalOpen] = useState(false);
   const [selectedNftForOffer, setSelectedNftForOffer] = useState(null);
   const [uniqueCurrencies, setUniqueCurrencies] = useState([]);
+  const [websocketUrl, setWebsocketUrl] = useState("");
+  const [transactionStatus, setTransactionStatus] = useState("");
+  const [qrCodeUrl, setQrCodeUrl] = useState("");
+  const [isQrModalVisible, setIsQrModalVisible] = useState(false);
+  const [sell, setSell] = useState(false);
 
   const toggleSellMode = () =>
     setState((prev) => ({ ...prev, isSell: !prev.isSell }));
@@ -135,21 +140,19 @@ const ParticipantCard = ({
     const myName = wgtParameters.displayName;
     const own = membersList.find((u) => u.name === myName /*"This Guy"*/);
     const ownWalletAddress = own.userId?.split(":")[0].replace("@", "");
-    const tempReceiver = state.selectedUser;
-    let receiver = "all";
+    let destination = state.selectedUser;
 
-    if( tempReceiver !== "all") {
-       receiver = membersList.find((u) => u.name === tempReceiver).userId?.split(":")[0].replace("@", "");
-      console.log("receiver : ", receiver);
+    if (destination !== "all") {
+      destination = membersList.find((u) => u.name === destination).userId?.split(":")[0].replace("@", "");
     }
-    
+
     console.log("own : ", own);
     console.log("selected user : ", state.selectedUser);
     console.log("selected token : ", state.token);
     console.log("selected amount : ", state.amount);
     console.log("selected nftID : ", selectedNftForOffer.nftokenID);
     console.log("selected issuer : ", selectedNftForOffer.issuer);
-    console.log("tempReceiver : ", tempReceiver);
+    console.log("destination : ", destination);
 
     // const client = new xrpl.Client(API_URLS.xrplMainnetUrl);
     // await client.connect();
@@ -158,31 +161,56 @@ const ParticipantCard = ({
     // console.log("sellerWallet : ", sellerWallet);
     // const brokerAddress = API_URLS.brokerWalletAddress;
 
-    // const receiver = membersList.find((u) => u.name === tempReceiver);
 
-    // const payload = {
-    //   nft: nftokenID,
-    //   amount: amount,
-    //   owner: selectedNftForOffer.issuer,
-    //   receiver: tempReceiver,
-    // };
-    // console.log("payload for sell", payload);
-    // console.log("Current receiver:", receiver);
+    const payload = {
+      nft: selectedNftForOffer.nftokenID,
+      amount: state.amount,
+      owner: selectedNftForOffer.issuer,
+      receiver: destination,
+    };
+    console.log("payload for sell", payload);
+    console.log("Current destination:", destination);
 
-    // try {
-    //   const response = await axios.post(
-    //     `${API_URLS.backendUrl}/create-nft-offer`,
-    //     payload
-    //   );
-    //   console.log("Offer created:", response.data);
-    //   setQrCodeUrl(response.data.refs.qr_png);
-    //   setWebsocketUrl(response.data.refs.websocket_status);
-    //   setIsModalVisible(true);
-    //   setSell(false);
-    // } catch (error) {
-    //   console.error("Error creating offer:", error);
-    // }
+    try {
+      const response = await axios.post(
+        `${API_URLS.backendUrl}/create-nft-offer`,
+        payload
+      );
+      console.log("Offer created:", response.data);
+      setQrCodeUrl(response.data.refs.qr_png);
+      setWebsocketUrl(response.data.refs.websocket_status);
+      setIsQrModalVisible(true);
+      setSell(false);
+    } catch (error) {
+      console.error("Error creating offer:", error);
+    }
   };
+
+  useEffect(() => {
+    if (websocketUrl) {
+      const ws = new WebSocket(websocketUrl);
+
+      ws.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        console.log(data, "data aman in user card qr code");
+        if (data.signed) {
+          setTransactionStatus(`Transaction signed. TXID: ${data.txid}`);
+          console.log(data.txid, "qr code completion");
+          console.log(
+            transactionStatus,
+            "transaction status aman in user card qr code"
+          );
+          //  setIsModalVisible(false);
+        } else if (data.rejected) {
+          setTransactionStatus("Transaction rejected");
+        }
+      };
+
+      return () => {
+        ws.close();
+      };
+    }
+  }, [websocketUrl]);
 
   const collections = [
     ...new Set(myNftData.groupedNfts.map((group) => group.collection)),
@@ -444,8 +472,8 @@ const ParticipantCard = ({
                   <div className="flex justify-center items-center gap-4">
                     <Typography
                       className={`font-medium ${state.isSell
-                          ? "text-black dark:text-white"
-                          : "text-gray-400 dark:text-gray-500"
+                        ? "text-black dark:text-white"
+                        : "text-gray-400 dark:text-gray-500"
                         }`}
                     >
                       Sell
@@ -457,8 +485,8 @@ const ParticipantCard = ({
                     />
                     <Typography
                       className={`font-medium ${!state.isSell
-                          ? "text-black dark:text-white"
-                          : "text-gray-400 dark:text-gray-500"
+                        ? "text-black dark:text-white"
+                        : "text-gray-400 dark:text-gray-500"
                         }`}
                     >
                       Transfer
@@ -590,6 +618,24 @@ const ParticipantCard = ({
             </Box>
           )}
         </div>
+      </Modal>
+      {/* this modal is for the qr code */}
+      <Modal
+        title="Transaction QR Code"
+        open={isQrModalVisible}
+        onCancel={() => setIsQrModalVisible(false)}
+        footer={null}
+        centered
+      >
+        {qrCodeUrl && (
+          <div className="qr-code-container">
+            <img
+              src={qrCodeUrl}
+              alt="Scan this QR code with XUMM to sign the transaction"
+            />
+          </div>
+        )}
+        <p>Transaction Status: {transactionStatus}</p>
       </Modal>
     </div>
   );
