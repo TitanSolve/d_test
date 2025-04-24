@@ -410,10 +410,10 @@ const MatrixClientProvider = () => {
                 exit="exit"
                 transition={{ duration: 0.4, ease: "easeInOut" }}
               >
-                <div style={{ display: selectedIndex === 0 ? "block" : "hidden" }}>
+                <div style={{ display: selectedIndex === 0 ? "block" : "none" }}>
                   <NFTs membersList={membersList} myNftData={myNftData} getImageData={getImageData} wgtParameters={widgetApi.widgetParameters} refreshOffers={refreshOffers} />
                 </div>
-                <div style={{ display: selectedIndex === 1 ? "block" : "hidden" }}>
+                <div style={{ display: selectedIndex === 1 ? "block" : "none" }}>
                   <Offers myWalletAddress={myOwnWalletAddress} membersList={membersList} />
                 </div>
 
