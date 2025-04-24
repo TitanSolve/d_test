@@ -3,14 +3,13 @@ import OutgoingTransferToggle from "../../components/OutgoingTransferToggle";
 import IncomingTransferToggle from "../../components/IncomingTransferToggle";
 import API_URLS from "../../config";
 
-const Offers = (membersList, myWalletAddress) => {
+const Offers = ({ membersList, myWalletAddress }) => {
   
   const [nftBuyOffers, setNftBuyOffers] = useState([]);
   const [nftSellOffers, setNftSellOffers] = useState([]);
   const [transferOffers, setTransferOffers] = useState([]);
   const [loading, setLoading] = useState(false); // Add loading state
   const [sellOffers, setSellOffers] = useState([]);
-  const [myOwnWalletAddress, setMyOwnWalletAddress] = useState("");
 /*
   function fetchNFTBuyOffers() {
     const requestOptions = {
@@ -126,7 +125,7 @@ const Offers = (membersList, myWalletAddress) => {
       body: JSON.stringify({ address: tempAddress }),
     };
     console.log("Fetching with requestOptions:", requestOptions);
-    console.log("myWalletAddress", myOwnWalletAddress);
+    console.log("myWalletAddress", myWalletAddress);
     console.log("currentAddress", currentAddress);
 
     setLoading(true);
@@ -135,7 +134,7 @@ const Offers = (membersList, myWalletAddress) => {
       .then((data) => {
         const filteredOffers = data.flatMap((item) =>
           item.NftBuyOffers.filter(
-            (offer) => offer.destination === myOwnWalletAddress
+            (offer) => offer.destination === myWalletAddress
           ).map((offer) => ({
             ...offer,
             URI: item.URI,
@@ -154,7 +153,7 @@ const Offers = (membersList, myWalletAddress) => {
 
 
   const refreshOffers = () => {
-    console.log("Offers->refreshOffers");
+    console.log("Offers->refreshOffers", myWalletAddress);
     // fetchNFTBuyOffers();
     // fetchNftSellOffers();
     
@@ -166,8 +165,6 @@ const Offers = (membersList, myWalletAddress) => {
   useEffect(() => {
     console.log("Offers->useEffect", membersList, myWalletAddress);
     if( myWalletAddress === "" || membersList.length < 1 ) return;
-    setMyOwnWalletAddress(myWalletAddress);
-    console.log("myOwnWalletAddress", myOwnWalletAddress);
     refreshOffers();
   }, [membersList, myWalletAddress]);
 
