@@ -137,6 +137,7 @@ const Offers = ({ membersList, myWalletAddress }) => {
 
     try {
       const response = await fetch(`${API_URLS.backendUrl}/getMembersNftsWithSellOffers`, requestOptions);
+      console.log("Response status:", response.status); // Log the response status
       const data = await response.json();
 
       const filteredOffers = data.flatMap((item) =>
