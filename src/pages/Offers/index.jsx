@@ -152,9 +152,9 @@ const Offers = (membersList, myWalletAddress) => {
     fetchNFTBuyOffers();
     fetchNftSellOffers();
     
-    membersList.forEach((member) => {
-      fetchTransferOffers(member);
-    });
+    // membersList.forEach((member) => {
+    //   fetchTransferOffers(member);
+    // });
   };
 
   useEffect(() => {
