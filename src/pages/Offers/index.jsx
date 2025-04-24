@@ -118,6 +118,7 @@ const Offers = ({ membersList, myWalletAddress }) => {
   */
   const fetchTransferOffers = async (currentAddress) => {
     const tempAddress = currentAddress.split(":")[0].replace("@", "");
+    console.log("fetchTransferOffers--->", tempAddress, myWalletAddress, tempAddress===myWalletAddress);
     if (tempAddress === myWalletAddress) return;
 
     console.log("tempAddress", tempAddress);
