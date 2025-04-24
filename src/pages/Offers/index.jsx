@@ -116,7 +116,7 @@ const Offers = ({ membersList, myWalletAddress }) => {
   //   console.log("Sell and transfer offers", sellOffers);
   // }, [roomMembers]);
 */
-  const fetchTransferOffers = async (currentAddress) => {
+  const fetchTransferOffers = (currentAddress) => {
     const tempAddress = currentAddress.split(":")[0].replace("@", "");
     if( tempAddress === myWalletAddress ) return;
     console.log("tempAddress", tempAddress);
@@ -130,7 +130,7 @@ const Offers = ({ membersList, myWalletAddress }) => {
     console.log("currentAddress", currentAddress);
 
     setLoading(true);
-    await fetch(`${API_URLS.backendUrl}/getMembersNftsWithSellOffers`, requestOptions)
+    fetch(`${API_URLS.backendUrl}/getMembersNftsWithSellOffers`, requestOptions)
       .then((response) => response.json())
       .then((data) => {
         const filteredOffers = data.flatMap((item) =>
