@@ -1,9 +1,83 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import nft_pic from "../../assets/small-nft.png";
 import { motion } from "framer-motion";
-import { Button } from "antd";
+import API_URLS from "../../config";
+import {
+  Typography,
+  Select,
+  MenuItem,
+  Switch,
+  Modal,
+  Box,
+  FormControl,
+  InputLabel,
+  TextField,
+  Chip,
+  Button,
+  InputAdornment,
+} from "@mui/material";
 
-const IncomingOfferCard = ({transfer, index}) => {
+
+const IncomingOfferCard = ({ transfer, index, onAction }) => {
+  const [qrCodeUrl, setQrCodeUrl] = useState("");
+  const [websocketUrl, setWebsocketUrl] = useState("");
+  const [transactionStatus, setTransactionStatus] = useState("");
+  const [isQrModalVisible, setIsQrModalVisible] = useState(false);
+
+  async function onAcceptTransfer(item) {
+    console.log("Accept clicked for item:", item);
+    const requestBody = {
+      OfferId: item.nft_offer_index,
+      address: item.owner,
+      buyOrSell: 0,
+    };
+    try {
+      const response = await fetch(`${API_URLS.backendUrl}/accept-offer`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+
+        body: JSON.stringify(requestBody),
+      });
+      console.log(requestBody, "requestBody");
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      if (data) {
+        console.log(data.refs, "data refs");
+        setQrCodeUrl(data.refs.qr_png);
+        setWebsocketUrl(data.refs.websocket_status);
+        setIsQrModalVisible(true);
+      }
+    } catch (error) {
+      console.error("Error during fetch:", error);
+    }
+  }
+
+  useEffect(() => {
+    if (websocketUrl) {
+      const ws = new WebSocket(websocketUrl);
+
+      ws.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        if (data.signed) {
+          setTransactionStatus("Transaction signed");
+          setIsQrModalVisible(false);
+          onAction();
+        } else if (data.rejected) {
+          setTransactionStatus("Transaction rejected");
+        }
+      };
+      return () => {
+        ws.close();
+      };
+    }
+  }, [websocketUrl]);
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
@@ -28,6 +102,7 @@ const IncomingOfferCard = ({transfer, index}) => {
       <div className="flex flex-col sm:flex-row items-center justify-between w-full sm:w-auto space-y-4 sm:space-y-0 sm:space-x-4">
         <Button
           type="primary"
+          onClick={onAcceptTransfer}
           block
           style={{ borderRadius: "6px", alignItems: "center" }}
           className="dark:bg-green-600 dark:hover:bg-green-500"
@@ -45,6 +120,31 @@ const IncomingOfferCard = ({transfer, index}) => {
           Deny
         </Button>
       </div>
+      {/* this modal is for the qr code */}
+      <Modal
+        title="Transaction QR Code"
+        open={isQrModalVisible}
+        onClose={() => setIsQrModalVisible(false)}
+        footer={null}
+        closable={true}
+        maskClosable={true}
+        closeAfterTransition
+        bodyStyle={{ borderRadius: "10px", padding: "16px" }}
+      >
+        <div>
+          <Box className="bg-white dark:bg-[#15191E] text-black dark:text-white rounded-xl p-6 shadow-lg max-h-[90vh] max-w-full md:max-w-[500px] w-full mx-auto top-1/2 left-1/2 absolute transform -translate-x-1/2 -translate-y-1/2 overflow-y-auto transition-colors duration-300">
+            {qrCodeUrl && (
+              <div className="">
+                <img
+                  src={qrCodeUrl}
+                  alt="Scan this QR code with XUMM to sign the transaction"
+                />
+              </div>
+            )}
+            <p>Transaction Status: {transactionStatus}</p>
+          </Box>
+        </div>
+      </Modal>
     </motion.div>
   );
 };

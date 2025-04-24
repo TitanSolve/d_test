@@ -4,7 +4,7 @@ import IncomingOfferCard from "../IncomingOfferCard";
 import { ChevronDownIcon, XIcon } from "@heroicons/react/solid";
 import { Button } from "antd";
 
-const IncomingListToggle = ({ title, incomingTransfers }) => {
+const IncomingListToggle = ({ title, incomingTransfers, onAction }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [incomingTransferOffers, setIncomingTransferOffers] = useState([]);
   const [count, setCount] = useState(0);
@@ -62,7 +62,7 @@ const IncomingListToggle = ({ title, incomingTransfers }) => {
           {count > 0 && (
             <div className="space-y-4">
               { incomingTransferOffers.map((incomingTransfer, index) => (
-                <IncomingOfferCard transfer={incomingTransfer} key={index} />
+                <IncomingOfferCard transfer={incomingTransfer} key={index} onAction={onAction} />
               ))}
             </div>
           )}
