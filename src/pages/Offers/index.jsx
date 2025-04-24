@@ -10,6 +10,7 @@ const Offers = (membersList, myWalletAddress) => {
   const [transferOffers, setTransferOffers] = useState([]);
   const [loading, setLoading] = useState(false); // Add loading state
   const [sellOffers, setSellOffers] = useState([]);
+  const [myOwnWalletAddress, setMyOwnWalletAddress] = usetState("");
 /*
   function fetchNFTBuyOffers() {
     const requestOptions = {
@@ -125,7 +126,7 @@ const Offers = (membersList, myWalletAddress) => {
       body: JSON.stringify({ address: tempAddress }),
     };
     console.log("Fetching with requestOptions:", requestOptions);
-    console.log("myWalletAddress", myWalletAddress);
+    console.log("myWalletAddress", myOwnWalletAddress);
     console.log("currentAddress", currentAddress);
 
     setLoading(true);
@@ -134,7 +135,7 @@ const Offers = (membersList, myWalletAddress) => {
       .then((data) => {
         const filteredOffers = data.flatMap((item) =>
           item.NftBuyOffers.filter(
-            (offer) => offer.destination === myWalletAddress
+            (offer) => offer.destination === myOwnWalletAddress
           ).map((offer) => ({
             ...offer,
             URI: item.URI,
@@ -165,6 +166,8 @@ const Offers = (membersList, myWalletAddress) => {
   useEffect(() => {
     console.log("Offers->useEffect", membersList, myWalletAddress);
     if( myWalletAddress === "" || membersList.length < 1 ) return;
+    setMyOwnWalletAddress(myWalletAddress);
+    console.log("myOwnWalletAddress", myOwnWalletAddress);
     refreshOffers();
   }, [membersList, myWalletAddress]);
 
