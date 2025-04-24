@@ -7,7 +7,7 @@ const Offers = ({ membersList, myWalletAddress }) => {
 
   const [nftBuyOffers, setNftBuyOffers] = useState([]);
   const [nftSellOffers, setNftSellOffers] = useState([]);
-  const [transferOffers, setTransferOffers] = useState([]);
+  const [incomingTransferOffers, setIncomingTransferOffers] = useState([]);
   const [loading, setLoading] = useState(false); // Add loading state
   const [sellOffers, setSellOffers] = useState([]);
   /*
@@ -116,28 +116,20 @@ const Offers = ({ membersList, myWalletAddress }) => {
     //   console.log("Sell and transfer offers", sellOffers);
     // }, [roomMembers]);
   */
-  const fetchTransferOffers = async (currentAddress) => {
+  const fetchIncomingTransferOffers = async (currentAddress) => {
     const tempAddress = currentAddress.split(":")[0].replace("@", "");
-    console.log("fetchTransferOffers--->", tempAddress, myWalletAddress, tempAddress===myWalletAddress);
-    if (tempAddress === myWalletAddress) return;
 
-    console.log("tempAddress", tempAddress);
-
-    const requestOptions = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ address: tempAddress }),
-    };
-
-    console.log("Fetching with requestOptions:", requestOptions);
-    console.log("myWalletAddress", myWalletAddress);
-    console.log("currentAddress", currentAddress);
-
-    setLoading(true);
+    // Skip if the address is own wallet
+    if (tempAddress === myWalletAddress) return [];
 
     try {
+      const requestOptions = {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ address: tempAddress }),
+      };
+
       const response = await fetch(`${API_URLS.backendUrl}/getMembersNftsWithSellOffers`, requestOptions);
-      console.log("Response status:", response.status); // Log the response status
       const data = await response.json();
 
       const filteredOffers = data.flatMap((item) =>
@@ -150,26 +142,42 @@ const Offers = ({ membersList, myWalletAddress }) => {
         }))
       );
 
-      console.log("transfer filtered offers", filteredOffers, tempAddress);
-
-      setTransferOffers((prevOffers) => [...prevOffers, ...filteredOffers]);
+      return filteredOffers;
     } catch (error) {
-      console.error("Error fetching or processing data:", error);
-    } finally {
-      setLoading(false);
+      console.error(`Error fetching data for ${tempAddress}:`, error);
+      return [];
     }
   };
 
 
 
-  const refreshOffers = () => {
+  const refreshOffers = async () => {
     console.log("Offers->refreshOffers", myWalletAddress);
+    setLoading(true);
+
     // fetchNFTBuyOffers();
     // fetchNftSellOffers();
 
-    membersList.forEach((member) => {
-      fetchTransferOffers(member.userId);
-    });
+    // membersList.forEach((member) => {
+    //   fetchIncomingTransferOffers(member.userId);
+    // });
+
+    try {
+      const allOffersArrays = await Promise.all(
+        membersList.map((member) => fetchIncomingTransferOffers(member.userId))
+      );
+
+      // Flatten all arrays into one
+      const allFilteredOffers = allOffersArrays.flat();
+
+      console.log("incoming transfers", allFilteredOffers);
+      setIncomingTransferOffers(allFilteredOffers);
+    } catch (error) {
+      console.error("Error refreshing offers:", error);
+    } finally {
+      setLoading(false);
+    }
+
   };
 
   useEffect(() => {
