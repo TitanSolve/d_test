@@ -149,6 +149,35 @@ const Offers = ({ membersList, myWalletAddress }) => {
     }
   };
 
+  // const fetchOutgoingTransferOffers = async () => {
+
+  //   try {
+  //     const requestOptions = {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify({ address: myWalletAddress }),
+  //     };
+
+  //     const response = await fetch(`${API_URLS.backendUrl}/getMembersNftsWithSellOffers`, requestOptions);
+  //     const data = await response.json();
+
+  //     const filteredOffers = data.flatMap((item) =>
+  //       item.NftBuyOffers.filter(
+  //         (offer) => offer.destination === myWalletAddress
+  //       ).map((offer) => ({
+  //         ...offer,
+  //         URI: item.URI,
+  //         NFTokenID: item.NFTokenID,
+  //       }))
+  //     );
+
+  //     return filteredOffers;
+  //   } catch (error) {
+  //     console.error(`Error fetching data for ${myWalletAddress}:`, error);
+  //     return [];
+  //   }
+  // };
+
 
 
   const refreshOffers = async () => {
