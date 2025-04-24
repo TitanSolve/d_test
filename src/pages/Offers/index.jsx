@@ -10,7 +10,7 @@ const Offers = (membersList, myWalletAddress) => {
   const [transferOffers, setTransferOffers] = useState([]);
   const [loading, setLoading] = useState(false); // Add loading state
   const [sellOffers, setSellOffers] = useState([]);
-  const [myOwnWalletAddress, setMyOwnWalletAddress] = usetState("");
+  const [myOwnWalletAddress, setMyOwnWalletAddress] = useState("");
 /*
   function fetchNFTBuyOffers() {
     const requestOptions = {
