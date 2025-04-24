@@ -403,7 +403,7 @@ const MatrixClientProvider = () => {
           <Box sx={{ p: 2, position: "relative", overflow: "hidden" }}>
             <AnimatePresence mode="wait">
               <motion.div
-                key={selectedIndex}
+                
                 variants={panelVariants}
                 initial="hidden"
                 animate="visible"
