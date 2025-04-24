@@ -4,7 +4,8 @@ import IncomingTransferToggle from "../../components/IncomingTransferToggle";
 import API_URLS from "../../config";
 
 const Offers = (membersList, myWalletAddress) => {
-  const [nftBuyOffers, setNftBuyOffers] = useState([]);
+  
+  /*const [nftBuyOffers, setNftBuyOffers] = useState([]);
   const [nftSellOffers, setNftSellOffers] = useState([]);
   const [transferOffers, setTransferOffers] = useState([]);
   const [loading, setLoading] = useState(false); // Add loading state
@@ -160,6 +161,7 @@ const Offers = (membersList, myWalletAddress) => {
   useEffect(() => {
     refreshOffers();
   }, [myWalletAddress]);
+*/
 
   return (
     <div className="h-full overflow-y-auto p-5 bg-gradient-to-br to-gray-100 flex flex-col items-center space-y-2">
