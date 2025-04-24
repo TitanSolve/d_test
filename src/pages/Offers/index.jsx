@@ -118,6 +118,7 @@ const Offers = ({ membersList, myWalletAddress }) => {
 */
   const fetchTransferOffers = async (currentAddress) => {
     const tempAddress = currentAddress.split(":")[0].replace("@", "");
+    if( tempAddress === myWalletAddress ) return;
     console.log("tempAddress", tempAddress);
     const requestOptions = {
       method: "POST",
