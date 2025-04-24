@@ -413,7 +413,7 @@ const MatrixClientProvider = () => {
                   <NFTs membersList={membersList} myNftData={myNftData} getImageData={getImageData} wgtParameters={widgetApi.widgetParameters} refreshOffers={refreshOffers} />
                 </div>
                 <div style={{ display: selectedIndex === 1 ? "block" : "none" }}>
-                  <Offers myWalletAddress={myWalletAddress} />
+                  <Offers myWalletAddress={myWalletAddress} membersList={membersList} />
                 </div>
 
               </motion.div>

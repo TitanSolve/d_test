@@ -3,7 +3,7 @@ import OutgoingTransferToggle from "../../components/OutgoingTransferToggle";
 import IncomingTransferToggle from "../../components/IncomingTransferToggle";
 import API_URLS from "../../config";
 
-const Offers = (myWalletAddress) => {
+const Offers = (membersList, myWalletAddress) => {
   const [nftBuyOffers, setNftBuyOffers] = useState([]);
   const [nftSellOffers, setNftSellOffers] = useState([]);
   const [transferOffers, setTransferOffers] = useState([]);
@@ -151,6 +151,10 @@ const Offers = (myWalletAddress) => {
     console.log("Offers->refreshOffers");
     fetchNFTBuyOffers();
     fetchNftSellOffers();
+    
+    membersList.forEach((member) => {
+      fetchTransferOffers(member);
+    });
   };
 
   useEffect(() => {
