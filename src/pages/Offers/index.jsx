@@ -3,7 +3,7 @@ import OutgoingTransferToggle from "../../components/OutgoingTransferToggle";
 import IncomingTransferToggle from "../../components/IncomingTransferToggle";
 import API_URLS from "../../config";
 
-const Offers = ({ membersList, myWalletAddress }) => {
+const Offers = ({ membersList, myWalletAddress, myNftData }) => {
 
   const [nftBuyOffers, setNftBuyOffers] = useState([]);
   const [nftSellOffers, setNftSellOffers] = useState([]);
@@ -131,16 +131,46 @@ const Offers = ({ membersList, myWalletAddress }) => {
 
       const response = await fetch(`${API_URLS.backendUrl}/getMembersNftsWithSellOffers`, requestOptions);
       const data = await response.json();
+      const memberData = myNftData.find((u) => u.userId === currentAddress);
 
+      const nftMap = {};
+      if (memberData?.groupedNfts?.length) {
+        for (const group of memberData.groupedNfts) {
+          for (const nft of group.nfts) {
+            nftMap[nft.nftokenID] = {
+              ...nft,
+            };
+          }
+        }
+      }
+
+      // ✅ Build filtered offers and merge matching NFT metadata
       const filteredOffers = data.flatMap((item) =>
-        item.NftBuyOffers.filter(
-          (offer) => offer.destination === myWalletAddress
-        ).map((offer) => ({
-          ...offer,
-          URI: item.URI,
-          NFTokenID: item.NFTokenID,
-        }))
+        item.NftBuyOffers
+          .filter((offer) => offer.destination === myWalletAddress)
+          .map((offer) => {
+            const nftMeta = nftMap[item.NFTokenID];
+            return {
+              ...offer,
+              URI: item.URI,
+              NFTokenID: item.NFTokenID,
+              ...(nftMeta && {
+                imageURI: nftMeta.imageURI,
+                name: nftMeta.metadata?.name,
+              }),
+            };
+          })
       );
+
+      // const filteredOffers = data.flatMap((item) =>
+      //   item.NftBuyOffers
+      //     .filter((offer) => offer.destination === myWalletAddress)
+      //     .map((offer) => ({
+      //       ...offer,
+      //       URI: item.URI,
+      //       NFTokenID: item.NFTokenID,
+      //     }))
+      // );
 
       return filteredOffers;
     } catch (error) {
@@ -187,10 +217,6 @@ const Offers = ({ membersList, myWalletAddress }) => {
     // fetchNFTBuyOffers();
     // fetchNftSellOffers();
 
-    // membersList.forEach((member) => {
-    //   fetchIncomingTransferOffers(member.userId);
-    // });
-
     try {
       const allOffersArrays = await Promise.all(
         membersList.map((member) => fetchIncomingTransferOffers(member.userId))
@@ -217,7 +243,7 @@ const Offers = ({ membersList, myWalletAddress }) => {
 
   return (
     <div className="h-full overflow-y-auto p-5 bg-gradient-to-br to-gray-100 flex flex-col items-center space-y-2">
-      <IncomingTransferToggle title="Incoming transfers" count={7} />
+      <IncomingTransferToggle title="Incoming transfers" incomingTransfers={incomingTransferOffers} />
       <OutgoingTransferToggle title="Outgoing transfers" count={6} />
       <OutgoingTransferToggle title="Offers Received" count={0} />
       <OutgoingTransferToggle title="Offers Made" count={3} />

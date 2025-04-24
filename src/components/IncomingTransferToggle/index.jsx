@@ -1,11 +1,17 @@
-import { useState } from "react";
+import { use, useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import IncomingOfferCard from "../IncomingOfferCard";
 import { ChevronDownIcon, XIcon } from "@heroicons/react/solid";
 import { Button } from "antd";
 
-const IncomingListToggle = ({ title, count }) => {
+const IncomingListToggle = ({ title, incomingTransfers }) => {
   const [isVisible, setIsVisible] = useState(false);
+  const [incomingTransferOffers, setIncomingTransferOffers] = useState([]);
+  const count = 3;
+
+  useEffect(() => {
+    setIncomingTransferOffers(incomingTransfers);
+  }, [incomingTransfers]);
 
   return (
     <div className="w-full max-w-2xl mx-auto p-4">
@@ -54,8 +60,8 @@ const IncomingListToggle = ({ title, count }) => {
           </div>
           {count > 0 && (
             <div className="space-y-4">
-              {[...Array(count)].map((_, index) => (
-                <IncomingOfferCard key={index} />
+              { incomingTransferOffers.map((incomingTransfer, index) => (
+                <IncomingOfferCard transfer={incomingTransfer} key={index} />
               ))}
             </div>
           )}
