@@ -127,7 +127,7 @@ const Offers = (membersList, myWalletAddress) => {
     console.log("Fetching with requestOptions:", requestOptions);
     console.log("myWalletAddress", myWalletAddress);
     console.log("currentAddress", currentAddress);
-    
+
     setLoading(true);
     await fetch(`${API_URLS.backendUrl}/getMembersNftsWithSellOffers`, requestOptions)
       .then((response) => response.json())
@@ -164,7 +164,7 @@ const Offers = (membersList, myWalletAddress) => {
 
   useEffect(() => {
     refreshOffers();
-  }, [membersList]);
+  }, [membersList, myWalletAddress]);
 
   return (
     <div className="h-full overflow-y-auto p-5 bg-gradient-to-br to-gray-100 flex flex-col items-center space-y-2">
