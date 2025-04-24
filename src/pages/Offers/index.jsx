@@ -118,6 +118,7 @@ const Offers = (membersList, myWalletAddress) => {
 */
   const fetchTransferOffers = async (currentAddress) => {
     const tempAddress = currentAddress.split(":")[0].replace("@", "");
+    console.log("tempAddress", tempAddress);
     const requestOptions = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
