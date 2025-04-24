@@ -161,7 +161,7 @@ const Offers = (membersList, myWalletAddress) => {
 
   useEffect(() => {
     refreshOffers();
-  }, [myWalletAddress]);
+  }, [membersList]);
 
   return (
     <div className="h-full overflow-y-auto p-5 bg-gradient-to-br to-gray-100 flex flex-col items-center space-y-2">
