@@ -5,12 +5,12 @@ import API_URLS from "../../config";
 
 const Offers = (membersList, myWalletAddress) => {
   
-  /*const [nftBuyOffers, setNftBuyOffers] = useState([]);
+  const [nftBuyOffers, setNftBuyOffers] = useState([]);
   const [nftSellOffers, setNftSellOffers] = useState([]);
   const [transferOffers, setTransferOffers] = useState([]);
   const [loading, setLoading] = useState(false); // Add loading state
   const [sellOffers, setSellOffers] = useState([]);
-
+/*
   function fetchNFTBuyOffers() {
     const requestOptions = {
       method: "POST",
@@ -115,8 +115,8 @@ const Offers = (membersList, myWalletAddress) => {
   //   // fetchNFTData(sellOffers);
   //   console.log("Sell and transfer offers", sellOffers);
   // }, [roomMembers]);
-
-  function fetchTransferOffers(currentAddress) {
+*/
+  const fetchTransferOffers = async (currentAddress) => {
     const tempAddress = currentAddress.split(":")[0].replace("@", "");
     const requestOptions = {
       method: "POST",
@@ -125,7 +125,7 @@ const Offers = (membersList, myWalletAddress) => {
     };
     console.log("Fetching with requestOptions:", requestOptions);
     setLoading(true);
-    fetch(`${API_URLS.backendUrl}/getMembersNftsWithSellOffers`, requestOptions)
+    await fetch(`${API_URLS.backendUrl}/getMembersNftsWithSellOffers`, requestOptions)
       .then((response) => response.json())
       .then((data) => {
         const filteredOffers = data.flatMap((item) =>
@@ -150,18 +150,17 @@ const Offers = (membersList, myWalletAddress) => {
 
   const refreshOffers = () => {
     console.log("Offers->refreshOffers");
-    fetchNFTBuyOffers();
-    fetchNftSellOffers();
+    // fetchNFTBuyOffers();
+    // fetchNftSellOffers();
     
-    // membersList.forEach((member) => {
-    //   fetchTransferOffers(member);
-    // });
+    membersList.forEach((member) => {
+      fetchTransferOffers(member);
+    });
   };
 
   useEffect(() => {
     refreshOffers();
   }, [myWalletAddress]);
-*/
 
   return (
     <div className="h-full overflow-y-auto p-5 bg-gradient-to-br to-gray-100 flex flex-col items-center space-y-2">
