@@ -125,6 +125,9 @@ const Offers = (membersList, myWalletAddress) => {
       body: JSON.stringify({ address: tempAddress }),
     };
     console.log("Fetching with requestOptions:", requestOptions);
+    console.log("myWalletAddress", myWalletAddress);
+    console.log("currentAddress", currentAddress);
+    
     setLoading(true);
     await fetch(`${API_URLS.backendUrl}/getMembersNftsWithSellOffers`, requestOptions)
       .then((response) => response.json())
