@@ -164,7 +164,7 @@ const Offers = (membersList, myWalletAddress) => {
 
   useEffect(() => {
     console.log("Offers->useEffect", membersList, myWalletAddress);
-    if( myWalletAddress === "" || membersList.membersList.isEmpty() ) return;
+    if( myWalletAddress === "" || membersList.length < 1 ) return;
     refreshOffers();
   }, [membersList, myWalletAddress]);
 
