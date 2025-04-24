@@ -7,10 +7,11 @@ import { Button } from "antd";
 const IncomingListToggle = ({ title, incomingTransfers }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [incomingTransferOffers, setIncomingTransferOffers] = useState([]);
-  const count = 3;
+  const [count, setCount] = useState(0);
 
   useEffect(() => {
     setIncomingTransferOffers(incomingTransfers);
+    setCount(incomingTransfers.length);
   }, [incomingTransfers]);
 
   return (
