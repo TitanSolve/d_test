@@ -157,7 +157,7 @@ const Offers = ({ membersList, myWalletAddress }) => {
     // fetchNFTBuyOffers();
     // fetchNftSellOffers();
     
-    membersList.membersList.forEach((member) => {
+    membersList.forEach((member) => {
       fetchTransferOffers(member.userId);
     });
   };
