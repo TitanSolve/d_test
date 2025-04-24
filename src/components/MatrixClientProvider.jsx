@@ -124,6 +124,7 @@ const MatrixClientProvider = () => {
 
         const own = usersList.find((u) => u.name === widgetApi.widgetParameters.displayName);
         const ownWalletAddress = own.userId?.split(":")[0].replace("@", "");
+        console.log("ownWalletAddress : ", ownWalletAddress);
         setMyWalletAddress(ownWalletAddress);
 
         const usersWithTrustLines = usersList.map(user => {
