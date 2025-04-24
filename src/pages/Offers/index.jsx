@@ -163,6 +163,7 @@ const Offers = (membersList, myWalletAddress) => {
   };
 
   useEffect(() => {
+    if( myWalletAddress.isEmpty() || membersList.isEmpty() ) return;
     refreshOffers();
   }, [membersList, myWalletAddress]);
 
