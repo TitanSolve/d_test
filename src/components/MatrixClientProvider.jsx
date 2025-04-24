@@ -13,7 +13,7 @@ import { WidgetApi } from "matrix-widget-api";
 import { Tooltip } from "@mui/material";
 import { ThemeProvider, useTheme } from "../context/ThemeContext";
 import "./index.css"
-import {Buffer} from "buffer";
+import { Buffer } from "buffer";
 
 const hexToAscii = (str) => {
   var hexString = str?.toString();
@@ -103,8 +103,8 @@ const MatrixClientProvider = () => {
   const [myNftData, setMyNftData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [membersList, setMembersList] = useState([]);
-
   const { theme, toggleTheme } = useTheme();
+  const [myWalletAddress, setMyWalletAddress] = useState("");
 
   useEffect(() => {
     const loadData = async () => {
@@ -116,11 +116,15 @@ const MatrixClientProvider = () => {
         const usersList = events.map(item => ({
           name: item.content.displayname,
           userId: item.sender
-        }));        
+        }));
 
         const userIds = usersList.map(member => member.userId.split(":")[0].replace("@", ""));
         console.log("userIds : ", userIds);
         const trustLinesArray = await getTrustLinesAsArray(userIds);
+
+        const own = usersList.find((u) => u.name === widgetApi.widgetParameters.displayName);
+        const ownWalletAddress = own.userId?.split(":")[0].replace("@", "");
+        setMyWalletAddress(ownWalletAddress);
 
         const usersWithTrustLines = usersList.map(user => {
           const walletAddress = user.userId.split(":")[0].replace("@", "")
@@ -312,6 +316,11 @@ const MatrixClientProvider = () => {
     exit: { opacity: 0, x: -50 }
   };
 
+  const refreshOffers = () => {
+    console.log("Refresh Offers");
+
+  }
+
   return (
     <>
       {loading ? (
@@ -401,10 +410,10 @@ const MatrixClientProvider = () => {
                 transition={{ duration: 0.4, ease: "easeInOut" }}
               >
                 <div style={{ display: selectedIndex === 0 ? "block" : "none" }}>
-                  <NFTs membersList={membersList} myNftData={myNftData} getImageData={getImageData} wgtParameters={widgetApi.widgetParameters} />
+                  <NFTs membersList={membersList} myNftData={myNftData} getImageData={getImageData} wgtParameters={widgetApi.widgetParameters} refreshOffers={refreshOffers} />
                 </div>
                 <div style={{ display: selectedIndex === 1 ? "block" : "none" }}>
-                  <Offers />
+                  <Offers myWalletAddress={myWalletAddress} />
                 </div>
 
               </motion.div>

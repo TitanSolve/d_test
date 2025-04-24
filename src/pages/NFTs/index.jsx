@@ -1,7 +1,7 @@
 import React from "react";
 import ParticipantCard from "../../components/ParticipantCard";
 
-const NFTs = ({ membersList, myNftData, wgtParameters, getImageData }) => {
+const NFTs = ({ membersList, myNftData, wgtParameters, getImageData, refreshOffers }) => {
   const myOwnNftData = myNftData.find(nft => nft.name === wgtParameters.displayName);
   const otherNfts = myNftData.filter(nft => nft.name !== wgtParameters.displayName);
 
@@ -15,6 +15,7 @@ const NFTs = ({ membersList, myNftData, wgtParameters, getImageData }) => {
           myNftData={myOwnNftData}
           wgtParameters={wgtParameters}
           getImageData={getImageData}
+          refreshOffers={refreshOffers}
         />
         {
           otherNfts.map((nft, index) => (

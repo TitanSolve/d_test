@@ -28,6 +28,7 @@ const ParticipantCard = ({
   myNftData,
   wgtParameters,
   getImageData,
+  refreshOffers
 }) => {
   const [state, setState] = useState({
     sortOrder: "newest",
@@ -140,7 +141,7 @@ const ParticipantCard = ({
     console.log("isSell : ", isSell);
     const myName = wgtParameters.displayName;
     const own = membersList.find((u) => u.name === myName /*"This Guy"*/);
-    const ownWalletAddress = own.userId?.split(":")[0].replace("@", "");
+    const ownWalletAddress = own?.userId?.split(":")[0].replace("@", "");
     let destination = state.selectedUser;
 
     if (destination !== "all") {
@@ -164,30 +165,60 @@ const ParticipantCard = ({
 
 
     if (isSell) {
-      const payload = {
-        nft: selectedNftForOffer.nftokenID,
-        amount: state.amount,
-        owner: selectedNftForOffer.issuer,
-        receiver: destination,
-      };
-      console.log("payload for sell", payload);
-      console.log("Current destination:", destination);
+      if ((selectedNftForOffer.userName === wgtParameters.displayName)) { //Create Sell Offer
+        const payload = {
+          nft: selectedNftForOffer.nftokenID,
+          amount: state.amount,
+          owner: selectedNftForOffer.issuer,
+          receiver: destination,
+        };
+        console.log("payload for sell", payload);
+        console.log("Current destination:", destination);
 
-      try {
-        const response = await axios.post(
-          `${API_URLS.backendUrl}/create-nft-offer`,
-          payload
-        );
-        console.log("Offer created:", response.data);
-        setQrCodeUrl(response.data.refs.qr_png);
-        setWebsocketUrl(response.data.refs.websocket_status);
-        setIsQrModalVisible(true);
-        setSell(false);
-      } catch (error) {
-        console.error("Error creating offer:", error);
+        try {
+          const response = await axios.post(
+            `${API_URLS.backendUrl}/create-nft-offer`,
+            payload
+          );
+          console.log("Offer created:", response.data);
+          setQrCodeUrl(response.data.refs.qr_png);
+          setWebsocketUrl(response.data.refs.websocket_status);
+          setIsQrModalVisible(true);
+          setSell(false);
+        } catch (error) {
+          console.error("Error creating offer:", error);
+        }
+      }
+      else  //Create Buy Offer
+      {
+        // userId = userId ? userId.split(":")[0].replace("@", "") : null;
+        const payload = {
+          nft: selectedNftForOffer.nftokenID,
+          amount: state.amount,
+          owner: selectedNftForOffer.issuer,
+          receiver: destination,
+        };
+        console.log(payload, "payload in participant card");
+        fetch(`${API_URLS.backendUrl}/create-nft-buy-offer`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            console.log("Success:", data);
+            setQrCodeUrl(data.refs.qr_png);
+            setWebsocketUrl(data.refs.websocket_status);
+            setIsQrModalVisible(true);
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
       }
     }
-    else {
+    else {  //Create Transfer Offer
       const payload = {
         nft: selectedNftForOffer.nftokenID,
         amount: "0",
@@ -223,11 +254,10 @@ const ParticipantCard = ({
         if (data.signed) {
           setTransactionStatus(`Transaction signed. TXID: ${data.txid}`);
           console.log(data.txid, "qr code completion");
-          console.log(
-            transactionStatus,
-            "transaction status aman in user card qr code"
-          );
+          console.log(transactionStatus,"transaction status aman in user card qr code");
           //  setIsModalVisible(false);
+
+          //refresh Offers tab
         } else if (data.rejected) {
           setTransactionStatus("Transaction rejected");
         }
@@ -560,7 +590,7 @@ const ParticipantCard = ({
                 <div className="flex flex-col md:flex-row gap-3 mb-5">
                   <TextField
                     type="number"
-                    label="Amount"
+                    label="Set a Price"
                     value={state.amount}
                     inputProps={{ min: 1 }}
                     onChange={(e) => updateField("amount", e.target.value)}
