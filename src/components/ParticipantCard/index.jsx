@@ -222,7 +222,7 @@ const ParticipantCard = ({
       const payload = {
         nft: selectedNftForOffer.nftokenID,
         amount: "0",
-        owner: selectedNftForOffer.issuer,
+        sender: ownWalletAddress,
         receiver: destination,
       };
       console.log("Transfer payload:", payload);
