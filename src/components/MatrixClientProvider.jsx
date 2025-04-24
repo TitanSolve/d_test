@@ -104,7 +104,7 @@ const MatrixClientProvider = () => {
   const [loading, setLoading] = useState(true);
   const [membersList, setMembersList] = useState([]);
   const { theme, toggleTheme } = useTheme();
-  const [myWalletAddress, setMyWalletAddress] = useState("");
+  const [myOwnWalletAddress, setMyWalletAddress] = useState("");
 
   useEffect(() => {
     const loadData = async () => {
@@ -414,7 +414,7 @@ const MatrixClientProvider = () => {
                   <NFTs membersList={membersList} myNftData={myNftData} getImageData={getImageData} wgtParameters={widgetApi.widgetParameters} refreshOffers={refreshOffers} />
                 </div>
                 <div style={{ display: selectedIndex === 1 ? "block" : "none" }}>
-                  <Offers myWalletAddress={myWalletAddress} membersList={membersList} />
+                  <Offers myWalletAddress={myOwnWalletAddress} membersList={membersList} />
                 </div>
 
               </motion.div>
