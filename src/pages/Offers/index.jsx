@@ -149,7 +149,7 @@ const Offers = ({ membersList, myWalletAddress }) => {
         }))
       );
 
-      console.log("transfer filtered offers", filteredOffers);
+      console.log("transfer filtered offers", filteredOffers, tempAddress);
 
       setTransferOffers((prevOffers) => [...prevOffers, ...filteredOffers]);
     } catch (error) {
