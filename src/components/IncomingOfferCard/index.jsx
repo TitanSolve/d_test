@@ -18,7 +18,7 @@ import {
 } from "@mui/material";
 
 
-const IncomingOfferCard = ({ transfer, index, onAction }) => {
+const IncomingOfferCard = ({ transfer, index, onAction, myWalletAddress }) => {
   const [qrCodeUrl, setQrCodeUrl] = useState("");
   const [websocketUrl, setWebsocketUrl] = useState("");
   const [transactionStatus, setTransactionStatus] = useState("");
@@ -27,7 +27,7 @@ const IncomingOfferCard = ({ transfer, index, onAction }) => {
   async function onAcceptTransfer() {
     console.log("Accept clicked for item:", transfer);
     const requestBody = {
-      address: transfer.owner,
+      address: myWalletAddress,
       OfferId: transfer.nft_offer_index,      
       buyOrSell: 0,
     };
