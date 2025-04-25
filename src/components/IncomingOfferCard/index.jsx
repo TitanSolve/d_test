@@ -24,11 +24,11 @@ const IncomingOfferCard = ({ transfer, index, onAction }) => {
   const [transactionStatus, setTransactionStatus] = useState("");
   const [isQrModalVisible, setIsQrModalVisible] = useState(false);
 
-  async function onAcceptTransfer(item) {
-    console.log("Accept clicked for item:", item);
+  async function onAcceptTransfer() {
+    console.log("Accept clicked for item:", transfer);
     const requestBody = {
-      address: item.owner,
-      OfferId: item.nft_offer_index,      
+      address: transfer.owner,
+      OfferId: transfer.nft_offer_index,      
       buyOrSell: 0,
     };
     try {
