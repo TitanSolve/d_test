@@ -27,8 +27,8 @@ const IncomingOfferCard = ({ transfer, index, onAction }) => {
   async function onAcceptTransfer(item) {
     console.log("Accept clicked for item:", item);
     const requestBody = {
-      OfferId: item.nft_offer_index,
       address: item.owner,
+      OfferId: item.nft_offer_index,      
       buyOrSell: 0,
     };
     try {
