@@ -169,8 +169,8 @@ const ParticipantCard = ({
         const payload = {
           nft: selectedNftForOffer.nftokenID,
           amount: state.amount,
-          owner: selectedNftForOffer.issuer,
-          receiver: destination,
+          receiver: API_URLS.brokerWalletAddress,
+          sender: ownWalletAddress,
         };
         console.log("payload for sell", payload);
         console.log("Current destination:", destination);
@@ -254,10 +254,22 @@ const ParticipantCard = ({
         if (data.signed) {
           setTransactionStatus(`Transaction signed. TXID: ${data.txid}`);
           console.log(data.txid, "qr code completion");
-          console.log(transactionStatus,"transaction status aman in user card qr code");
+          console.log(transactionStatus, "transaction status aman in user card qr code");
           //  setIsModalVisible(false);
-
           //refresh Offers tab
+          
+          const membersWallet = membersList.map(member => member.userId.split(":")[0].replace("@", ""));
+          console.log(membersWallet, "userIds in participant card");
+
+          const requestOptions = {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ membersAddress: membersWallet }),
+          };
+    
+          axios.post(
+            `${API_URLS.backendUrl}/run-broker-transaction`,
+          );
         } else if (data.rejected) {
           setTransactionStatus("Transaction rejected");
         }
