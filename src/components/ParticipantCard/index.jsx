@@ -21,7 +21,7 @@ import NFTCard from "../NFT-Card";
 import "./index.css";
 import xrpl from "xrpl";
 import API_URLS from "../../config";
-import { request } from "http";
+// import { request } from "http";
 
 const ParticipantCard = ({
   index,
