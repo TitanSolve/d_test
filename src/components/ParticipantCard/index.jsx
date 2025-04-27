@@ -169,7 +169,7 @@ const ParticipantCard = ({
         const payload = {
           nft: selectedNftForOffer.nftokenID,
           amount: state.amount,
-          receiver: API_URLS.brokerWalletAddress,
+          receiver: destination,
           sender: ownWalletAddress,
         };
         console.log("payload for sell", payload);
@@ -196,7 +196,6 @@ const ParticipantCard = ({
           nft: selectedNftForOffer.nftokenID,
           amount: state.amount,
           owner: /*selectedNftForOffer.issuer*/ myNftData.userId.split(":")[0].replace("@", ""),
-          receiver: destination,
         };
         console.log(payload, "payload in participant card");
         fetch(`${API_URLS.backendUrl}/create-nft-buy-offer`, {
