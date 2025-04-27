@@ -164,7 +164,6 @@ const ParticipantCard = ({
     // console.log("sellerWallet : ", sellerWallet);
     // const brokerAddress = API_URLS.brokerWalletAddress;
 
-
     if (isSell) {
       if ((selectedNftForOffer.userName === wgtParameters.displayName)) { //Create Sell Offer
         const payload = {
@@ -259,19 +258,19 @@ const ParticipantCard = ({
           //  setIsModalVisible(false);
           //refresh Offers tab
           
-          const membersWallet = membersList.map(member => member.userId.split(":")[0].replace("@", ""));
-          console.log(membersWallet, "userIds in participant card");
+          // const membersWallet = membersList.map(member => member.userId.split(":")[0].replace("@", ""));
+          // console.log(membersWallet, "userIds in participant card");
 
-          const requestOptions = {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ membersAddress: membersWallet }),
-          };
+          // const requestOptions = {
+          //   method: "POST",
+          //   headers: { "Content-Type": "application/json" },
+          //   body: JSON.stringify({ membersAddress: membersWallet }),
+          // };
     
-          axios.post(
-            `${API_URLS.backendUrl}/run-broker-transaction`,
-            requestOptions
-          );
+          // axios.post(
+          //   `${API_URLS.backendUrl}/run-broker-transaction`,
+          //   requestOptions
+          // );
         } else if (data.rejected) {
           setTransactionStatus("Transaction rejected");
         }
