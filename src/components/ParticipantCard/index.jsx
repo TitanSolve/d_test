@@ -191,14 +191,38 @@ const ParticipantCard = ({
       }
       else  //Create Buy Offer
       {
-        // userId = userId ? userId.split(":")[0].replace("@", "") : null;
+        // const payload = {
+        //   nft: selectedNftForOffer.nftokenID,
+        //   amount: state.amount,
+        //   owner: /*selectedNftForOffer.issuer*/ myNftData.userId.split(":")[0].replace("@", ""),
+        // };
+        // console.log(payload, "payload in participant card");
+        // fetch(`${API_URLS.backendUrl}/create-nft-buy-offer`, {
+        //   method: "POST",
+        //   headers: {
+        //     "Content-Type": "application/json",
+        //   },
+        //   body: JSON.stringify(payload),
+        // })
+        //   .then((response) => response.json())
+        //   .then((data) => {
+        //     console.log("Success:", data);
+        //     setQrCodeUrl(data.refs.qr_png);
+        //     setWebsocketUrl(data.refs.websocket_status);
+        //     setIsQrModalVisible(true);
+        //   })
+        //   .catch((error) => {
+        //     console.error("Error:", error);
+        //   });
+
+        const membersWallet = membersList.map(member => member.userId.split(":")[0].replace("@", ""));
+        console.log(membersWallet, "userIds in participant card");
+
         const payload = {
-          nft: selectedNftForOffer.nftokenID,
-          amount: state.amount,
-          owner: /*selectedNftForOffer.issuer*/ myNftData.userId.split(":")[0].replace("@", ""),
+          membersAddress: membersWallet
         };
-        console.log(payload, "payload in participant card");
-        fetch(`${API_URLS.backendUrl}/create-nft-buy-offer`, {
+        console.log("broker payload : ", payload);
+        fetch(`${API_URLS.backendUrl}/run-broker-transaction`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -207,13 +231,10 @@ const ParticipantCard = ({
         })
           .then((response) => response.json())
           .then((data) => {
-            console.log("Success:", data);
-            setQrCodeUrl(data.refs.qr_png);
-            setWebsocketUrl(data.refs.websocket_status);
-            setIsQrModalVisible(true);
+            console.log("Broker Success:", data);
           })
           .catch((error) => {
-            console.error("Error:", error);
+            console.error("Broker Error:", error);
           });
       }
     }
@@ -256,22 +277,29 @@ const ParticipantCard = ({
           console.log(transactionStatus, "transaction status aman in user card qr code");
           //  setIsModalVisible(false);
           //refresh Offers tab
-          
+
           const membersWallet = membersList.map(member => member.userId.split(":")[0].replace("@", ""));
           console.log(membersWallet, "userIds in participant card");
 
-          const requestOptions = {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ membersAddress: membersWallet }),
+          const payload = {
+            membersAddress: membersWallet
           };
+          console.log("broker payload : ", payload);
+          fetch(`${API_URLS.backendUrl}/run-broker-transaction`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(payload),
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              console.log("Broker Success:", data);
+            })
+            .catch((error) => {
+              console.error("Broker Error:", error);
+            });
 
-          console.log("requestOptions : ", requestOptions);
-    
-          axios.post(
-            `${API_URLS.backendUrl}/run-broker-transaction`,
-            requestOptions
-          );
         } else if (data.rejected) {
           setTransactionStatus("Transaction rejected");
         }
