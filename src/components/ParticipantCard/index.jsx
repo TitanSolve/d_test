@@ -138,7 +138,7 @@ const ParticipantCard = ({
     setSelectedNftForOffer(null);
   };
 
-  const makeOffer = async (isSell, selectedNftForOffer) => {
+  const makeOffer = async (isSell, selectedNftForOffer, ownerAddress) => {
     console.log("isSell : ", isSell);
     const myName = wgtParameters.displayName;
     const own = membersList.find((u) => u.name === myName /*"This Guy"*/);
@@ -195,7 +195,7 @@ const ParticipantCard = ({
         const payload = {
           nft: selectedNftForOffer.nftokenID,
           amount: state.amount,
-          owner: selectedNftForOffer.issuer,
+          owner: /*selectedNftForOffer.issuer*/ myNftData.userId.split(":")[0].replace("@", ""),
           receiver: destination,
         };
         console.log(payload, "payload in participant card");
