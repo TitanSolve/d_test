@@ -175,6 +175,8 @@ const ParticipantCard = ({
         console.log("payload for sell", payload);
         console.log("Current destination:", destination);
 
+        
+
         try {
           const response = await axios.post(
             `${API_URLS.backendUrl}/create-nft-offer`,
