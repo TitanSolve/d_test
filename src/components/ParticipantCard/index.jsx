@@ -191,38 +191,13 @@ const ParticipantCard = ({
       }
       else  //Create Buy Offer
       {
-        // const payload = {
-        //   nft: selectedNftForOffer.nftokenID,
-        //   amount: state.amount,
-        //   owner: /*selectedNftForOffer.issuer*/ myNftData.userId.split(":")[0].replace("@", ""),
-        // };
-        // console.log(payload, "payload in participant card");
-        // fetch(`${API_URLS.backendUrl}/create-nft-buy-offer`, {
-        //   method: "POST",
-        //   headers: {
-        //     "Content-Type": "application/json",
-        //   },
-        //   body: JSON.stringify(payload),
-        // })
-        //   .then((response) => response.json())
-        //   .then((data) => {
-        //     console.log("Success:", data);
-        //     setQrCodeUrl(data.refs.qr_png);
-        //     setWebsocketUrl(data.refs.websocket_status);
-        //     setIsQrModalVisible(true);
-        //   })
-        //   .catch((error) => {
-        //     console.error("Error:", error);
-        //   });
-
-        const membersWallet = membersList.map(member => member.userId.split(":")[0].replace("@", ""));
-        console.log(membersWallet, "userIds in participant card");
-
         const payload = {
-          membersAddress: membersWallet
+          nft: selectedNftForOffer.nftokenID,
+          amount: state.amount,
+          owner: /*selectedNftForOffer.issuer*/ myNftData.userId.split(":")[0].replace("@", ""),
         };
-        console.log("broker payload : ", payload);
-        fetch(`${API_URLS.backendUrl}/run-broker-transaction`, {
+        console.log(payload, "payload in participant card");
+        fetch(`${API_URLS.backendUrl}/create-nft-buy-offer`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -231,11 +206,36 @@ const ParticipantCard = ({
         })
           .then((response) => response.json())
           .then((data) => {
-            console.log("Broker Success:", data);
+            console.log("Success:", data);
+            setQrCodeUrl(data.refs.qr_png);
+            setWebsocketUrl(data.refs.websocket_status);
+            setIsQrModalVisible(true);
           })
           .catch((error) => {
-            console.error("Broker Error:", error);
+            console.error("Error:", error);
           });
+
+        // const membersWallet = membersList.map(member => member.userId.split(":")[0].replace("@", ""));
+        // console.log(membersWallet, "userIds in participant card");
+
+        // const payload = {
+        //   membersAddress: membersWallet
+        // };
+        // console.log("broker payload : ", payload);
+        // fetch(`${API_URLS.backendUrl}/run-broker-transaction`, {
+        //   method: "POST",
+        //   headers: {
+        //     "Content-Type": "application/json",
+        //   },
+        //   body: JSON.stringify(payload),
+        // })
+        //   .then((response) => response.json())
+        //   .then((data) => {
+        //     console.log("Broker Success:", data);
+        //   })
+        //   .catch((error) => {
+        //     console.error("Broker Error:", error);
+        //   });
       }
     }
     else {  //Create Transfer Offer
