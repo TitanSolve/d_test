@@ -65,12 +65,12 @@ async function getTrustLinesAsArray(wallets) {
   const client = new xrpl.Client(API_URLS.xrplMainnetUrl) // mainnet
   await client.connect()
 
-  const info = await client.request({
-    command: "account_info",
-    account: "r9syfthWEycVKuy9bz2awsxrTNK3NBBT6h",
-    ledger_index: "validated"
-  });
-  console.log("-------Account info: ", info);
+  // const info = await client.request({
+  //   command: "account_info",
+  //   account: "r9syfthWEycVKuy9bz2awsxrTNK3NBBT6h",
+  //   ledger_index: "validated"
+  // });
+  // console.log("-------Account info: ", info);
 
   const trustLinesArray = []
 
