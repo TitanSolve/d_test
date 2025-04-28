@@ -278,27 +278,27 @@ const ParticipantCard = ({
           //  setIsModalVisible(false);
           //refresh Offers tab
 
-          const membersWallet = membersList.map(member => member.userId.split(":")[0].replace("@", ""));
-          console.log(membersWallet, "userIds in participant card");
+          // const membersWallet = membersList.map(member => member.userId.split(":")[0].replace("@", ""));
+          // console.log(membersWallet, "userIds in participant card");
 
-          const payload = {
-            membersAddress: membersWallet
-          };
-          console.log("broker payload : ", payload);
-          fetch(`${API_URLS.backendUrl}/run-broker-transaction`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(payload),
-          })
-            .then((response) => response.json())
-            .then((data) => {
-              console.log("Broker Success:", data);
-            })
-            .catch((error) => {
-              console.error("Broker Error:", error);
-            });
+          // const payload = {
+          //   membersAddress: membersWallet
+          // };
+          // console.log("broker payload : ", payload);
+          // fetch(`${API_URLS.backendUrl}/run-broker-transaction`, {
+          //   method: "POST",
+          //   headers: {
+          //     "Content-Type": "application/json",
+          //   },
+          //   body: JSON.stringify(payload),
+          // })
+          //   .then((response) => response.json())
+          //   .then((data) => {
+          //     console.log("Broker Success:", data);
+          //   })
+          //   .catch((error) => {
+          //     console.error("Broker Error:", error);
+          //   });
 
         } else if (data.rejected) {
           setTransactionStatus("Transaction rejected");
