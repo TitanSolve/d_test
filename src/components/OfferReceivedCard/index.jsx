@@ -158,6 +158,7 @@ const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddr
   useEffect(() => {
     if (websocketUrl) {
       const ws = new WebSocket(websocketUrl);
+      console.log("isSignforAccept--->", isSignforAccept); 
 
       ws.onmessage = (event) => {
         const data = JSON.parse(event.data);
