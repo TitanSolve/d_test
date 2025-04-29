@@ -75,7 +75,7 @@ const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddr
     }
     else {
       console.log("No matching offer found for the selected NFT.");
-      sellAmount = (buyOffer.amount * 1 - buyOffer.amount * 1 / 100).toString();
+      sellAmount = ( (buyOffer.amount * 1 - buyOffer.amount * 1 / 100) / 1000000 ).toString();
 
       const payload = {
         nft: buyOffer.NFTokenID,
@@ -92,6 +92,7 @@ const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddr
           },
           body: JSON.stringify(payload),
         });
+
         console.log("Offer created:", response.data);
         setQrCodeUrl(response.data.refs.qr_png);
         setWebsocketUrl(response.data.refs.websocket_status);
