@@ -75,7 +75,7 @@ const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddr
     else {
       console.log("No matching offer found for the selected NFT.");
 
-      setIsSignforAccept(() => true);
+      setIsSignforAccept(true);
       
       let sellAmount = "0";
       sellAmount = ( (buyOffer.amount * 1 - buyOffer.amount * 1 / 100) / 1000000 ).toString();
@@ -119,14 +119,12 @@ const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddr
 
   async function onCancelOffer() {
     console.log("Cancel clicked for item:", buyOffer);
-    setIsSignforAccept(() => false);
-
     const requestBody = {
       account: buyOffer.owner,
       offerId: buyOffer.nft_offer_index,
     };
     try {
-
+      setIsSignforAccept(false);
       const response = await fetch(`${API_URLS.backendUrl}/cancel-nft-offer`, {
         method: "POST",
         headers: {
@@ -157,7 +155,7 @@ const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddr
     console.log("refreshSellOfferAndAccept");
     const refreshedSellOffers = await refreshSellOffers();
     console.log("done refreshSellOffers", refreshedSellOffers);
-    setMadeOffers(() => refreshedSellOffers);
+    setMadeOffers(refreshedSellOffers);
     onAcceptOffer( refreshedSellOffers );
   }
 
@@ -176,8 +174,6 @@ const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddr
           if (isSignforAccept) { //sign for accept offer
             console.log("sign for accept offer--->", buyOffer);
             setIsSignforAccept(false);
-            setIsSignforAccept(() => false);
-            console.log("isSignForAccept--->", isSignforAccept);
             refreshSellOfferAndAccept();
           }
           else{
@@ -192,7 +188,7 @@ const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddr
         ws.close();
       };
     }
-  }, [websocketUrl, isSignforAccept]);
+  }, [websocketUrl]);
 
   return (
     <motion.div
