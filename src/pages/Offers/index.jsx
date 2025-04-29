@@ -227,9 +227,7 @@ const Offers = ({ membersList, myWalletAddress, myNftData }) => {
       //---------------------------
 
       //Sell Offers
-      await Promise.all(
         fetchNftSellOffers() 
-      );
       //---------------------
     } catch (error) {
       console.error("Error refreshing offers:", error);
@@ -246,14 +244,12 @@ const Offers = ({ membersList, myWalletAddress, myNftData }) => {
 
   return (
     <div className="h-full overflow-y-auto p-5 bg-gradient-to-br to-gray-100 flex flex-col items-center space-y-2">
-      <Tooltip title={`Switch to ${theme === "light" ? "Dark" : "Light"} Mode`} arrow>
         <button
           onClick={refreshOffers}
           className="fixed top-4 left-4 z-50 p-2 md:p-3 rounded-full bg-gray-100 dark:bg-[#15191E] text-gray-800 dark:text-white shadow-lg hover:scale-105 active:scale-95 transition-all duration-300 ease-in-out border border-gray-300 dark:border-gray-700 backdrop-blur-md"
         >
           update
         </button>
-      </Tooltip>
 
       <IncomingTransferToggle title="Incoming transfers" incomingTransfers={incomingTransferOffers} onAction={refreshOffers} myOwnWalletAddress={myWalletAddress} />
       <OutgoingTransferToggle title="Outgoing transfers" count={6} />
