@@ -13,7 +13,7 @@ const OfferMadeToggle = ({ title, madeOffers, onAction, myOwnWalletAddress }) =>
     setSellOffers(madeOffers);
     setCount(madeOffers.length);
     console.log("sellOffer-->", madeOffers);
-  }, [sellOffers]);
+  }, [madeOffers]);
 
   return (
     <div className="w-full max-w-2xl mx-auto p-4">
