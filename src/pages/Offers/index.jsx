@@ -65,6 +65,8 @@ const Offers = ({ membersList, myWalletAddress, myNftData }) => {
         //   });
         // });
 
+        const memberData = myNftData.find((u) => u.userId.split(":")[0].replace("@", "") === myWalletAddress);
+
         const nftMap = {};
         if (memberData?.groupedNfts?.length) {
           for (const group of memberData.groupedNfts) {
