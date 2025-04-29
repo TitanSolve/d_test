@@ -12,7 +12,7 @@ const Offers = ({ membersList, myWalletAddress, myNftData }) => {
   const [incomingTransferOffers, setIncomingTransferOffers] = useState([]);
   const [loading, setLoading] = useState(false); // Add loading state
   const [sellOffers, setSellOffers] = useState([]);
-  
+
   function fetchReceivedBuyOffers() {
     const requestOptions = {
       method: "POST",
@@ -60,7 +60,7 @@ const Offers = ({ membersList, myWalletAddress, myNftData }) => {
       .finally(() => setLoading(false));
   }
 
-  function fetchSellOffers() {
+  async function fetchSellOffers() {
     console.log("-----fetchSellOffers-----");
     const requestOptions = {
       method: "POST",
@@ -69,42 +69,46 @@ const Offers = ({ membersList, myWalletAddress, myNftData }) => {
     };
 
     console.log("Fetching NFT sell offers...", requestOptions);
-    setLoading(true);
-    fetch(`${API_URLS.backendUrl}/getMembersNftsWithSellOffers`, requestOptions)
-      .then((response) => response.json())
-      .then((data) => {
-        const memberData = myNftData.find((u) => u.userId.split(":")[0].replace("@", "") === myWalletAddress);
-        const nftMap = {};
-        if (memberData?.groupedNfts?.length) {
-          for (const group of memberData.groupedNfts) {
-            for (const nft of group.nfts) {
-              nftMap[nft.nftokenID] = {
-                ...nft,
-              };
-            }
+    try {
+      const response = await fetch(`${API_URLS.backendUrl}/getMembersNftsWithSellOffers`, requestOptions);
+      const data = await response.json();
+
+      const memberData = myNftData.find(
+        (u) => u.userId.split(":")[0].replace("@", "") === myWalletAddress
+      );
+
+      const nftMap = {};
+      if (memberData?.groupedNfts?.length) {
+        for (const group of memberData.groupedNfts) {
+          for (const nft of group.nfts) {
+            nftMap[nft.nftokenID] = { ...nft };
           }
         }
-        const filteredOffers = data.flatMap((item) =>
-          item.NftBuyOffers
-            .map((offer) => {
-              const nftMeta = nftMap[item.NFTokenID];
-              return {
-                ...offer,
-                URI: item.URI,
-                NFTokenID: item.NFTokenID,
-                ...(nftMeta && {
-                  imageURI: nftMeta.imageURI,
-                  name: nftMeta.metadata?.name,
-                  nft: nftMeta,
-                }),
-              };
-            })
-        );
-        setNftSellOffers(filteredOffers);
-        console.log(filteredOffers, "nft sell offers");
-      })
-      .catch((error) => console.error("Error fetching NFT sell offers:", error))
-      .finally(() => setLoading(false));
+      }
+
+      const filteredOffers = data.flatMap((item) =>
+        item.NftBuyOffers.map((offer) => {
+          const nftMeta = nftMap[item.NFTokenID];
+          return {
+            ...offer,
+            URI: item.URI,
+            NFTokenID: item.NFTokenID,
+            ...(nftMeta && {
+              imageURI: nftMeta.imageURI,
+              name: nftMeta.metadata?.name,
+              nft: nftMeta,
+            }),
+          };
+        })
+      );
+
+      setNftSellOffers(filteredOffers);
+      console.log(filteredOffers, "nft sell offers");
+    } catch (error) {
+      console.error("Error fetching NFT sell offers:", error);
+    } finally {
+      console.log("fetchSellOffer is finished");
+    }
   }
 
   // function fetchAccountOffers(currentaddress) {
