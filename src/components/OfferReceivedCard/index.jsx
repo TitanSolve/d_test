@@ -21,14 +21,14 @@ const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddr
     console.log("sellOffer-->", sellOffers);
   }, [sellOffers]);
 
-  async function onAcceptOffer( sellOffers ) {
+  async function onAcceptOffer() {
     console.log("Accpet clicked for item:", buyOffer);
-    console.log("SellOffer--->", sellOffers);
+    console.log("SellOffer--->", madeOffers);
 
     let isOfferFound = false;
     let sellOfferIndex = "";
     let brokerFee = (parseFloat(buyOffer.amount) * 1.01).toString();
-    for (const offer of sellOffers) {
+    for (const offer of madeOffers) {
       console.log("offer--->", offer);
       if (offer.NFTokenID === buyOffer.NFTokenID) {
         isOfferFound = true;
@@ -74,9 +74,7 @@ const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddr
     }
     else {
       console.log("No matching offer found for the selected NFT.");
-
       setIsSignforAccept(true);
-      
       let sellAmount = "0";
       sellAmount = ( (buyOffer.amount * 1 - buyOffer.amount * 1 / 100) / 1000000 ).toString();
 
@@ -156,7 +154,7 @@ const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddr
     const refreshedSellOffers = await refreshSellOffers();
     console.log("done refreshSellOffers", refreshedSellOffers);
     setMadeOffers(refreshedSellOffers);
-    onAcceptOffer( refreshedSellOffers );
+    onAcceptOffer();
   }
 
   useEffect(() => {
@@ -174,7 +172,7 @@ const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddr
           if (isSignforAccept) { //sign for accept offer
             console.log("sign for accept offer--->", buyOffer);
             setIsSignforAccept(false);
-            refreshSellOfferAndAccept();
+            refreshSellOfferAndAccept();  
           }
           else{
             onAction(); //refresh
@@ -215,7 +213,7 @@ const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddr
       <div className="flex flex-col sm:flex-row items-center justify-between w-full sm:w-auto space-y-4 sm:space-y-0 sm:space-x-4">
         <Button
           type="primary"
-          onClick={onAcceptOffer(madeOffers)}
+          onClick={onAcceptOffer}
           block
           style={{ borderRadius: "6px", alignItems: "center" }}
           className="dark:bg-green-600 dark:hover:bg-green-500"
