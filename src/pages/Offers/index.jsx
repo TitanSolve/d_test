@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import OutgoingTransferToggle from "../../components/OutgoingTransferToggle";
 import IncomingTransferToggle from "../../components/IncomingTransferToggle";
+import OfferMadeToggle from "../../components/OfferMadeToggle";
 import API_URLS from "../../config";
 
 const Offers = ({ membersList, myWalletAddress, myNftData }) => {
@@ -254,7 +255,7 @@ const Offers = ({ membersList, myWalletAddress, myNftData }) => {
       <IncomingTransferToggle title="Incoming transfers" incomingTransfers={incomingTransferOffers} onAction={refreshOffers} myOwnWalletAddress={myWalletAddress} />
       <OutgoingTransferToggle title="Outgoing transfers" count={6} />
       <OutgoingTransferToggle title="Offers Received" count={0} />
-      <OutgoingTransferToggle title="Offers Made" count={3} />
+      <OfferMadeToggle title="Offers Made" madeOffers={nftSellOffers} myOwnWalletAddress={myWalletAddress} onAction={refreshOffers} />
     </div>
   );
 };
