@@ -11,7 +11,8 @@ const OfferMadeToggle = ({ title, madeOffers, onAction, myOwnWalletAddress }) =>
 
   useEffect(() => {
     setSellOffers(madeOffers);
-    setCount(sellOffers.length);
+    setCount(madeOffers.length);
+    console.log("sellOffer-->", madeOffers);
   }, [sellOffers]);
 
   return (
