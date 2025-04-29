@@ -151,8 +151,9 @@ const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddr
   async function refreshSellOfferAndAccept()
   {
     console.log("refreshSellOfferAndAccept");
-    await refreshSellOffers();
-    console.log("done refreshSellOffers");
+    const refreshedSellOffers = await refreshSellOffers();
+    console.log("done refreshSellOffers", refreshedSellOffers);
+    setMadeOffers(refreshedSellOffers);
     onAcceptOffer();
   }
 

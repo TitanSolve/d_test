@@ -103,7 +103,8 @@ const Offers = ({ membersList, myWalletAddress, myNftData }) => {
       );
 
       setNftSellOffers(filteredOffers);
-      console.log(filteredOffers, "nft sell offers");
+      return filteredOffers;
+      console.log("nft sell offers--->", filteredOffers);
     } catch (error) {
       console.error("Error fetching NFT sell offers:", error);
     } finally {
