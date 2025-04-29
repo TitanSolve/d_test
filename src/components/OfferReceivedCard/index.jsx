@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import API_URLS from "../../config";
 import {
@@ -14,7 +14,7 @@ const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddr
   const [transactionStatus, setTransactionStatus] = useState("");
   const [isQrModalVisible, setIsQrModalVisible] = useState(false);
   const [madeOffers, setMadeOffers] = useState([]);
-  const isSignForAcceptRef = useRef(false);
+  const [isSignforAccept, setIsSignforAccept] = useState(false);
 
   useEffect(() => {
     setMadeOffers(sellOffers);
@@ -75,10 +75,10 @@ const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddr
     else {
       console.log("No matching offer found for the selected NFT.");
 
+      setIsSignforAccept(() => true);
+      
       let sellAmount = "0";
       sellAmount = ( (buyOffer.amount * 1 - buyOffer.amount * 1 / 100) / 1000000 ).toString();
-
-      isSignForAcceptRef.current = true;
 
       const payload = {
         nft: buyOffer.NFTokenID,
@@ -119,12 +119,14 @@ const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddr
 
   async function onCancelOffer() {
     console.log("Cancel clicked for item:", buyOffer);
+    setIsSignforAccept(() => false);
+
     const requestBody = {
       account: buyOffer.owner,
       offerId: buyOffer.nft_offer_index,
     };
     try {
-      isSignForAcceptRef.current = false;
+
       const response = await fetch(`${API_URLS.backendUrl}/cancel-nft-offer`, {
         method: "POST",
         headers: {
@@ -155,14 +157,14 @@ const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddr
     console.log("refreshSellOfferAndAccept");
     const refreshedSellOffers = await refreshSellOffers();
     console.log("done refreshSellOffers", refreshedSellOffers);
-    setMadeOffers(refreshedSellOffers);
+    setMadeOffers(() => refreshedSellOffers);
     onAcceptOffer( refreshedSellOffers );
   }
 
   useEffect(() => {
     if (websocketUrl) {
       const ws = new WebSocket(websocketUrl);
-      console.log("isSignforAccept--->", isSignForAcceptRef.current); 
+      console.log("isSignforAccept--->", isSignforAccept); 
 
       ws.onmessage = (event) => {
         const data = JSON.parse(event.data);
@@ -171,10 +173,11 @@ const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddr
           setIsQrModalVisible(false);
           // onAction();  //refresh
 
-          if (isSignForAcceptRef.current === true) { //sign for accept offer
+          if (isSignforAccept) { //sign for accept offer
             console.log("sign for accept offer--->", buyOffer);
-            isSignForAcceptRef.current = false;
-            console.log("isSignForAcceptRef.current--->", isSignForAcceptRef.current);
+            setIsSignforAccept(false);
+            setIsSignforAccept(() => false);
+            console.log("isSignForAccept--->", isSignforAccept);
             refreshSellOfferAndAccept();
           }
           else{
@@ -189,7 +192,7 @@ const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddr
         ws.close();
       };
     }
-  }, [websocketUrl]);
+  }, [websocketUrl, isSignforAccept]);
 
   return (
     <motion.div
@@ -216,7 +219,7 @@ const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddr
       <div className="flex flex-col sm:flex-row items-center justify-between w-full sm:w-auto space-y-4 sm:space-y-0 sm:space-x-4">
         <Button
           type="primary"
-          onClick={onAcceptOffer( madeOffers )}
+          onClick={onAcceptOffer(madeOffers)}
           block
           style={{ borderRadius: "6px", alignItems: "center" }}
           className="dark:bg-green-600 dark:hover:bg-green-500"
