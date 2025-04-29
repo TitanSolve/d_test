@@ -18,7 +18,7 @@ const Offers = ({ membersList, myWalletAddress, myNftData }) => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ address: myWalletAddress }),
     };
-    setLoading(true);
+    console.log("Fetching NFT buy offers...", requestOptions);
     fetch(`${API_URLS.backendUrl}/getUserNftsWithBuyOffers`, requestOptions)
       .then((response) => response.json())
       .then((data) => {
@@ -225,8 +225,6 @@ const Offers = ({ membersList, myWalletAddress, myNftData }) => {
     console.log("Offers->refreshOffers", myWalletAddress);
     setLoading(true);
 
-    // fetchNFTBuyOffers();
-
     try {
 
       //Transfer----------
@@ -240,11 +238,11 @@ const Offers = ({ membersList, myWalletAddress, myNftData }) => {
       //---------------------------
 
       //Sell Offers
-      fetchNftSellOffers()
+      fetchNftSellOffers();
       //---------------------
 
       //Buy Offers
-      fetchNFTBuyOffers()
+      fetchNFTBuyOffers();
       //---------------------
     } catch (error) {
       console.error("Error refreshing offers:", error);
