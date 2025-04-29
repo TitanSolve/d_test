@@ -148,7 +148,7 @@ const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddr
   }
 
   async function onAcceptAutoMakeSellOfferOffer(refreshedSellOffers) {
-    console.log("Accpet clicked for item:", buyOffer);
+    console.log("onAcceptAutoMakeSellOfferOffer item:", buyOffer);
     console.log("SellOffer--->", refreshedSellOffers);
 
     let isOfferFound = false;
