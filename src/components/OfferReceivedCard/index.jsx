@@ -11,10 +11,10 @@ import {
 const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddress, refreshSellOffers }) => {
   const [qrCodeUrl, setQrCodeUrl] = useState("");
   const [websocketUrl, setWebsocketUrl] = useState("");
+  const [websocketAutoMakeSellOfferUrl, setWebsocketAutoMakeSellOfferUrl] = useState("");
   const [transactionStatus, setTransactionStatus] = useState("");
   const [isQrModalVisible, setIsQrModalVisible] = useState(false);
   const [madeOffers, setMadeOffers] = useState([]);
-  const [isSignforAccept, setIsSignforAccept] = useState(false);
 
   useEffect(() => {
     setMadeOffers(sellOffers);
@@ -37,8 +37,7 @@ const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddr
         break;
       }
     }
-    if(isOfferFound)
-    {
+    if (isOfferFound) {
       const requestBody = {
         nftId: buyOffer.NFTokenID,
         buyOfferId: buyOffer.nft_offer_index,
@@ -46,7 +45,7 @@ const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddr
         brokerFee: brokerFee,
       };
       console.log("requestBody--->", requestBody);
-  
+
       try {
         const response = await fetch(`${API_URLS.backendUrl}/broker-accept-offer`, {
           method: "POST",
@@ -56,17 +55,20 @@ const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddr
           body: JSON.stringify(requestBody),
         });
         console.log(requestBody, "requestBody");
-  
+
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-  
+
+        console.log("response", response);
+
         const data = await response.json();
         if (data) {
-          console.log(data.refs, "data refs");
-          setQrCodeUrl(data.refs.qr_png);
-          setWebsocketUrl(data.refs.websocket_status);
-          setIsQrModalVisible(true);
+          console.log(data, "data");
+          onAction();
+          // setQrCodeUrl(data.refs.qr_png);
+          // setWebsocketUrl(data.refs.websocket_status);
+          // setIsQrModalVisible(true);
         }
       } catch (error) {
         console.error("Error during fetch:", error);
@@ -74,9 +76,8 @@ const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddr
     }
     else {
       console.log("No matching offer found for the selected NFT.");
-      setIsSignforAccept(true);
       let sellAmount = "0";
-      sellAmount = ( (buyOffer.amount * 1 - buyOffer.amount * 1 / 100) / 1000000 ).toString();
+      sellAmount = ((buyOffer.amount * 1 - buyOffer.amount * 1 / 100) / 1000000).toString();
 
       const payload = {
         nft: buyOffer.NFTokenID,
@@ -97,13 +98,13 @@ const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddr
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-  
+
         const data = await response.json();
         console.log("Offer created:", response);
         if (data) {
           console.log(data.refs, "data refs");
           setQrCodeUrl(data.refs.qr_png);
-          setWebsocketUrl(data.refs.websocket_status);
+          setWebsocketAutoMakeSellOfferUrl(data.refs.websocket_status);
           setIsQrModalVisible(true);
         }
 
@@ -112,7 +113,6 @@ const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddr
       }
 
     }
-    
   }
 
   async function onCancelOffer() {
@@ -122,7 +122,6 @@ const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddr
       offerId: buyOffer.nft_offer_index,
     };
     try {
-      setIsSignforAccept(false);
       const response = await fetch(`${API_URLS.backendUrl}/cancel-nft-offer`, {
         method: "POST",
         headers: {
@@ -148,35 +147,74 @@ const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddr
     }
   }
 
-  async function refreshSellOfferAndAccept()
-  {
+  async function onAcceptAutoMakeSellOfferOffer(refreshedSellOffers) {
+    console.log("Accpet clicked for item:", buyOffer);
+    console.log("SellOffer--->", refreshedSellOffers);
+
+    let isOfferFound = false;
+    let sellOfferIndex = "";
+    let brokerFee = (parseFloat(buyOffer.amount) * 1.01).toString();
+    for (const offer of refreshedSellOffers) {
+      console.log("offer--->", offer);
+      if (offer.NFTokenID === buyOffer.NFTokenID) {
+        isOfferFound = true;
+        sellOfferIndex = offer.nft_offer_index;
+        brokerFee = (buyOffer.amount * 1 - offer.amount * 1).toString();
+        break;
+      }
+    }
+    if (isOfferFound) {
+      const requestBody = {
+        nftId: buyOffer.NFTokenID,
+        buyOfferId: buyOffer.nft_offer_index,
+        sellOfferId: sellOfferIndex,
+        brokerFee: brokerFee,
+      };
+      console.log("requestBody--->", requestBody);
+
+      try {
+        const response = await fetch(`${API_URLS.backendUrl}/broker-accept-offer`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestBody),
+        });
+        console.log(requestBody, "requestBody");
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        if (data) {
+          console.log(data, "data");
+          // setQrCodeUrl(data.refs.qr_png);
+          // setWebsocketUrl(data.refs.websocket_status);
+          // setIsQrModalVisible(true);
+        }
+      } catch (error) {
+        console.error("Error during fetch:", error);
+      }
+    }
+  }
+
+  async function refreshSellOfferAndAccept() {
     console.log("refreshSellOfferAndAccept");
     const refreshedSellOffers = await refreshSellOffers();
     console.log("done refreshSellOffers", refreshedSellOffers);
-    setMadeOffers(refreshedSellOffers);
-    onAcceptOffer();
+    onAcceptAutoMakeSellOfferOffer(refreshedSellOffers);
   }
 
   useEffect(() => {
     if (websocketUrl) {
       const ws = new WebSocket(websocketUrl);
-      console.log("isSignforAccept--->", isSignforAccept); 
-
       ws.onmessage = (event) => {
         const data = JSON.parse(event.data);
         if (data.signed) {
           setTransactionStatus("Transaction signed");
           setIsQrModalVisible(false);
-          // onAction();  //refresh
-
-          if (isSignforAccept) { //sign for accept offer
-            console.log("sign for accept offer--->", buyOffer);
-            setIsSignforAccept(false);
-            refreshSellOfferAndAccept();  
-          }
-          else{
-            onAction(); //refresh
-          }
+          onAction();  //refresh
 
         } else if (data.rejected) {
           setTransactionStatus("Transaction rejected");
@@ -187,6 +225,26 @@ const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddr
       };
     }
   }, [websocketUrl]);
+
+  useEffect(() => {
+    if (websocketAutoMakeSellOfferUrl) {
+      const ws = new WebSocket(websocketAutoMakeSellOfferUrl);
+      ws.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        if (data.signed) {
+          setTransactionStatus("Transaction signed");
+          setIsQrModalVisible(false);
+          refreshSellOfferAndAccept();
+
+        } else if (data.rejected) {
+          setTransactionStatus("Transaction rejected");
+        }
+      };
+      return () => {
+        ws.close();
+      };
+    }
+  }, [websocketAutoMakeSellOfferUrl]);
 
   return (
     <motion.div
