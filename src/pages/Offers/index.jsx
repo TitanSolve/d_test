@@ -37,7 +37,7 @@ const Offers = ({ membersList, myWalletAddress, myNftData }) => {
         .catch((error) => console.error("Error fetching NFT buy offers:", error))
         .finally(() => setLoading(false));
     }
-  
+*/  
     function fetchNftSellOffers() {
       const requestOptions = {
         method: "POST",
@@ -45,7 +45,7 @@ const Offers = ({ membersList, myWalletAddress, myNftData }) => {
         body: JSON.stringify({ address: myWalletAddress }),
       };
   
-      console.log("Fetching NFT sell offers...");
+      console.log("Fetching NFT sell offers...", requestOptions);
       setLoading(true);
       fetch(`${API_URLS.backendUrl}/getMembersNftsWithSellOffers`, requestOptions)
         .then((response) => response.json())
@@ -65,9 +65,7 @@ const Offers = ({ membersList, myWalletAddress, myNftData }) => {
             });
           });
           setNftSellOffers(nftSellOffers);
-          // setTransferOffers(nftTransferOffers);
           console.log(nftSellOffers, "nft sell offers");
-          // x`x`console.log(nftTransferOffers, "nft transfer offers");
         })
         .catch((error) => console.error("Error fetching NFT sell offers:", error))
         .finally(() => setLoading(false));
@@ -115,7 +113,7 @@ const Offers = ({ membersList, myWalletAddress, myNftData }) => {
     //   // fetchNFTData(sellOffers);
     //   console.log("Sell and transfer offers", sellOffers);
     // }, [roomMembers]);
-  */
+  
   const fetchIncomingTransferOffers = async (currentAddress) => {
     const tempAddress = currentAddress.split(":")[0].replace("@", "");
 
@@ -215,24 +213,29 @@ const Offers = ({ membersList, myWalletAddress, myNftData }) => {
     setLoading(true);
 
     // fetchNFTBuyOffers();
-    // fetchNftSellOffers();
 
     try {
-      const allOffersArrays = await Promise.all(
-        membersList.map((member) => fetchIncomingTransferOffers(member.userId))
+      
+      //Transfer----------
+      // const allOffersArrays = await Promise.all(
+      //   membersList.map((member) => fetchIncomingTransferOffers(member.userId))
+      // );
+      // // Flatten all arrays into one
+      // const allFilteredOffers = allOffersArrays.flat();
+      // console.log("incoming transfers", allFilteredOffers);
+      // setIncomingTransferOffers(allFilteredOffers);
+      //---------------------------
+
+      //Sell Offers
+      await Promise.all(
+        fetchNftSellOffers() 
       );
-
-      // Flatten all arrays into one
-      const allFilteredOffers = allOffersArrays.flat();
-
-      console.log("incoming transfers", allFilteredOffers);
-      setIncomingTransferOffers(allFilteredOffers);
+      //---------------------
     } catch (error) {
       console.error("Error refreshing offers:", error);
     } finally {
       setLoading(false);
     }
-
   };
 
   useEffect(() => {
@@ -243,7 +246,16 @@ const Offers = ({ membersList, myWalletAddress, myNftData }) => {
 
   return (
     <div className="h-full overflow-y-auto p-5 bg-gradient-to-br to-gray-100 flex flex-col items-center space-y-2">
-      <IncomingTransferToggle title="Incoming transfers" incomingTransfers={incomingTransferOffers} onAction={refreshOffers} myOwnWalletAddress={myWalletAddress}/>
+      <Tooltip title={`Switch to ${theme === "light" ? "Dark" : "Light"} Mode`} arrow>
+        <button
+          onClick={refreshOffers}
+          className="fixed top-4 left-4 z-50 p-2 md:p-3 rounded-full bg-gray-100 dark:bg-[#15191E] text-gray-800 dark:text-white shadow-lg hover:scale-105 active:scale-95 transition-all duration-300 ease-in-out border border-gray-300 dark:border-gray-700 backdrop-blur-md"
+        >
+          update
+        </button>
+      </Tooltip>
+
+      <IncomingTransferToggle title="Incoming transfers" incomingTransfers={incomingTransferOffers} onAction={refreshOffers} myOwnWalletAddress={myWalletAddress} />
       <OutgoingTransferToggle title="Outgoing transfers" count={6} />
       <OutgoingTransferToggle title="Offers Received" count={0} />
       <OutgoingTransferToggle title="Offers Made" count={3} />
