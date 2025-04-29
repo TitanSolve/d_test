@@ -279,7 +279,7 @@ const Offers = ({ membersList, myWalletAddress, myNftData }) => {
 
       <IncomingTransferToggle title="Incoming transfers" incomingTransfers={incomingTransferOffers} onAction={refreshOffers} myOwnWalletAddress={myWalletAddress} />
       <OutgoingTransferToggle title="Outgoing transfers" count={6} />
-      <OfferReceivedToggle title="Offers Received" madeOffers={nftSellOffers} receivedOffers={nftBuyOffers} myOwnWalletAddress={myWalletAddress} onAction={refreshOffers} />
+      <OfferReceivedToggle title="Offers Received" madeOffers={nftSellOffers} receivedOffers={nftBuyOffers} myOwnWalletAddress={myWalletAddress} onAction={refreshOffers} refreshSellOffers={fetchSellOffers} />
       <OfferMadeToggle title="Offers Made" madeOffers={nftSellOffers} myOwnWalletAddress={myWalletAddress} onAction={refreshOffers} />
     </div>
   );
