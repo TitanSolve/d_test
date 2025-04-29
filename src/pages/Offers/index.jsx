@@ -11,34 +11,34 @@ const Offers = ({ membersList, myWalletAddress, myNftData }) => {
   const [incomingTransferOffers, setIncomingTransferOffers] = useState([]);
   const [loading, setLoading] = useState(false); // Add loading state
   const [sellOffers, setSellOffers] = useState([]);
-  /*
-    function fetchNFTBuyOffers() {
-      const requestOptions = {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ address: myWalletAddress }),
-      };
-      setLoading(true);
-      fetch(`${API_URLS.backendUrl}/getUserNftsWithBuyOffers`, requestOptions)
-        .then((response) => response.json())
-        .then((data) => {
-          console.log("getUserNftsWithBuyOffers---->", data);
-          const nftBuyOffers = data
-            .filter((item) => item.NftBuyOffers.length > 0)
-            .map((item) => ({
-              Address: myWalletAddress,
-              NFTokenID: item.NFTokenID,
-              URI: item.URI,
-              nft_serial: item.nft_serial,
-              NftBuyOffers: item.NftBuyOffers,
-            }));
-          setNftBuyOffers(nftBuyOffers);
-          console.log(nftBuyOffers, "nft buy offers");
-        })
-        .catch((error) => console.error("Error fetching NFT buy offers:", error))
-        .finally(() => setLoading(false));
-    }
-*/
+  
+  function fetchNFTBuyOffers() {
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ address: myWalletAddress }),
+    };
+    setLoading(true);
+    fetch(`${API_URLS.backendUrl}/getUserNftsWithBuyOffers`, requestOptions)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("getUserNftsWithBuyOffers---->", data);
+        const nftBuyOffers = data
+          .filter((item) => item.NftBuyOffers.length > 0)
+          .map((item) => ({
+            Address: myWalletAddress,
+            NFTokenID: item.NFTokenID,
+            URI: item.URI,
+            nft_serial: item.nft_serial,
+            NftBuyOffers: item.NftBuyOffers,
+          }));
+        setNftBuyOffers(nftBuyOffers);
+        console.log(nftBuyOffers, "nft buy offers");
+      })
+      .catch((error) => console.error("Error fetching NFT buy offers:", error))
+      .finally(() => setLoading(false));
+  }
+
   function fetchNftSellOffers() {
     const requestOptions = {
       method: "POST",
@@ -241,6 +241,10 @@ const Offers = ({ membersList, myWalletAddress, myNftData }) => {
 
       //Sell Offers
       fetchNftSellOffers()
+      //---------------------
+
+      //Buy Offers
+      fetchNFTBuyOffers()
       //---------------------
     } catch (error) {
       console.error("Error refreshing offers:", error);
