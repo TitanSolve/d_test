@@ -216,7 +216,7 @@ const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddr
       <div className="flex flex-col sm:flex-row items-center justify-between w-full sm:w-auto space-y-4 sm:space-y-0 sm:space-x-4">
         <Button
           type="primary"
-          onClick={onAcceptOffer}
+          onClick={onAcceptOffer( madeOffers )}
           block
           style={{ borderRadius: "6px", alignItems: "center" }}
           className="dark:bg-green-600 dark:hover:bg-green-500"
