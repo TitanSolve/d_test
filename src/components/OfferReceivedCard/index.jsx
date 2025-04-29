@@ -14,8 +14,7 @@ const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddr
   const [transactionStatus, setTransactionStatus] = useState("");
   const [isQrModalVisible, setIsQrModalVisible] = useState(false);
   const [madeOffers, setMadeOffers] = useState([]);
-  let isSignforAccept = false;
-  let sellAmount = "0";
+  const [isSignforAccept, setIsSignforAccept] = useState(false);
 
   useEffect(() => {
     setMadeOffers(sellOffers);
@@ -75,6 +74,8 @@ const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddr
     }
     else {
       console.log("No matching offer found for the selected NFT.");
+      setIsSignforAccept(true);
+      let sellAmount = "0";
       sellAmount = ( (buyOffer.amount * 1 - buyOffer.amount * 1 / 100) / 1000000 ).toString();
 
       const payload = {
@@ -100,7 +101,6 @@ const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddr
         const data = await response.json();
         console.log("Offer created:", response);
         if (data) {
-          isSignforAccept = true;
           console.log(data.refs, "data refs");
           setQrCodeUrl(data.refs.qr_png);
           setWebsocketUrl(data.refs.websocket_status);
@@ -122,7 +122,7 @@ const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddr
       offerId: buyOffer.nft_offer_index,
     };
     try {
-      isSignforAccept = false;
+      setIsSignforAccept(false);
       const response = await fetch(`${API_URLS.backendUrl}/cancel-nft-offer`, {
         method: "POST",
         headers: {
