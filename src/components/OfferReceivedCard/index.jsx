@@ -100,6 +100,7 @@ const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddr
         const data = await response.json();
         console.log("Offer created:", response);
         if (data) {
+          isSignforAccept = true;
           console.log(data.refs, "data refs");
           setQrCodeUrl(data.refs.qr_png);
           setWebsocketUrl(data.refs.websocket_status);
