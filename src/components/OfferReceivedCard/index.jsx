@@ -93,10 +93,19 @@ const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddr
           body: JSON.stringify(payload),
         });
 
-        console.log("Offer created:", response.data);
-        setQrCodeUrl(response.data.refs.qr_png);
-        setWebsocketUrl(response.data.refs.websocket_status);
-        setIsQrModalVisible(true);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+  
+        const data = await response.json();
+        console.log("Offer created:", response);
+        if (data) {
+          console.log(data.refs, "data refs");
+          setQrCodeUrl(data.refs.qr_png);
+          setWebsocketUrl(data.refs.websocket_status);
+          setIsQrModalVisible(true);
+        }
+
       } catch (error) {
         console.error("Error creating offer:", error);
       }
