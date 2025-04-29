@@ -38,83 +38,111 @@ const Offers = ({ membersList, myWalletAddress, myNftData }) => {
         .catch((error) => console.error("Error fetching NFT buy offers:", error))
         .finally(() => setLoading(false));
     }
-*/  
-    function fetchNftSellOffers() {
-      const requestOptions = {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ address: myWalletAddress }),
-      };
-  
-      console.log("Fetching NFT sell offers...", requestOptions);
-      setLoading(true);
-      fetch(`${API_URLS.backendUrl}/getMembersNftsWithSellOffers`, requestOptions)
-        .then((response) => response.json())
-        .then((data) => {
-          console.log("getMembersNftsWithSellOffers---->", data);
-          const nftSellOffers = [];
-          // const nftTransferOffers = [];
-          data.forEach((item) => {
-            item.NftBuyOffers.forEach((offer) => {
-              const offerData = {
+*/
+  function fetchNftSellOffers() {
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ address: myWalletAddress }),
+    };
+
+    console.log("Fetching NFT sell offers...", requestOptions);
+    setLoading(true);
+    fetch(`${API_URLS.backendUrl}/getMembersNftsWithSellOffers`, requestOptions)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("getMembersNftsWithSellOffers---->", data);
+        // const nftTransferOffers = [];
+        // data.forEach((item) => {
+        //   item.NftBuyOffers.forEach((offer) => {
+        //     const offerData = {
+        //       ...offer,
+        //       URI: item.URI,
+        //       Address: myWalletAddress,
+        //       NFTokenID: item.NFTokenID,
+        //     };
+        //     nftSellOffers.push(offerData);
+        //   });
+        // });
+
+        const nftMap = {};
+        if (memberData?.groupedNfts?.length) {
+          for (const group of memberData.groupedNfts) {
+            for (const nft of group.nfts) {
+              nftMap[nft.nftokenID] = {
+                ...nft,
+              };
+            }
+          }
+        }
+
+        const filteredOffers = data.flatMap((item) =>
+          item.NftBuyOffers
+            .map((offer) => {
+              const nftMeta = nftMap[item.NFTokenID];
+              return {
                 ...offer,
                 URI: item.URI,
-                Address: myWalletAddress,
                 NFTokenID: item.NFTokenID,
+                ...(nftMeta && {
+                  imageURI: nftMeta.imageURI,
+                  name: nftMeta.metadata?.name,
+                }),
               };
-              nftSellOffers.push(offerData);
-            });
-          });
-          setNftSellOffers(nftSellOffers);
-          console.log(nftSellOffers, "nft sell offers");
-        })
-        .catch((error) => console.error("Error fetching NFT sell offers:", error))
-        .finally(() => setLoading(false));
-    }
-  
-    // function fetchAccountOffers(currentaddress) {
-    //   const tempAddress = currentaddress.split(":")[0].replace("@", "");
-    //   const requestOptions = {
-    //     method: "POST",
-    //     headers: { "Content-Type": "application/json" },
-    //     body: JSON.stringify({ address: tempAddress }),
-    //   };
-  
-    //   console.log("Fetching with requestOptions:", requestOptions);
-    //   fetch(`${API_URLS.backendUrl}/get-users-nfts`, requestOptions)
-    //     .then((response) => response.json())
-    //     .then((data) => {
-    //       console.log(
-    //         "Raw data received for objects:",
-    //         data,
-    //         "adddress",
-    //         address
-    //       );
-    //       console.log(Array.isArray(data), "yoyoyo yo");
-  
-    //       const filteredOffers = data
-    //         .filter((offer) => offer.Flags === 1 && offer.Destination === address)
-    //         .map((offer) => ({
-    //           ...offer,
-    //           // Spread the offer properties
-    //         }));
-    //       console.log("account filtered offers", filteredOffers);
-    //       setSellOffers((prevOffers) => [...prevOffers, ...filteredOffers]);
-    //       console.log("selloffers umang", sellOffers);
-    //     });
-    // }
-  
-    // function fetchNFTData(nfts) {}
-    // useEffect(() => {
-    //   roomMembers.map((member) => {
-    //     fetchAccountOffers(member);
-    //     console.log("yoyoyoy", sellOffers);
-    //   });
-  
-    //   // fetchNFTData(sellOffers);
-    //   console.log("Sell and transfer offers", sellOffers);
-    // }, [roomMembers]);
-  
+            })
+        );
+
+
+        setNftSellOffers(filteredOffers);
+        console.log(filteredOffers, "nft sell offers");
+      })
+      .catch((error) => console.error("Error fetching NFT sell offers:", error))
+      .finally(() => setLoading(false));
+  }
+
+  // function fetchAccountOffers(currentaddress) {
+  //   const tempAddress = currentaddress.split(":")[0].replace("@", "");
+  //   const requestOptions = {
+  //     method: "POST",
+  //     headers: { "Content-Type": "application/json" },
+  //     body: JSON.stringify({ address: tempAddress }),
+  //   };
+
+  //   console.log("Fetching with requestOptions:", requestOptions);
+  //   fetch(`${API_URLS.backendUrl}/get-users-nfts`, requestOptions)
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       console.log(
+  //         "Raw data received for objects:",
+  //         data,
+  //         "adddress",
+  //         address
+  //       );
+  //       console.log(Array.isArray(data), "yoyoyo yo");
+
+  //       const filteredOffers = data
+  //         .filter((offer) => offer.Flags === 1 && offer.Destination === address)
+  //         .map((offer) => ({
+  //           ...offer,
+  //           // Spread the offer properties
+  //         }));
+  //       console.log("account filtered offers", filteredOffers);
+  //       setSellOffers((prevOffers) => [...prevOffers, ...filteredOffers]);
+  //       console.log("selloffers umang", sellOffers);
+  //     });
+  // }
+
+  // function fetchNFTData(nfts) {}
+  // useEffect(() => {
+  //   roomMembers.map((member) => {
+  //     fetchAccountOffers(member);
+  //     console.log("yoyoyoy", sellOffers);
+  //   });
+
+  //   // fetchNFTData(sellOffers);
+  //   console.log("Sell and transfer offers", sellOffers);
+  // }, [roomMembers]);
+
   const fetchIncomingTransferOffers = async (currentAddress) => {
     const tempAddress = currentAddress.split(":")[0].replace("@", "");
 
@@ -216,7 +244,7 @@ const Offers = ({ membersList, myWalletAddress, myNftData }) => {
     // fetchNFTBuyOffers();
 
     try {
-      
+
       //Transfer----------
       // const allOffersArrays = await Promise.all(
       //   membersList.map((member) => fetchIncomingTransferOffers(member.userId))
@@ -228,7 +256,7 @@ const Offers = ({ membersList, myWalletAddress, myNftData }) => {
       //---------------------------
 
       //Sell Offers
-        fetchNftSellOffers() 
+      fetchNftSellOffers()
       //---------------------
     } catch (error) {
       console.error("Error refreshing offers:", error);
@@ -245,12 +273,12 @@ const Offers = ({ membersList, myWalletAddress, myNftData }) => {
 
   return (
     <div className="h-full overflow-y-auto p-5 bg-gradient-to-br to-gray-100 flex flex-col items-center space-y-2">
-        <button
-          onClick={refreshOffers}
-          className="fixed top-4 left-4 z-50 p-2 md:p-3 rounded-full bg-gray-100 dark:bg-[#15191E] text-gray-800 dark:text-white shadow-lg hover:scale-105 active:scale-95 transition-all duration-300 ease-in-out border border-gray-300 dark:border-gray-700 backdrop-blur-md"
-        >
-          update
-        </button>
+      <button
+        onClick={refreshOffers}
+        className="fixed top-4 left-4 z-50 p-2 md:p-3 rounded-full bg-gray-100 dark:bg-[#15191E] text-gray-800 dark:text-white shadow-lg hover:scale-105 active:scale-95 transition-all duration-300 ease-in-out border border-gray-300 dark:border-gray-700 backdrop-blur-md"
+      >
+        update
+      </button>
 
       <IncomingTransferToggle title="Incoming transfers" incomingTransfers={incomingTransferOffers} onAction={refreshOffers} myOwnWalletAddress={myWalletAddress} />
       <OutgoingTransferToggle title="Outgoing transfers" count={6} />

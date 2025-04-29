@@ -3,18 +3,9 @@ import nft_pic from "../../assets/small-nft.png";
 import { motion } from "framer-motion";
 import API_URLS from "../../config";
 import {
-  Typography,
-  Select,
-  MenuItem,
-  Switch,
   Modal,
   Box,
-  FormControl,
-  InputLabel,
-  TextField,
-  Chip,
   Button,
-  InputAdornment,
 } from "@mui/material";
 
 
