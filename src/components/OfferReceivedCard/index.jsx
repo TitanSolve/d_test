@@ -8,11 +8,71 @@ import {
 } from "@mui/material";
 
 
-const OfferReceivedCard = ({ buyOffer, index, onAction, myWalletAddress }) => {
+const OfferReceivedCard = ({sellOffers, buyOffer, index, onAction, myWalletAddress }) => {
   const [qrCodeUrl, setQrCodeUrl] = useState("");
   const [websocketUrl, setWebsocketUrl] = useState("");
   const [transactionStatus, setTransactionStatus] = useState("");
   const [isQrModalVisible, setIsQrModalVisible] = useState(false);
+  const [madeOffers, setMadeOffers] = useState([]);
+
+  useEffect(() => {
+    setMadeOffers(sellOffers);
+    console.log("sellOffer-->", sellOffers);
+  }, [sellOffers]);
+
+  async function onAcceptOffer() {
+    console.log("Accpet clicked for item:", buyOffer);
+    console.log("SellOffer--->", madeOffers);
+
+    let isOfferFound = false;
+    let sellOfferIndex = "";
+    let brokerFee = (parseFloat(buyOffer.amount) * 1.01).toString();
+    for (const offer of madeOffers) {
+      console.log("offer--->", offer);
+      if(offer.NFTokenID === buyOffer.NFTokenID) {
+        isOfferFound = true;
+        sellOfferIndex = offer.nft_offer_index;
+        break;
+      }
+    }
+    if(!isOfferFound) {
+      console.log("No matching offer found for the selected NFT.");
+    }
+
+    const requestBody = {
+      nftId: buyOffer.NFTokenID,
+      buyOfferId: buyOffer.nft_offer_index,
+      sellOfferId: sellOfferIndex,
+      brokerFee: brokerFee,
+    };
+
+    console.log("requestBody--->", requestBody);
+
+    try {
+      const response = await fetch(`${API_URLS.backendUrl}/broker-accept-offer`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestBody),
+      });
+      console.log(requestBody, "requestBody");
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      if (data) {
+        console.log(data.refs, "data refs");
+        setQrCodeUrl(data.refs.qr_png);
+        setWebsocketUrl(data.refs.websocket_status);
+        setIsQrModalVisible(true);
+      }
+    } catch (error) {
+      console.error("Error during fetch:", error);
+    }
+  }
 
   async function onCancelOffer() {
     console.log("Cancel clicked for item:", buyOffer);
@@ -89,6 +149,16 @@ const OfferReceivedCard = ({ buyOffer, index, onAction, myWalletAddress }) => {
         <span className="text-gray-500 dark:text-gray-400 text-sm sm:text-base sm:whitespace-nowrap">Buy Offer</span>
       </div>
       <div className="flex flex-col sm:flex-row items-center justify-between w-full sm:w-auto space-y-4 sm:space-y-0 sm:space-x-4">
+        <Button
+          type="primary"
+          onClick={onAcceptOffer}
+          block
+          style={{ borderRadius: "6px", alignItems: "center" }}
+          className="dark:bg-green-600 dark:hover:bg-green-500"
+        // className="w-full sm:w-auto bg-red-500 text-white px-4 sm:px-5 py-2 rounded-lg hover:bg-red-600 transition shadow-md text-center">
+        >
+          Accpet
+        </Button>
         <Button
           type="primary"
           onClick={onCancelOffer}

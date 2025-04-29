@@ -4,9 +4,10 @@ import OfferReceivedCard from "../OfferReceivedCard";
 import { ChevronDownIcon, XIcon } from "@heroicons/react/solid";
 import { Button } from "antd";
 
-const OfferReceivedToggle = ({ title, receivedOffers, onAction, myOwnWalletAddress }) => {
+const OfferReceivedToggle = ({ title, madeOffers, receivedOffers, onAction, myOwnWalletAddress }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [buyOffers, setBuyOffers] = useState([]);
+  const [sellOffers, setSellOffers] = useState([]);
   const [count, setCount] = useState(0);
 
   useEffect(() => {
@@ -14,6 +15,10 @@ const OfferReceivedToggle = ({ title, receivedOffers, onAction, myOwnWalletAddre
     setCount(receivedOffers.length);
     console.log("buyOffer-->", receivedOffers);
   }, [receivedOffers]);
+
+  useEffect(() => {
+    setSellOffers(madeOffers);
+  }, [madeOffers]);
 
   return (
     <div className="w-full max-w-2xl mx-auto p-4">
@@ -54,7 +59,7 @@ const OfferReceivedToggle = ({ title, receivedOffers, onAction, myOwnWalletAddre
           {count > 0 && (
             <div className="space-y-4">
               { buyOffers.map((offer, index) => (
-                <OfferReceivedCard buyOffer={offer} key={index} onAction={onAction} myWalletAddress={myOwnWalletAddress} />
+                <OfferReceivedCard sellOffers={sellOffers} buyOffer={offer} key={index} onAction={onAction} myWalletAddress={myOwnWalletAddress} />
               ))}
             </div>
           )}
