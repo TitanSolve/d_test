@@ -61,6 +61,7 @@ const Offers = ({ membersList, myWalletAddress, myNftData }) => {
   }
 
   function fetchSellOffers() {
+    console.log("-----fetchSellOffers-----");
     const requestOptions = {
       method: "POST",
       headers: { "Content-Type": "application/json" },

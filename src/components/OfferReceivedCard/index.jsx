@@ -149,6 +149,7 @@ const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddr
 
   async function refreshSellOfferAndAccept()
   {
+    console.log("refreshSellOfferAndAccept");
     await refreshSellOffers();
     onAcceptOffer();
   }
@@ -162,11 +163,14 @@ const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddr
         if (data.signed) {
           setTransactionStatus("Transaction signed");
           setIsQrModalVisible(false);
-          onAction();
+          // onAction();  //refresh
 
           if (isSignforAccept) { //sign for accept offer
             console.log("sign for accept offer--->", buyOffer);
             refreshSellOfferAndAccept();            
+          }
+          else{
+            onAction(); //refresh
           }
 
         } else if (data.rejected) {
