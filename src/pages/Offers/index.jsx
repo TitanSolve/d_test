@@ -47,12 +47,13 @@ const Offers = ({ membersList, myWalletAddress, myNftData }) => {
                 ...(nftMeta && {
                   imageURI: nftMeta.imageURI,
                   name: nftMeta.metadata?.name,
-                  nftMetadata: nftMeta,
+                  buyerName: nftMeta.userName,
+                  // nftMetadata: nftMeta,
                 }),
               };
             })
         );
-        // setNftBuyOffers(filteredOffers);
+        setNftBuyOffers(filteredOffers);
         console.log(filteredOffers, "nft buy offers");
       })
       .catch((error) => console.error("Error fetching NFT buy offers:", error))

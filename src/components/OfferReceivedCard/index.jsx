@@ -85,7 +85,8 @@ const OfferReceivedCard = ({ buyOffer, index, onAction, myWalletAddress }) => {
       </div>
       <div className="flex flex-col items-center sm:items-end text-center sm:text-right w-full sm:w-auto">
         <span className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white sm:whitespace-nowrap">{buyOffer.amount * 1 / 1000000} XRP</span>
-        <span className="text-gray-500 dark:text-gray-400 text-sm sm:text-base sm:whitespace-nowrap">Sell Offer</span>
+        <span className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white sm:whitespace-nowrap">From : {buyOffer.buyerName}</span>
+        <span className="text-gray-500 dark:text-gray-400 text-sm sm:text-base sm:whitespace-nowrap">Buy Offer</span>
       </div>
       <div className="flex flex-col sm:flex-row items-center justify-between w-full sm:w-auto space-y-4 sm:space-y-0 sm:space-x-4">
         <Button
