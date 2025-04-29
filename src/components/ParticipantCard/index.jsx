@@ -195,7 +195,7 @@ const ParticipantCard = ({
       {
         const payload = {
           nft: selectedNftForOffer.nftokenID,
-          amount: (state.amount *1 + state.amount *1 / 100),
+          amount: (parseFloat(state.amount) * 1.01).toString(),
           account: ownWalletAddress,
           owner: /*selectedNftForOffer.issuer*/ myNftData.userId.split(":")[0].replace("@", ""),
         };

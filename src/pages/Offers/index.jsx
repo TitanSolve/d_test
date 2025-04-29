@@ -51,22 +51,7 @@ const Offers = ({ membersList, myWalletAddress, myNftData }) => {
     fetch(`${API_URLS.backendUrl}/getMembersNftsWithSellOffers`, requestOptions)
       .then((response) => response.json())
       .then((data) => {
-        console.log("getMembersNftsWithSellOffers---->", data);
-        // const nftTransferOffers = [];
-        // data.forEach((item) => {
-        //   item.NftBuyOffers.forEach((offer) => {
-        //     const offerData = {
-        //       ...offer,
-        //       URI: item.URI,
-        //       Address: myWalletAddress,
-        //       NFTokenID: item.NFTokenID,
-        //     };
-        //     nftSellOffers.push(offerData);
-        //   });
-        // });
-
         const memberData = myNftData.find((u) => u.userId.split(":")[0].replace("@", "") === myWalletAddress);
-
         const nftMap = {};
         if (memberData?.groupedNfts?.length) {
           for (const group of memberData.groupedNfts) {
@@ -77,7 +62,6 @@ const Offers = ({ membersList, myWalletAddress, myNftData }) => {
             }
           }
         }
-
         const filteredOffers = data.flatMap((item) =>
           item.NftBuyOffers
             .map((offer) => {
@@ -93,8 +77,6 @@ const Offers = ({ membersList, myWalletAddress, myNftData }) => {
               };
             })
         );
-
-
         setNftSellOffers(filteredOffers);
         console.log(filteredOffers, "nft sell offers");
       })
