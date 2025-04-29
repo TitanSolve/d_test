@@ -74,17 +74,17 @@ const OfferReceivedCard = ({ buyOffer, index, onAction, myWalletAddress }) => {
     >
       <div className="flex items-center gap-3 w-full sm:w-auto overflow-hidden">
         <img
-          src={sellOffer.imageURI}
+          src={buyOffer.imageURI}
           alt="TextRP Feature Pack"
           className="w-16 h-16 rounded-lg object-cover shadow-sm"
         />
         <div className="flex flex-col text-center sm:text-left overflow-hidden">
-          <span className="font-semibold text-gray-900 dark:text-white text-base sm:text-lg truncate w-full">{sellOffer.name}</span>
+          <span className="font-semibold text-gray-900 dark:text-white text-base sm:text-lg truncate w-full">{buyOffer.name}</span>
           {/* <span className="text-gray-500 dark:text-gray-400 text-sm sm:text-base truncate w-full">Exclusive NFT Collection TextRP Feature Pack TextRP Feature Pack TextRP Feature Pack</span> */}
         </div>
       </div>
       <div className="flex flex-col items-center sm:items-end text-center sm:text-right w-full sm:w-auto">
-        <span className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white sm:whitespace-nowrap">{sellOffer.amount * 1 / 1000000} XRP</span>
+        <span className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white sm:whitespace-nowrap">{buyOffer.amount * 1 / 1000000} XRP</span>
         <span className="text-gray-500 dark:text-gray-400 text-sm sm:text-base sm:whitespace-nowrap">Sell Offer</span>
       </div>
       <div className="flex flex-col sm:flex-row items-center justify-between w-full sm:w-auto space-y-4 sm:space-y-0 sm:space-x-4">
