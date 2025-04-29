@@ -85,7 +85,13 @@ const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddr
       };
       console.log("payload for sell", payload);
       try {
-        const response = await fetch(`${API_URLS.backendUrl}/create-nft-offer`, payload );
+        const response = await fetch(`${API_URLS.backendUrl}/create-nft-offer`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
+        });
         console.log("Offer created:", response.data);
         setQrCodeUrl(response.data.refs.qr_png);
         setWebsocketUrl(response.data.refs.websocket_status);
