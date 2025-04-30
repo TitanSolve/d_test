@@ -7,6 +7,7 @@ import {
   Box,
   Button,
 } from "@mui/material";
+import TransactionModal from "../TransactionModal";
 
 
 const IncomingOfferCard = ({ transfer, index, onAction, myWalletAddress }) => {
@@ -19,7 +20,7 @@ const IncomingOfferCard = ({ transfer, index, onAction, myWalletAddress }) => {
     console.log("Accept clicked for item:", transfer);
     const requestBody = {
       address: myWalletAddress,
-      OfferId: transfer.nft_offer_index,      
+      OfferId: transfer.nft_offer_index,
       buyOrSell: 0,
     };
     try {
@@ -112,7 +113,7 @@ const IncomingOfferCard = ({ transfer, index, onAction, myWalletAddress }) => {
         </Button>
       </div>
       {/* this modal is for the qr code */}
-      <Modal
+      {/* <Modal
         title="Transaction QR Code"
         open={isQrModalVisible}
         onClose={() => setIsQrModalVisible(false)}
@@ -135,7 +136,13 @@ const IncomingOfferCard = ({ transfer, index, onAction, myWalletAddress }) => {
             <p>Transaction Status: {transactionStatus}</p>
           </Box>
         </div>
-      </Modal>
+      </Modal> */}
+      <TransactionModal
+        isOpen={isQrModalVisible}
+        onClose={() => setIsQrModalVisible(false)}
+        qrCodeUrl={qrCodeUrl}
+        transactionStatus={transactionStatus}
+      />
     </motion.div>
   );
 };

@@ -6,6 +6,7 @@ import {
   Box,
   Button,
 } from "@mui/material";
+import TransactionModal from "../TransactionModal";
 
 
 const OfferMadeCard = ({ sellOffer, index, onAction, myWalletAddress }) => {
@@ -100,7 +101,7 @@ const OfferMadeCard = ({ sellOffer, index, onAction, myWalletAddress }) => {
         </Button>
       </div>
       {/* this modal is for the qr code */}
-      <Modal
+      {/* <Modal
         title="Transaction QR Code"
         open={isQrModalVisible}
         onClose={() => setIsQrModalVisible(false)}
@@ -123,7 +124,13 @@ const OfferMadeCard = ({ sellOffer, index, onAction, myWalletAddress }) => {
             <p>Transaction Status: {transactionStatus}</p>
           </Box>
         </div>
-      </Modal>
+      </Modal> */}
+      <TransactionModal
+        isOpen={isQrModalVisible}
+        onClose={() => setIsQrModalVisible(false)}
+        qrCodeUrl={qrCodeUrl}
+        transactionStatus={transactionStatus}
+      />
     </motion.div>
   );
 };
