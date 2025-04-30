@@ -271,11 +271,11 @@ const Offers = ({ membersList, myWalletAddress, myNftData }) => {
   }, [membersList, myWalletAddress]);
 
   return (
-    <div className="h-full overflow-y-auto p-5 bg-gradient-to-br to-gray-100 flex flex-col items-center space-y-2">
+    <>
       {loading ? (
         <LoadingOverlay message="Loading..." />
       ) : (
-        <div>
+        <div className="h-full overflow-y-auto p-5 bg-gradient-to-br to-gray-100 flex flex-col items-center space-y-2">
           <button
             onClick={refreshOffers}
             className="fixed top-4 left-4 z-50 p-2 md:p-3 rounded-full bg-gray-100 dark:bg-[#15191E] text-gray-800 dark:text-white shadow-lg hover:scale-105 active:scale-95 transition-all duration-300 ease-in-out border border-gray-300 dark:border-gray-700 backdrop-blur-md"
@@ -289,7 +289,7 @@ const Offers = ({ membersList, myWalletAddress, myNftData }) => {
           <OfferMadeToggle title="Offers Made" madeOffers={nftSellOffers} myOwnWalletAddress={myWalletAddress} onAction={refreshOffers} />
         </div>
       )}
-    </div>
+    </>
   );
 };
 
