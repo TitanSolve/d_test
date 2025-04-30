@@ -317,7 +317,7 @@ const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddr
         type={messageBoxType}
         message={messageBoxText}
       />
-    </di>
+    </div>
     // </motion.div>
   );
 };
