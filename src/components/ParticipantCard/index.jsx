@@ -282,18 +282,19 @@ const ParticipantCard = ({
             setMessageBoxType("success");
             setMessageBoxText("Transaction signed successfully.");
             setIsMessageBoxVisible(true);
-        } else if (data.rejected) {
-          setTransactionStatus("Transaction rejected");
-          setIsQrModalVisible(false);
-          setMessageBoxType("error");
-          setMessageBoxText("Transaction rejected.");
-          setIsMessageBoxVisible(true);
+          } else if (data.rejected) {
+            setTransactionStatus("Transaction rejected");
+            setIsQrModalVisible(false);
+            setMessageBoxType("error");
+            setMessageBoxText("Transaction rejected.");
+            setIsMessageBoxVisible(true);
+          }
         }
-      };
 
-      return () => {
-        ws.close();
-      };
+        return () => {
+          ws.close();
+        };
+      }
     }
   }, [websocketUrl]);
 
