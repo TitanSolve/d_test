@@ -21,7 +21,7 @@ import NFTCard from "../NFT-Card";
 import "./index.css";
 import xrpl from "xrpl";
 import API_URLS from "../../config";
-// import { request } from "http";
+import TransactionModal from "../TransactionModal";
 
 const ParticipantCard = ({
   index,
@@ -718,7 +718,7 @@ const ParticipantCard = ({
         </div>
       </Modal>
       {/* this modal is for the qr code */}
-      <Modal
+      {/* <Modal
         title="Transaction QR Code"
         open={isQrModalVisible}
         onClose={() => setIsQrModalVisible(false)}
@@ -741,7 +741,13 @@ const ParticipantCard = ({
             <p>Transaction Status: {transactionStatus}</p>
           </Box>
         </div>
-      </Modal>
+      </Modal> */}
+      <TransactionModal
+        isOpen={isQrModalVisible}
+        onClose={() => setIsQrModalVisible(false)}
+        qrCodeUrl={qrCodeUrl}
+        transactionStatus={transactionStatus}
+      />
     </div>
   );
 };
