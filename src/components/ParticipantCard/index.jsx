@@ -236,6 +236,14 @@ const ParticipantCard = ({
       }
     }
     else {  //Create Transfer Offer
+
+      if(destination === "all") {
+        setMessageBoxType("error");
+        setMessageBoxText("Please select a user to transfer the NFT.");
+        setIsMessageBoxVisible(true);
+        return;
+      }
+
       const payload = {
         nft: selectedNftForOffer.nftokenID,
         amount: "0",
