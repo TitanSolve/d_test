@@ -30,6 +30,8 @@ const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddr
     console.log("Accpet clicked for item:", buyOffer);
     console.log("SellOffer--->", madeOffers);
 
+    setTransactionStatus("");
+
     let isOfferFound = false;
     let sellOfferIndex = "";
     let brokerFee = (parseFloat(buyOffer.amount) * 1.01).toString();
@@ -122,6 +124,7 @@ const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddr
 
   async function onCancelOffer() {
     console.log("Cancel clicked for item:", buyOffer);
+    setTransactionStatus("");
     const requestBody = {
       account: buyOffer.owner,
       offerId: buyOffer.nft_offer_index,

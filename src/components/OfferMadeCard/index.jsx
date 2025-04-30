@@ -22,6 +22,7 @@ const OfferMadeCard = ({ sellOffer, index, onAction, myWalletAddress }) => {
 
   async function onCancelOffer() {
     console.log("Cancel clicked for item:", sellOffer);
+    setTransactionStatus("");
     const requestBody = {
       account: sellOffer.owner,
       offerId: sellOffer.nft_offer_index,
