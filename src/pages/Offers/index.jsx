@@ -4,6 +4,7 @@ import IncomingTransferToggle from "../../components/IncomingTransferToggle";
 import OfferMadeToggle from "../../components/OfferMadeToggle";
 import OfferReceivedToggle from "../../components/OfferReceivedToggle";
 import API_URLS from "../../config";
+import LoadingOverlay from "../../components/LoadingOverlay";
 
 const Offers = ({ membersList, myWalletAddress, myNftData }) => {
 
@@ -61,13 +62,11 @@ const Offers = ({ membersList, myWalletAddress, myNftData }) => {
   }
 
   async function fetchSellOffers() {
-    console.log("-----fetchSellOffers-----");
     const requestOptions = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ address: myWalletAddress }),
     };
-
     console.log("Fetching NFT sell offers...", requestOptions);
     try {
       const response = await fetch(`${API_URLS.backendUrl}/getMembersNftsWithSellOffers`, requestOptions);
@@ -104,7 +103,6 @@ const Offers = ({ membersList, myWalletAddress, myNftData }) => {
 
       setNftSellOffers(filteredOffers);
       return filteredOffers;
-      console.log("nft sell offers--->", filteredOffers);
     } catch (error) {
       console.error("Error fetching NFT sell offers:", error);
     } finally {
@@ -236,8 +234,6 @@ const Offers = ({ membersList, myWalletAddress, myNftData }) => {
   //   }
   // };
 
-
-
   const refreshOffers = async () => {
     console.log("Offers->refreshOffers", myWalletAddress);
     setLoading(true);
@@ -276,17 +272,23 @@ const Offers = ({ membersList, myWalletAddress, myNftData }) => {
 
   return (
     <div className="h-full overflow-y-auto p-5 bg-gradient-to-br to-gray-100 flex flex-col items-center space-y-2">
-      <button
-        onClick={refreshOffers}
-        className="fixed top-4 left-4 z-50 p-2 md:p-3 rounded-full bg-gray-100 dark:bg-[#15191E] text-gray-800 dark:text-white shadow-lg hover:scale-105 active:scale-95 transition-all duration-300 ease-in-out border border-gray-300 dark:border-gray-700 backdrop-blur-md"
-      >
-        update
-      </button>
+      {loading ? (
+        <LoadingOverlay message="Loading..." />
+      ) : (
+        <div>
+          <button
+            onClick={refreshOffers}
+            className="fixed top-4 left-4 z-50 p-2 md:p-3 rounded-full bg-gray-100 dark:bg-[#15191E] text-gray-800 dark:text-white shadow-lg hover:scale-105 active:scale-95 transition-all duration-300 ease-in-out border border-gray-300 dark:border-gray-700 backdrop-blur-md"
+          >
+            update
+          </button>
 
-      <IncomingTransferToggle title="Incoming transfers" incomingTransfers={incomingTransferOffers} onAction={refreshOffers} myOwnWalletAddress={myWalletAddress} />
-      <OutgoingTransferToggle title="Outgoing transfers" count={6} />
-      <OfferReceivedToggle title="Offers Received" madeOffers={nftSellOffers} receivedOffers={nftBuyOffers} myOwnWalletAddress={myWalletAddress} onAction={refreshOffers} refreshSellOffers={fetchSellOffers} />
-      <OfferMadeToggle title="Offers Made" madeOffers={nftSellOffers} myOwnWalletAddress={myWalletAddress} onAction={refreshOffers} />
+          <IncomingTransferToggle title="Incoming transfers" incomingTransfers={incomingTransferOffers} onAction={refreshOffers} myOwnWalletAddress={myWalletAddress} />
+          <OutgoingTransferToggle title="Outgoing transfers" count={6} />
+          <OfferReceivedToggle title="Offers Received" madeOffers={nftSellOffers} receivedOffers={nftBuyOffers} myOwnWalletAddress={myWalletAddress} onAction={refreshOffers} refreshSellOffers={fetchSellOffers} />
+          <OfferMadeToggle title="Offers Made" madeOffers={nftSellOffers} myOwnWalletAddress={myWalletAddress} onAction={refreshOffers} />
+        </div>
+      )}
     </div>
   );
 };

@@ -117,8 +117,6 @@ const MatrixClientProvider = () => {
   useEffect(() => {
     const loadData = async () => {
       setLoading(true);
-      // console.log("widgetApi.widgetParameters : ", widgetApi.widgetParameters);
-
       try {
         const events = await widgetApi.receiveStateEvents(STATE_EVENT_ROOM_MEMBER);
         const usersList = events.map(item => ({
@@ -248,7 +246,6 @@ const MatrixClientProvider = () => {
             };
           })
         );
-
         console.log("Merged members with NFT data:", mergedMembers);
         setMyNftData(mergedMembers);
 
@@ -327,52 +324,12 @@ const MatrixClientProvider = () => {
 
   const refreshOffers = () => {
     console.log("Refresh Offers");
-
   }
 
   return (
     <>
       {loading ? (
         <LoadingOverlay message="Loading..." />
-        // <Box
-        //   sx={{
-        //     display: "flex",
-        //     flexDirection: "column",
-        //     alignItems: "center",
-        //     justifyContent: "center",
-        //     height: "60vh",
-        //     width: "100%",
-        //     textAlign: "center",
-        //     gap: 2,
-        //   }}
-        // >
-        //   <motion.div
-        //     animate={{ rotate: 360 }}
-        //     transition={{
-        //       repeat: Infinity,
-        //       duration: 1.2,
-        //       ease: "linear",
-        //     }}
-        //   >
-        //     <CircularProgress
-        //       size={48}
-        //       thickness={2}
-        //       sx={{
-        //         color: "#1976d2", // your primary color or theme
-        //       }}
-        //     />
-        //   </motion.div>
-        //   <Typography
-        //     variant="body1"
-        //     sx={{
-        //       fontWeight: 600,
-        //       color: "#555",
-        //       mt: 1,
-        //     }}
-        //   >
-        //     Loading...
-        //   </Typography>
-        // </Box>
       ) : (
         < Box sx={{
           width: "100%",
