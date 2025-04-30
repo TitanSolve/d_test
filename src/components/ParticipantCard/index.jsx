@@ -148,6 +148,7 @@ const ParticipantCard = ({
     const own = membersList.find((u) => u.name === myName /*"This Guy"*/);
     const ownWalletAddress = own?.userId?.split(":")[0].replace("@", "");
     let destination = state.selectedUser;
+    setTransactionStatus("");
 
     if (destination !== "all") {
       destination = membersList.find((u) => u.name === destination).userId?.split(":")[0].replace("@", "");
