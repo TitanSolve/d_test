@@ -236,54 +236,29 @@ const ParticipantCard = ({
       }
     }
     else {  //Create Transfer Offer
-      // const payload = {
-      //   nft: selectedNftForOffer.nftokenID,
-      //   amount: "0",
-      //   receiver: destination,
-      //   sender: ownWalletAddress,
-      // };
-      // console.log("Transfer payload:", payload);
-
-      // try {
-      //   const response = await axios.post(
-      //     `${API_URLS.backendUrl}/create-nft-offer`,
-      //     payload
-      //   );
-      //   console.log(response, "response aman in user card");
-      //   setQrCodeUrl(response.data.refs.qr_png);
-      //   setWebsocketUrl(response.data.refs.websocket_status);
-      //   setIsQrModalVisible(true);
-      //   setTransfer(false);
-      //   console.log("Transfer initiated:", response.data);
-      // } catch (error) {
-      //   console.error("Error initiating transfer:", error);
-      // }
-
-      const membersWallet = membersList.map(member => member.userId.split(":")[0].replace("@", ""));
-      console.log(membersWallet, "userIds in participant card");
-
       const payload = {
-        membersAddress: membersWallet
+        nft: selectedNftForOffer.nftokenID,
+        amount: "0",
+        receiver: destination,
+        sender: ownWalletAddress,
       };
-      console.log("broker payload : ", payload);
+      console.log("Transfer payload:", payload);
+
       try {
         setIsLoading(true);
-        const response = await fetch(`${API_URLS.backendUrl}/run-broker-transaction`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(payload),
-        });
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
+        const response = await axios.post(
+          `${API_URLS.backendUrl}/create-nft-offer`,
+          payload
+        );
         setIsLoading(false);
-        const data = await response.json();
-        console.log("Broker Success:", data);
+        console.log(response, "response aman in user card");
+        setQrCodeUrl(response.data.refs.qr_png);
+        setWebsocketUrl(response.data.refs.websocket_status);
+        setIsQrModalVisible(true);
+        setTransfer(false);
+        console.log("Transfer initiated:", response.data);
       } catch (error) {
-        console.error("Broker Error:", error);
+        console.error("Error initiating transfer:", error);
       }
     }
   };

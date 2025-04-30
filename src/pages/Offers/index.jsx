@@ -246,15 +246,15 @@ const Offers = ({ membersList, myWalletAddress, myNftData }) => {
 
     try {
 
-      //Transfer----------
-      // const allOffersArrays = await Promise.all(
-      //   membersList.map((member) => fetchIncomingTransferOffers(member.userId))
-      // );
-      // // Flatten all arrays into one
-      // const allFilteredOffers = allOffersArrays.flat();
-      // console.log("incoming transfers", allFilteredOffers);
-      // setIncomingTransferOffers(allFilteredOffers);
-      //---------------------------
+      // Transfer----------
+      const allOffersArrays = await Promise.all(
+        membersList.map((member) => fetchIncomingTransferOffers(member.userId))
+      );
+      // Flatten all arrays into one
+      const allFilteredOffers = allOffersArrays.flat();
+      console.log("incoming transfers", allFilteredOffers);
+      setIncomingTransferOffers(allFilteredOffers);
+      // ---------------------------
 
       //Sell Offers
       await fetchSellOffers();
