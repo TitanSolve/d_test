@@ -6,7 +6,8 @@ import {
   Box,
   Button,
 } from "@mui/material";
-import TransactionModal from "../TransactionModal"; 
+import TransactionModal from "../TransactionModal";
+import NFTMessageBox from "../NFTMessageBox";
 
 
 const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddress, refreshSellOffers }) => {
@@ -16,6 +17,9 @@ const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddr
   const [transactionStatus, setTransactionStatus] = useState("");
   const [isQrModalVisible, setIsQrModalVisible] = useState(false);
   const [madeOffers, setMadeOffers] = useState([]);
+  const [isMessageBoxVisible, setIsMessageBoxVisible] = useState(false);
+  const [messageBoxType, setMessageBoxType] = useState("success");
+  const [messageBoxText, setMessageBoxText] = useState("");
 
   useEffect(() => {
     setMadeOffers(sellOffers);
@@ -66,10 +70,10 @@ const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddr
         const data = await response.json();
         if (data) {
           console.log(data, "data");
-          onAction();
-          // setQrCodeUrl(data.refs.qr_png);
-          // setWebsocketUrl(data.refs.websocket_status);
-          // setIsQrModalVisible(true);
+          setMessageBoxType("success");
+          setMessageBoxText("Offer finished successfully");
+          setIsMessageBoxVisible(true);
+          // onAction(); //refresh
         }
       } catch (error) {
         console.error("Error during fetch:", error);
@@ -190,9 +194,10 @@ const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddr
         const data = await response.json();
         if (data) {
           console.log(data, "data");
-          // setQrCodeUrl(data.refs.qr_png);
-          // setWebsocketUrl(data.refs.websocket_status);
-          // setIsQrModalVisible(true);
+          // onAction();
+          setMessageBoxType("success");
+          setMessageBoxText("Offer finished successfully");
+          setIsMessageBoxVisible(true);
         }
       } catch (error) {
         console.error("Error during fetch:", error);
@@ -246,6 +251,11 @@ const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddr
       };
     }
   }, [websocketAutoMakeSellOfferUrl]);
+
+  function handleCloseMessageBox() {
+    setIsMessageBoxVisible(false);
+    onAction();
+  }
 
   return (
     <motion.div
@@ -321,6 +331,12 @@ const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddr
         onClose={() => setIsQrModalVisible(false)}
         qrCodeUrl={qrCodeUrl}
         transactionStatus={transactionStatus}
+      />
+      <NFTMessageBox
+        isOpen={isMessageBoxVisible}
+        onClose={handleCloseMessageBox()}
+        type={messageBoxType}
+        message={messageBoxText}
       />
     </motion.div>
   );

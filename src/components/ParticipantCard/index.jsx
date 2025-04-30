@@ -22,6 +22,7 @@ import "./index.css";
 import xrpl from "xrpl";
 import API_URLS from "../../config";
 import TransactionModal from "../TransactionModal";
+import NFTMessageBox from "../NFTMessageBox";
 
 const ParticipantCard = ({
   index,
@@ -55,6 +56,9 @@ const ParticipantCard = ({
   const [isQrModalVisible, setIsQrModalVisible] = useState(false);
   const [sell, setSell] = useState(false);
   const [transfer, setTransfer] = useState(false);
+  const [isMessageBoxVisible, setIsMessageBoxVisible] = useState(false);
+  const [messageBoxType, setMessageBoxType] = useState("success");
+  const [messageBoxText, setMessageBoxText] = useState("");
 
   const toggleSellMode = () =>
     setState((prev) => ({ ...prev, isSell: !prev.isSell }));
@@ -747,6 +751,12 @@ const ParticipantCard = ({
         onClose={() => setIsQrModalVisible(false)}
         qrCodeUrl={qrCodeUrl}
         transactionStatus={transactionStatus}
+      />
+      <NFTMessageBox
+        isOpen={isMessageBoxVisible}
+        onClose={() => setIsMessageBoxVisible(false)}
+        type={messageBoxType}
+        message={messageBoxText}
       />
     </div>
   );
