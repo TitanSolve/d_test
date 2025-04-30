@@ -265,12 +265,14 @@ const ParticipantCard = ({
           setMessageBoxType("success");
           setMessageBoxText("Transaction signed successfully.");
           setIsMessageBoxVisible(true);
+          ws.close();
         } else if (data.rejected) {
           setTransactionStatus("Transaction rejected");
           setIsQrModalVisible(false);
           setMessageBoxType("error");
           setMessageBoxText("Transaction rejected.");
           setIsMessageBoxVisible(true);
+          ws.close();
         }
       }
 
