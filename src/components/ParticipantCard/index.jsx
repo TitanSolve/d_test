@@ -254,6 +254,7 @@ const ParticipantCard = ({
 
   useEffect(() => {
     if (websocketUrl) {
+      console.log("websocketUrl in user card", websocketUrl);
       const ws = new WebSocket(websocketUrl);
 
       ws.onmessage = (event) => {
