@@ -112,9 +112,7 @@ const ParticipantCard = ({
           theirLine.account === myLine.account
       )
     );
-
     console.log("sharedTrustLines", sharedTrustLines);
-
     let unique = Array.from(
       new Map(
         sharedTrustLines.map((line) => [
@@ -126,14 +124,10 @@ const ParticipantCard = ({
         ])
       ).values()
     );
-
     const hasXRP = unique.some((item) => item.decodedCurrency === "XRP");
     if (!hasXRP) {
       unique.push({ currency: "XRP", decodedCurrency: "XRP" });
     }
-
-    // console.log("uniqueCurrencies : ", unique);
-
     setUniqueCurrencies(unique);
     setSelectedNftForOffer(nft);
     setOfferModalOpen(true);
@@ -150,12 +144,20 @@ const ParticipantCard = ({
     const own = membersList.find((u) => u.name === myName /*"This Guy"*/);
     const ownWalletAddress = own?.userId?.split(":")[0].replace("@", "");
     let destination = state.selectedUser;
-    setTransactionStatus("");
+    let decodedCurrency = state.token;
+    const myTrustLines = own.trustLines;
+    const currentCurrency = myTrustLines.find(
+      (line) => line.decodedCurrency === decodedCurrency
+    );
 
+    console.log("decodedCurrency", decodedCurrency);
+    console.log("myTrustLines", myTrustLines);
+    console.log("currentCurrency", currentCurrency);
+
+    setTransactionStatus("");
     if (destination !== "all") {
       destination = membersList.find((u) => u.name === destination).userId?.split(":")[0].replace("@", "");
     }
-
     if (isSell) {
       if ((selectedNftForOffer.userName === wgtParameters.displayName)) { //Create Sell Offer
         const payload = {
