@@ -160,9 +160,22 @@ const ParticipantCard = ({
     }
     if (isSell) {
       if ((selectedNftForOffer.userName === wgtParameters.displayName)) { //Create Sell Offer
+
+        let offerAmount;
+        if (state.token === "XRP") {
+          offerAmount = state.amount;
+        } else {
+          offerAmount = {
+            currency: currentCurrency.currency,
+            issuer: currentCurrency.account,
+            value: state.amount,
+          };
+        }
+        console.log("offerAmount", offerAmount);
+
         const payload = {
           nft: selectedNftForOffer.nftokenID,
-          amount: state.amount,
+          amount: offerAmount,
           receiver: destination,
           sender: ownWalletAddress,
         };
@@ -195,9 +208,21 @@ const ParticipantCard = ({
       }
       else  //Create Buy Offer
       {
+        let offerAmount;
+        if (state.token === "XRP") {
+          offerAmount = state.amount;
+        } else {
+          offerAmount = {
+            currency: currentCurrency.currency,
+            issuer: currentCurrency.account,
+            value: (parseFloat(state.amount) * 1.01).toString(),
+          };
+        }
+        console.log("offerAmount", offerAmount);
+
         const payload = {
           nft: selectedNftForOffer.nftokenID,
-          amount: (parseFloat(state.amount) * 1.01).toString(),
+          amount: offerAmount,
           account: ownWalletAddress,
           owner: myNftData.userId.split(":")[0].replace("@", ""),
         };
@@ -239,7 +264,7 @@ const ParticipantCard = ({
     }
     else {  //Create Transfer Offer
 
-      if(destination === "all") {
+      if (destination === "all") {
         setMessageBoxType("error");
         setMessageBoxText("Please select a user to transfer the NFT.");
         setIsMessageBoxVisible(true);

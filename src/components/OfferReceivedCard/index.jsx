@@ -30,8 +30,6 @@ const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddr
     console.log("Accpet clicked for item:", buyOffer);
     console.log("SellOffer--->", madeOffers);
 
-    setTransactionStatus("");
-
     let isOfferFound = false;
     let sellOfferIndex = "";
     let brokerFee = (parseFloat(buyOffer.amount) * 1.01).toString();
@@ -72,10 +70,10 @@ const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddr
         const data = await response.json();
         if (data) {
           console.log(data, "data");
-          setMessageBoxType("success");
-          setMessageBoxText("Offer finished successfully");
-          setIsMessageBoxVisible(true);
-          // onAction(); //refresh
+          onAction();
+          // setQrCodeUrl(data.refs.qr_png);
+          // setWebsocketUrl(data.refs.websocket_status);
+          // setIsQrModalVisible(true);
         }
       } catch (error) {
         console.error("Error during fetch:", error);
@@ -124,7 +122,6 @@ const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddr
 
   async function onCancelOffer() {
     console.log("Cancel clicked for item:", buyOffer);
-    setTransactionStatus("");
     const requestBody = {
       account: buyOffer.owner,
       offerId: buyOffer.nft_offer_index,
@@ -197,10 +194,7 @@ const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddr
         const data = await response.json();
         if (data) {
           console.log(data, "data");
-          // onAction();
-          setMessageBoxType("success");
-          setMessageBoxText("Offer finished successfully");
-          setIsMessageBoxVisible(true);
+          onAction();
         }
       } catch (error) {
         console.error("Error during fetch:", error);
