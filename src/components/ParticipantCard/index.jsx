@@ -275,36 +275,19 @@ const ParticipantCard = ({
         const data = JSON.parse(event.data);
         console.log(data, "data aman in user card qr code");
         if (data.signed) {
-          setTransactionStatus(`Transaction signed. TXID: ${data.txid}`);
-          console.log(data.txid, "qr code completion");
-          console.log(transactionStatus, "transaction status aman in user card qr code");
-          //  setIsModalVisible(false);
-          //refresh Offers tab
-
-          // const membersWallet = membersList.map(member => member.userId.split(":")[0].replace("@", ""));
-          // console.log(membersWallet, "userIds in participant card");
-
-          // const payload = {
-          //   membersAddress: membersWallet
-          // };
-          // console.log("broker payload : ", payload);
-          // fetch(`${API_URLS.backendUrl}/run-broker-transaction`, {
-          //   method: "POST",
-          //   headers: {
-          //     "Content-Type": "application/json",
-          //   },
-          //   body: JSON.stringify(payload),
-          // })
-          //   .then((response) => response.json())
-          //   .then((data) => {
-          //     console.log("Broker Success:", data);
-          //   })
-          //   .catch((error) => {
-          //     console.error("Broker Error:", error);
-          //   });
-
+          setTransactionStatus("Transaction signed.");
+          if (data.signed) {
+            setTransactionStatus("Transaction signed");
+            setIsQrModalVisible(false);
+            setMessageBoxType("success");
+            setMessageBoxText("Transaction signed successfully.");
+            setIsMessageBoxVisible(true);
         } else if (data.rejected) {
           setTransactionStatus("Transaction rejected");
+          setIsQrModalVisible(false);
+          setMessageBoxType("error");
+          setMessageBoxText("Transaction rejected.");
+          setIsMessageBoxVisible(true);
         }
       };
 
