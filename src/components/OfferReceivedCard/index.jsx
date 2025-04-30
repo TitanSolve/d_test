@@ -30,6 +30,8 @@ const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddr
     console.log("Accpet clicked for item:", buyOffer);
     console.log("SellOffer--->", madeOffers);
 
+    setTransactionStatus("");
+
     let isOfferFound = false;
     let sellOfferIndex = "";
     let brokerFee = (parseFloat(buyOffer.amount) * 1.01).toString();
@@ -70,10 +72,10 @@ const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddr
         const data = await response.json();
         if (data) {
           console.log(data, "data");
-          onAction();
-          // setQrCodeUrl(data.refs.qr_png);
-          // setWebsocketUrl(data.refs.websocket_status);
-          // setIsQrModalVisible(true);
+          setMessageBoxType("success");
+          setMessageBoxText("Offer finished successfully");
+          setIsMessageBoxVisible(true);
+          // onAction(); //refresh
         }
       } catch (error) {
         console.error("Error during fetch:", error);
@@ -122,6 +124,7 @@ const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddr
 
   async function onCancelOffer() {
     console.log("Cancel clicked for item:", buyOffer);
+    setTransactionStatus("");
     const requestBody = {
       account: buyOffer.owner,
       offerId: buyOffer.nft_offer_index,
@@ -194,7 +197,10 @@ const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddr
         const data = await response.json();
         if (data) {
           console.log(data, "data");
-          onAction();
+          // onAction();
+          setMessageBoxType("success");
+          setMessageBoxText("Offer finished successfully");
+          setIsMessageBoxVisible(true);
         }
       } catch (error) {
         console.error("Error during fetch:", error);
@@ -255,11 +261,12 @@ const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddr
   }
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="flex flex-col sm:flex-row items-center sm:justify-between bg-white dark:bg-[#15191E] p-4 rounded-xl shadow-md w-full max-w-2xl border border-gray-200 dark:border-gray-700 space-y-4 sm:space-y-0 sm:space-x-4 transition-colors"
-    >
+    // <motion.div
+    //   initial={{ opacity: 0, y: 10 }}
+    //   animate={{ opacity: 1, y: 0 }}
+    //   className="flex flex-col sm:flex-row items-center sm:justify-between bg-white dark:bg-[#15191E] p-4 rounded-xl shadow-md w-full max-w-2xl border border-gray-200 dark:border-gray-700 space-y-4 sm:space-y-0 sm:space-x-4 transition-colors"
+    // >
+    <div className="flex flex-col sm:flex-row items-center sm:justify-between bg-white dark:bg-[#15191E] p-4 rounded-xl shadow-md w-full max-w-2xl border border-gray-200 dark:border-gray-700 space-y-4 sm:space-y-0 sm:space-x-4 transition-colors">
       <div className="flex items-center gap-3 w-full sm:w-auto overflow-hidden">
         <img
           src={buyOffer.imageURI}
@@ -298,31 +305,6 @@ const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddr
           Cancel
         </Button>
       </div>
-      {/* this modal is for the qr code */}
-      {/* <Modal
-        title="Transaction QR Code"
-        open={isQrModalVisible}
-        onClose={() => setIsQrModalVisible(false)}
-        footer={null}
-        closable={true}
-        maskClosable={true}
-        closeAfterTransition
-        bodyStyle={{ borderRadius: "10px", padding: "16px" }}
-      >
-        <div>
-          <Box className="bg-white dark:bg-[#15191E] text-black dark:text-white rounded-xl p-6 shadow-lg max-h-[90vh] max-w-full md:max-w-[500px] w-full mx-auto top-1/2 left-1/2 absolute transform -translate-x-1/2 -translate-y-1/2 overflow-y-auto transition-colors duration-300">
-            {qrCodeUrl && (
-              <div className="">
-                <img
-                  src={qrCodeUrl}
-                  alt="Scan this QR code with XUMM to sign the transaction"
-                />
-              </div>
-            )}
-            <p>Transaction Status: {transactionStatus}</p>
-          </Box>
-        </div>
-      </Modal> */}
       <TransactionModal
         isOpen={isQrModalVisible}
         onClose={() => setIsQrModalVisible(false)}
@@ -335,7 +317,8 @@ const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddr
         type={messageBoxType}
         message={messageBoxText}
       />
-    </motion.div>
+    </di>
+    // </motion.div>
   );
 };
 
