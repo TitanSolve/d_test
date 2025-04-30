@@ -261,12 +261,10 @@ const ParticipantCard = ({
         console.log(data, "data aman in user card qr code");
         if (data.signed) {
           setTransactionStatus("Transaction signed.");
-          //setIsQrModalVisible(false);
+          setIsQrModalVisible(false);
           setMessageBoxType("success");
           setMessageBoxText("Transaction signed successfully.");
-          console.log("---------setIsMessageBoxVisible-------");
           setIsMessageBoxVisible(true);
-          console.log("--------------------------------------");
         } else if (data.rejected) {
           setTransactionStatus("Transaction rejected");
           setIsQrModalVisible(false);

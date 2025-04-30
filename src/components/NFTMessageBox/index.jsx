@@ -8,9 +8,9 @@ const iconMap = {
   success: <CheckCircle2 className="text-green-500 w-6 h-6 mr-2" />,
 };
 
-const NFTMessageBox = ({ open, onClose, type, message }) => {
+const NFTMessageBox = ({ isOpen, onClose, type, message }) => {
     return (
-      <Modal open={open} onClose={onClose}>
+      <Modal open={isOpen} onClose={onClose}>
         <div className="fixed inset-0 flex items-center justify-center p-4 z-50">
           <Box className="bg-white dark:bg-[#15191E] text-black dark:text-white rounded-xl p-6 shadow-xl w-full max-w-sm mx-auto text-center">
             <div className="flex items-center justify-center mb-4">
