@@ -223,7 +223,7 @@ const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddr
         if (data.signed) {
           setTransactionStatus("Transaction signed");
           setIsQrModalVisible(false);
-          // onAction();  //refresh
+          onAction();  //refresh
 
         } else if (data.rejected) {
           setTransactionStatus("Transaction rejected");
@@ -257,7 +257,7 @@ const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddr
 
   function handleCloseMessageBox() {
     setIsMessageBoxVisible(false);
-    // onAction();
+    onAction();
   }
 
   return (
