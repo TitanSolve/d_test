@@ -169,6 +169,7 @@ const ParticipantCard = ({
             currency: currentCurrency.currency,
             issuer: currentCurrency.account,
             value: state.amount,
+            limit: currentCurrency.limit,
           };
         }
         console.log("offerAmount", offerAmount);
