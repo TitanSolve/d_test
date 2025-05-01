@@ -223,7 +223,7 @@ const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddr
         if (data.signed) {
           setTransactionStatus("Transaction signed");
           setIsQrModalVisible(false);
-          onAction();  //refresh
+          // onAction();  //refresh
 
         } else if (data.rejected) {
           setTransactionStatus("Transaction rejected");
@@ -257,16 +257,15 @@ const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddr
 
   function handleCloseMessageBox() {
     setIsMessageBoxVisible(false);
-    onAction();
+    // onAction();
   }
 
   return (
-    // <motion.div
-    //   initial={{ opacity: 0, y: 10 }}
-    //   animate={{ opacity: 1, y: 0 }}
-    //   className="flex flex-col sm:flex-row items-center sm:justify-between bg-white dark:bg-[#15191E] p-4 rounded-xl shadow-md w-full max-w-2xl border border-gray-200 dark:border-gray-700 space-y-4 sm:space-y-0 sm:space-x-4 transition-colors"
-    // >
-    <div className="flex flex-col sm:flex-row items-center sm:justify-between bg-white dark:bg-[#15191E] p-4 rounded-xl shadow-md w-full max-w-2xl border border-gray-200 dark:border-gray-700 space-y-4 sm:space-y-0 sm:space-x-4 transition-colors">
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="flex flex-col sm:flex-row items-center sm:justify-between bg-white dark:bg-[#15191E] p-4 rounded-xl shadow-md w-full max-w-2xl border border-gray-200 dark:border-gray-700 space-y-4 sm:space-y-0 sm:space-x-4 transition-colors"
+    >
       <div className="flex items-center gap-3 w-full sm:w-auto overflow-hidden">
         <img
           src={buyOffer.imageURI}
@@ -317,8 +316,7 @@ const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddr
         type={messageBoxType}
         message={messageBoxText}
       />
-    </div>
-    // </motion.div>
+    </motion.div>
   );
 };
 
