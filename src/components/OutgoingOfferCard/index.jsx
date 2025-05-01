@@ -5,7 +5,7 @@ import { Button } from "antd";
 
 const OutgoingOfferCard = () => {
   return (
-    <div className="flex flex-col sm:flex-row items-center bg-white dark:bg-[#1a1d21] p-5 rounded-2xl shadow-xl w-full max-w-3xl border border-gray-200 dark:border-gray-700 gap-6 transition-all duration-300">
+    <div className="flex flex-col sm:flex-row items-center bg-white dark:bg-[#1a1d21] p-5 rounded-2xl shadow-xl w-full max-w-3xl border border-gray-200 dark:border-gray-700 gap-1 transition-all duration-300">
       <div className="w-full sm:w-auto flex justify-center">
         <img
           src={nft_pic}
@@ -22,8 +22,7 @@ const OutgoingOfferCard = () => {
           Ultra Rare
         </span>
       </div>
-
-      <div className="flex flex-col sm:items-end text-center sm:text-right w-full sm:w-auto gap-2">
+      <div className="flex flex-col sm:items-end text-center sm:text-right w-full sm:w-auto gap-1">
         <div>
           <span className="text-xl font-bold text-gray-900 dark:text-white">
             12.0 XRP
