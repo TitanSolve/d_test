@@ -1,12 +1,7 @@
 import React, { useEffect, useState } from "react";
-import nft_pic from "../../assets/small-nft.png";
 import { motion } from "framer-motion";
 import API_URLS from "../../config";
-import {
-  Modal,
-  Box,
-  Button,
-} from "@mui/material";
+import { Button } from "@mui/material";
 import TransactionModal from "../TransactionModal";
 
 

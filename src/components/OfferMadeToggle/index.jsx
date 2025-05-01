@@ -63,6 +63,4 @@ const OfferMadeToggle = ({ title, madeOffers, onAction, myOwnWalletAddress }) =>
     </div>
   );
 };
-
-
 export default OfferMadeToggle;
