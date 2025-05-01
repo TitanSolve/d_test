@@ -1,7 +1,7 @@
-import { use, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import IncomingOfferCard from "../IncomingOfferCard";
-import { ChevronDownIcon, XIcon } from "@heroicons/react/solid";
+import { ChevronDownIcon } from "@heroicons/react/solid";
 import { Button } from "antd";
 
 const IncomingListToggle = ({ title, incomingTransfers, onAction, myOwnWalletAddress }) => {
