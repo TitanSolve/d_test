@@ -12,6 +12,7 @@ const IncomingListToggle = ({ title, incomingTransfers, onAction, myOwnWalletAdd
   useEffect(() => {
     setIncomingTransferOffers(incomingTransfers);
     setCount(incomingTransfers.length);
+    
   }, [incomingTransfers]);
 
   return (
