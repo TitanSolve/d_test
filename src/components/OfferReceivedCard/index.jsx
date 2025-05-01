@@ -312,7 +312,7 @@ const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddr
       />
       <NFTMessageBox
         isOpen={isMessageBoxVisible}
-        onClose={handleCloseMessageBox()}
+        onClose={handleCloseMessageBox}
         type={messageBoxType}
         message={messageBoxText}
       />
