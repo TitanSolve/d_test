@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import API_URLS from "../../config";
-import {
-  Button,
-} from "@mui/material";
+import { Button } from "antd";
 import TransactionModal from "../TransactionModal";
 import LoadingOverlayForCard from "../LoadingOverlayForCard";
 import NFTMessageBox from "../NFTMessageBox";
