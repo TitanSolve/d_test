@@ -16,10 +16,10 @@ const OutgoingOfferCard = () => {
 
       <div className="flex flex-col text-center sm:text-left gap-1 flex-grow">
         <span className="font-semibold text-gray-900 dark:text-white text-lg sm:text-xl truncate">
-          TextRP Feature Pack — Limited Edition
+          TextRP
         </span>
         <span className="text-gray-600 dark:text-gray-400 text-sm sm:text-base truncate">
-          Ultra Rare | Access Bonus Content | Animated Assets
+          Ultra Rare
         </span>
       </div>
 
