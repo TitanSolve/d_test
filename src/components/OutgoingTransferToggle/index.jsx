@@ -15,28 +15,22 @@ const OutgoingTransferToggle = ({ title, count }) => {
       >
         <span className="text-lg font-semibold">{title}</span>
         <ChevronDownIcon
-          className={`w-6 h-6 transition-transform ${isVisible ? "rotate-180" : "rotate-0"}`}
+          className={`w-6 h-6 transform transition-transform duration-300 ${isVisible ? "rotate-180" : "rotate-0"}`}
         />
       </button>
 
       {isVisible && (
-        <motion.div
-          initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: 1, height: "auto" }}
-          exit={{ opacity: 0, height: 0 }}
-          className="mt-4 bg-white dark:bg-[#15191E] p-5 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700"
-        >
-          <div className="flex justify-end sm:justify-between items-center mb-4">
+        <div className="mt-4 bg-white dark:bg-[#15191E] p-5 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
+          <div className="flex justify-between items-center mb-4">
             <span className="text-lg font-semibold text-gray-900 dark:text-white hidden sm:block">
               Listed Items
             </span>
             {count > 0 ? (
               <Button
                 type="primary"
-                style={{ borderRadius: "6px", width: "30%", alignItems: "center" }}
-                className="dark:bg-red-600 dark:hover:bg-red-500 text-white"
+                className="dark:bg-red-600 dark:hover:bg-red-500 text-white rounded-md font-semibold px-4 py-1"
               >
-                <XIcon className="w-5 h-5" /> Cancel All
+                <XIcon className="w-5 h-5 mr-1 inline" /> Cancel All
               </Button>
             ) : (
               <span className="text-gray-500 dark:text-gray-400">No listed items available.</span>
@@ -50,7 +44,7 @@ const OutgoingTransferToggle = ({ title, count }) => {
               ))}
             </div>
           )}
-        </motion.div>
+        </div>
       )}
     </div>
   );
