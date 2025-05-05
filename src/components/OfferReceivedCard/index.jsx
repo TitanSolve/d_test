@@ -37,6 +37,7 @@ const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddr
         isOfferFound = true;
         sellOfferIndex = offer.nft_offer_index;
         brokerFee = (buyOffer.amount * 1 - offer.amount * 1).toString();
+        console.log("brokerFee--->", brokerFee, buyOffer.amount, offer.amount);
         break;
       }
     }
