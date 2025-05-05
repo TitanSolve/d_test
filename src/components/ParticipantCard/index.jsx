@@ -214,7 +214,7 @@ const ParticipantCard = ({
       else {
         let offerAmount;
         if (state.token === "XRP") {
-          offerAmount = state.amount;
+          offerAmount = (parseFloat(state.amount) * 1.01).toString();
         } else {
           offerAmount = {
             currency: currentCurrency.currency,
@@ -339,11 +339,6 @@ const ParticipantCard = ({
   const collections = [
     ...new Set(myNftData.groupedNfts.map((group) => group.collection)),
   ];
-
-  function onAmountChange(event) {
-    console.log("Amount changed:", event.target.value);
-    updateField("amount", e.target.value);
-  }
 
   return (
     <>
