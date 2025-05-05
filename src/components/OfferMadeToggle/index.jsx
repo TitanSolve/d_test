@@ -44,7 +44,7 @@ const OfferMadeToggle = ({ title, madeOffers, onAction, myOwnWalletAddress }) =>
                     style={{ borderRadius: "6px", alignItems: "center" }}
                     className="dark:bg-red-600 dark:hover:bg-red-500"
                 >
-                  Cancel All
+                  Reject All
                 </Button>
               </div>
             ) : (

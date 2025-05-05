@@ -5,11 +5,18 @@ import { Button } from "antd";
 import TransactionModal from "../TransactionModal";
 import NFTMessageBox from "../NFTMessageBox";
 
-
-const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddress, refreshSellOffers }) => {
+const OfferReceivedCard = ({
+  sellOffers,
+  buyOffer,
+  index,
+  onAction,
+  myWalletAddress,
+  refreshSellOffers,
+}) => {
   const [qrCodeUrl, setQrCodeUrl] = useState("");
   const [websocketUrl, setWebsocketUrl] = useState("");
-  const [websocketAutoMakeSellOfferUrl, setWebsocketAutoMakeSellOfferUrl] = useState("");
+  const [websocketAutoMakeSellOfferUrl, setWebsocketAutoMakeSellOfferUrl] =
+    useState("");
   const [transactionStatus, setTransactionStatus] = useState("");
   const [isQrModalVisible, setIsQrModalVisible] = useState(false);
   const [madeOffers, setMadeOffers] = useState([]);
@@ -51,13 +58,16 @@ const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddr
       console.log("requestBody--->", requestBody);
 
       try {
-        const response = await fetch(`${API_URLS.backendUrl}/broker-accept-offer`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(requestBody),
-        });
+        const response = await fetch(
+          `${API_URLS.backendUrl}/broker-accept-offer`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(requestBody),
+          }
+        );
         console.log(requestBody, "requestBody");
 
         if (!response.ok) {
@@ -69,19 +79,25 @@ const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddr
         const data = await response.json();
         if (data) {
           console.log(data, "data");
-          setMessageBoxType("success");
-          setMessageBoxText("Offer finished successfully");
+          if (data.result.meta.TransactionResult === "tesSUCCESS") {
+            setMessageBoxType("success");
+            setMessageBoxText("Offer finished successfully");
+          } else {
+            setMessageBoxType("error");
+            setMessageBoxText(data.result.meta.TransactionResult);
+          }
           setIsMessageBoxVisible(true);
-          // onAction(); //refresh
         }
       } catch (error) {
         console.error("Error during fetch:", error);
       }
-    }
-    else {
+    } else {
       console.log("No matching offer found for the selected NFT.");
       let sellAmount = "0";
-      sellAmount = ((buyOffer.amount * 1 - buyOffer.amount * 1 / 100) / 1000000).toString();
+      sellAmount = (
+        (buyOffer.amount * 1 - (buyOffer.amount * 1) / 100) /
+        1000000
+      ).toString();
 
       const payload = {
         nft: buyOffer.NFTokenID,
@@ -91,13 +107,16 @@ const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddr
       };
       console.log("payload for sell", payload);
       try {
-        const response = await fetch(`${API_URLS.backendUrl}/create-nft-offer`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(payload),
-        });
+        const response = await fetch(
+          `${API_URLS.backendUrl}/create-nft-offer`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(payload),
+          }
+        );
 
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -111,11 +130,9 @@ const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddr
           setWebsocketAutoMakeSellOfferUrl(data.refs.websocket_status);
           setIsQrModalVisible(true);
         }
-
       } catch (error) {
         console.error("Error creating offer:", error);
       }
-
     }
   }
 
@@ -178,13 +195,16 @@ const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddr
       console.log("requestBody--->", requestBody);
 
       try {
-        const response = await fetch(`${API_URLS.backendUrl}/broker-accept-offer`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(requestBody),
-        });
+        const response = await fetch(
+          `${API_URLS.backendUrl}/broker-accept-offer`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(requestBody),
+          }
+        );
         console.log(requestBody, "requestBody");
 
         if (!response.ok) {
@@ -195,8 +215,13 @@ const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddr
         if (data) {
           console.log(data, "data");
           // onAction();
-          setMessageBoxType("success");
-          setMessageBoxText("Offer finished successfully");
+          if (data.result.meta.TransactionResult === "tesSUCCESS") {
+            setMessageBoxType("success");
+            setMessageBoxText("Offer finished successfully");
+          } else {
+            setMessageBoxType("error");
+            setMessageBoxText(data.result.meta.TransactionResult);
+          }
           setIsMessageBoxVisible(true);
         }
       } catch (error) {
@@ -220,8 +245,7 @@ const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddr
         if (data.signed) {
           setTransactionStatus("Transaction signed");
           setIsQrModalVisible(false);
-          onAction();  //refresh
-
+          onAction(); //refresh
         } else if (data.rejected) {
           setTransactionStatus("Transaction rejected");
         }
@@ -241,7 +265,6 @@ const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddr
           setTransactionStatus("Transaction signed");
           setIsQrModalVisible(false);
           refreshSellOfferAndAccept();
-
         } else if (data.rejected) {
           setTransactionStatus("Transaction rejected");
         }
@@ -279,7 +302,7 @@ const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddr
       <div className="flex flex-col sm:items-end text-center sm:text-right w-full sm:w-auto gap-1">
         <div>
           <span className="text-xl font-bold text-gray-900 dark:text-white">
-            Amount : {buyOffer.amount * 1 / 1000000}
+            Amount : {(buyOffer.amount * 1) / 1000000}
           </span>
           <p className="text-gray-500 dark:text-gray-400 text-sm">
             Received Offer
@@ -292,7 +315,7 @@ const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddr
             block
             style={{ borderRadius: "6px", alignItems: "center" }}
             className="dark:bg-green-600 dark:hover:bg-green-500"
-          // className="w-full sm:w-auto bg-red-500 text-white px-4 sm:px-5 py-2 rounded-lg hover:bg-red-600 transition shadow-md text-center">
+            // className="w-full sm:w-auto bg-red-500 text-white px-4 sm:px-5 py-2 rounded-lg hover:bg-red-600 transition shadow-md text-center">
           >
             Accpet
           </Button>
@@ -302,9 +325,9 @@ const OfferReceivedCard = ({ sellOffers, buyOffer, index, onAction, myWalletAddr
             block
             style={{ borderRadius: "6px", alignItems: "center" }}
             className="dark:bg-red-600 dark:hover:bg-red-500"
-          // className="w-full sm:w-auto bg-red-500 text-white px-4 sm:px-5 py-2 rounded-lg hover:bg-red-600 transition shadow-md text-center">
+            // className="w-full sm:w-auto bg-red-500 text-white px-4 sm:px-5 py-2 rounded-lg hover:bg-red-600 transition shadow-md text-center">
           >
-            Cancel
+            Reject
           </Button>
         </div>
       </div>

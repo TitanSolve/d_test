@@ -31,7 +31,7 @@ const ParticipantCard = ({
   myNftData,
   wgtParameters,
   getImageData,
-  refreshOffers
+  refreshOffers,
 }) => {
   const [state, setState] = useState({
     sortOrder: "newest",
@@ -156,10 +156,14 @@ const ParticipantCard = ({
 
     setTransactionStatus("");
     if (destination !== "all") {
-      destination = membersList.find((u) => u.name === destination).userId?.split(":")[0].replace("@", "");
+      destination = membersList
+        .find((u) => u.name === destination)
+        .userId?.split(":")[0]
+        .replace("@", "");
     }
     if (isSell) {
-      if ((selectedNftForOffer.userName === wgtParameters.displayName)) { //Create Sell Offer
+      if (selectedNftForOffer.userName === wgtParameters.displayName) {
+        //Create Sell Offer
 
         let offerAmount;
         if (state.token === "XRP") {
@@ -195,20 +199,19 @@ const ParticipantCard = ({
             setWebsocketUrl(response.data.refs.websocket_status);
             setIsQrModalVisible(true);
             setSell(false);
-          }
-          else {
+          } else {
             console.log("No data received from the server.");
             setMessageBoxType("error");
-            setMessageBoxText("No data received from the server.\n Please try again.");
+            setMessageBoxText(
+              "No data received from the server.\n Please try again."
+            );
             setIsMessageBoxVisible(true);
           }
-
         } catch (error) {
           console.error("Error creating offer:", error);
         }
-      }
-      else  //Create Buy Offer
-      {
+      } //Create Buy Offer
+      else {
         let offerAmount;
         if (state.token === "XRP") {
           offerAmount = state.amount;
@@ -232,13 +235,16 @@ const ParticipantCard = ({
 
         try {
           setIsLoading(true);
-          const response = await fetch(`${API_URLS.backendUrl}/create-nft-buy-offer`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(payload),
-          });
+          const response = await fetch(
+            `${API_URLS.backendUrl}/create-nft-buy-offer`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(payload),
+            }
+          );
 
           if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
@@ -250,20 +256,20 @@ const ParticipantCard = ({
             setQrCodeUrl(data.refs.qr_png);
             setWebsocketUrl(data.refs.websocket_status);
             setIsQrModalVisible(true);
-          }
-          else {
+          } else {
             console.log("No data received from the server.");
             setMessageBoxType("error");
-            setMessageBoxText("No data received from the server.\n Please try again.");
+            setMessageBoxText(
+              "No data received from the server.\n Please try again."
+            );
             setIsMessageBoxVisible(true);
           }
-
         } catch (error) {
           console.error("Error:", error);
         }
       }
-    }
-    else {  //Create Transfer Offer
+    } else {
+      //Create Transfer Offer
 
       if (destination === "all") {
         setMessageBoxType("error");
@@ -322,7 +328,7 @@ const ParticipantCard = ({
           setIsMessageBoxVisible(true);
           ws.close();
         }
-      }
+      };
 
       return () => {
         ws.close();
@@ -334,429 +340,448 @@ const ParticipantCard = ({
     ...new Set(myNftData.groupedNfts.map((group) => group.collection)),
   ];
 
+  function onAmountChange(event) {
+    console.log("Amount changed:", event.target.value);
+    updateField("amount", e.target.value);
+  }
+
   return (
     <>
-      {
-        isLoading ? (
-          <LoadingOverlayForCard />
-        ) : (
-          <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-2xl shadow-lg w-full max-w-5xl bg-white dark:bg-[#15191E] text-black dark:text-white transition-colors duration-300">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      {isLoading ? (
+        <LoadingOverlayForCard />
+      ) : (
+        <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-2xl shadow-lg w-full max-w-5xl bg-white dark:bg-[#15191E] text-black dark:text-white transition-colors duration-300">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <Typography
+              variant="h6"
+              className="font-bold text-black dark:text-white"
+            >
+              {myNftData.name === wgtParameters.displayName
+                ? "My NFTs"
+                : myNftData.name}
+            </Typography>
+
+            <FormControl
+              variant="outlined"
+              size="small"
+              className="text-black dark:text-white"
+            >
+              <InputLabel className="text-black dark:text-white">
+                Collection
+              </InputLabel>
+              <Select
+                value={state.selectedCollection}
+                onChange={(e) =>
+                  updateField("selectedCollection", e.target.value)
+                }
+                label="Collection"
+                className="bg-white dark:bg-gray-800 text-black dark:text-white"
+                MenuProps={{
+                  PaperProps: {
+                    className:
+                      "bg-white dark:bg-gray-800 text-black dark:text-white",
+                  },
+                }}
+              >
+                <MenuItem value="">
+                  <em>All</em>
+                </MenuItem>
+                {collections.map((collection, idx) => (
+                  <MenuItem key={idx} value={collection}>
+                    {collection}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </div>
+
+          <div className="mt-4">
+            <Carousel
+              responsive={responsive}
+              ssr={true}
+              infinite={false}
+              draggable={true}
+              containerClass="carousel-container"
+              itemClass="carousel-item flex justify-center items-center px-2"
+              customLeftArrow={
+                <button
+                  className="absolute left-2 md:left-4 top-1/2 z-20 -translate-y-1/2 bg-white dark:bg-gray-800 text-gray-800 dark:text-white shadow-md p-2 md:p-3 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 dark:focus:ring-gray-400"
+                  aria-label="Previous"
+                >
+                  <ChevronLeft size={20} className="md:size-6" />
+                </button>
+              }
+              customRightArrow={
+                <button
+                  className="absolute right-2 md:right-4 top-1/2 z-20 -translate-y-1/2 bg-white dark:bg-gray-800 text-gray-800 dark:text-white shadow-md p-2 md:p-3 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 dark:focus:ring-gray-400"
+                  aria-label="Next"
+                >
+                  <ChevronRight size={20} className="md:size-6" />
+                </button>
+              }
+            >
+              {filteredNfts.length > 0 ? (
+                filteredNfts.map((groupedNft, idx) => (
+                  <div
+                    key={idx}
+                    onClick={() => openPreviewModal(groupedNft)}
+                    className="cursor-pointer"
+                  >
+                    <NFTCard
+                      myNftData={groupedNft}
+                      isGroup={true}
+                      isImgOnly={false}
+                    />
+                  </div>
+                ))
+              ) : (
+                <div className="flex items-center justify-center h-32 font-semibold text-center w-full">
+                  <p className="text-black dark:text-white">
+                    No NFTs available
+                  </p>
+                </div>
+              )}
+            </Carousel>
+          </div>
+
+          <Modal
+            open={previewModalOpen}
+            onClose={closePreviewModal}
+            footer={null}
+            closable={true}
+            maskClosable={true}
+            bodyStyle={{ borderRadius: "10px", padding: "24px" }}
+          >
+            <Box className="absolute top-1/2 left-1/2 w-11/12 bg-white dark:bg-[#15191E] text-black dark:text-white rounded-2xl shadow-2xl transform -translate-x-1/2 -translate-y-1/2 p-4 sm:p-6 md:p-8 outline-none border border-gray-200 dark:border-gray-700 transition-colors duration-300">
               <Typography
                 variant="h6"
-                className="font-bold text-black dark:text-white"
+                className="font-bold overflow-hidden text-black dark:text-white"
               >
-                {myNftData.name === wgtParameters.displayName
-                  ? "My NFTs"
-                  : myNftData.name}
+                {selectedNFTGroup &&
+                  "Issuer : " + selectedNFTGroup.nfts[0].Issuer}
               </Typography>
-
-              <FormControl
-                variant="outlined"
-                size="small"
-                className="text-black dark:text-white"
-              >
-                <InputLabel className="text-black dark:text-white">
-                  Collection
-                </InputLabel>
-                <Select
-                  value={state.selectedCollection}
-                  onChange={(e) => updateField("selectedCollection", e.target.value)}
-                  label="Collection"
-                  className="bg-white dark:bg-gray-800 text-black dark:text-white"
-                  MenuProps={{
-                    PaperProps: {
-                      className:
-                        "bg-white dark:bg-gray-800 text-black dark:text-white",
-                    },
-                  }}
+              <div className="relative">
+                <Carousel
+                  responsive={responsive}
+                  ssr={true}
+                  infinite={false}
+                  draggable={true}
+                  swipeable={true}
+                  containerClass="carousel-container"
+                  itemClass="carousel-item flex justify-center items-center px-2"
+                  customLeftArrow={
+                    <button className="absolute left-2 md:left-4 top-1/2 z-20 -translate-y-1/2 bg-white dark:bg-gray-800 text-gray-800 dark:text-white shadow-lg p-2 md:p-3 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition duration-200 ease-in-out">
+                      <ChevronLeft size={20} />
+                    </button>
+                  }
+                  customRightArrow={
+                    <button className="absolute right-2 md:right-4 top-1/2 z-20 -translate-y-1/2 bg-white dark:bg-gray-800 text-gray-800 dark:text-white shadow-lg p-2 md:p-3 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition duration-200 ease-in-out">
+                      <ChevronRight size={20} />
+                    </button>
+                  }
                 >
-                  <MenuItem value="">
-                    <em>All</em>
-                  </MenuItem>
-                  {collections.map((collection, idx) => (
-                    <MenuItem key={idx} value={collection}>
-                      {collection}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </div>
-
-            <div className="mt-4">
-              <Carousel
-                responsive={responsive}
-                ssr={true}
-                infinite={false}
-                draggable={true}
-                containerClass="carousel-container"
-                itemClass="carousel-item flex justify-center items-center px-2"
-                customLeftArrow={
-                  <button
-                    className="absolute left-2 md:left-4 top-1/2 z-20 -translate-y-1/2 bg-white dark:bg-gray-800 text-gray-800 dark:text-white shadow-md p-2 md:p-3 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 dark:focus:ring-gray-400"
-                    aria-label="Previous"
-                  >
-                    <ChevronLeft size={20} className="md:size-6" />
-                  </button>
-                }
-                customRightArrow={
-                  <button
-                    className="absolute right-2 md:right-4 top-1/2 z-20 -translate-y-1/2 bg-white dark:bg-gray-800 text-gray-800 dark:text-white shadow-md p-2 md:p-3 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 dark:focus:ring-gray-400"
-                    aria-label="Next"
-                  >
-                    <ChevronRight size={20} className="md:size-6" />
-                  </button>
-                }
-              >
-                {filteredNfts.length > 0 ? (
-                  filteredNfts.map((groupedNft, idx) => (
-                    <div
-                      key={idx}
-                      onClick={() => openPreviewModal(groupedNft)}
-                      className="cursor-pointer"
-                    >
-                      <NFTCard
-                        myNftData={groupedNft}
-                        isGroup={true}
-                        isImgOnly={false}
-                      />
-                    </div>
-                  ))
-                ) : (
-                  <div className="flex items-center justify-center h-32 font-semibold text-center w-full">
-                    <p className="text-black dark:text-white">No NFTs available</p>
-                  </div>
-                )}
-              </Carousel>
-            </div>
-
-            <Modal
-              open={previewModalOpen}
-              onClose={closePreviewModal}
-              footer={null}
-              closable={true}
-              maskClosable={true}
-              bodyStyle={{ borderRadius: "10px", padding: "24px" }}
-            >
-              <Box className="absolute top-1/2 left-1/2 w-11/12 bg-white dark:bg-[#15191E] text-black dark:text-white rounded-2xl shadow-2xl transform -translate-x-1/2 -translate-y-1/2 p-4 sm:p-6 md:p-8 outline-none border border-gray-200 dark:border-gray-700 transition-colors duration-300">
-                <Typography
-                  variant="h6"
-                  className="font-bold overflow-hidden text-black dark:text-white"
-                >
-                  {selectedNFTGroup && "Issuer : " + selectedNFTGroup.nfts[0].Issuer}
-                </Typography>
-                <div className="relative">
-                  <Carousel
-                    responsive={responsive}
-                    ssr={true}
-                    infinite={false}
-                    draggable={true}
-                    swipeable={true}
-                    containerClass="carousel-container"
-                    itemClass="carousel-item flex justify-center items-center px-2"
-                    customLeftArrow={
-                      <button className="absolute left-2 md:left-4 top-1/2 z-20 -translate-y-1/2 bg-white dark:bg-gray-800 text-gray-800 dark:text-white shadow-lg p-2 md:p-3 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition duration-200 ease-in-out">
-                        <ChevronLeft size={20} />
-                      </button>
-                    }
-                    customRightArrow={
-                      <button className="absolute right-2 md:right-4 top-1/2 z-20 -translate-y-1/2 bg-white dark:bg-gray-800 text-gray-800 dark:text-white shadow-lg p-2 md:p-3 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition duration-200 ease-in-out">
-                        <ChevronRight size={20} />
-                      </button>
-                    }
-                  >
-                    {selectedNFTGroup &&
-                      selectedNFTGroup.nfts.map((nft, idx) => (
-                        <div
-                          key={idx}
-                          onClick={() => openOfferModal(nft)}
-                          className="cursor-pointer hover:scale-105 transition-transform duration-300"
-                        >
-                          <NFTCard
-                            myNftData={nft}
-                            isGroup={false}
-                            isImgOnly={false}
-                          />
-                        </div>
-                      ))}
-                  </Carousel>
-                </div>
-              </Box>
-            </Modal>
-
-            <Modal
-              open={offerModalOpen}
-              onClose={closeOfferModal}
-              footer={null}
-              closable={true}
-              maskClosable={true}
-              closeAfterTransition
-              bodyStyle={{ borderRadius: "10px", padding: "16px" }}
-            >
-              <div>
-                {selectedNftForOffer !== null && (
-                  <Box className="bg-white dark:bg-[#15191E] text-black dark:text-white rounded-xl p-6 shadow-lg max-h-[90vh] max-w-full md:max-w-[500px] w-full mx-auto top-1/2 left-1/2 absolute transform -translate-x-1/2 -translate-y-1/2 overflow-y-auto transition-colors duration-300">
-                    <div className="flex justify-between items-center mb-4">
-                      <div>
-                        <Typography
-                          variant="subtitle1"
-                          className="font-semibold text-black dark:text-white"
-                        >
-                          {selectedNftForOffer.metadata.name}
-                        </Typography>
-                        <Typography
-                          variant="subtitle2"
-                          className="text-sm text-gray-600 dark:text-gray-300"
-                        >
-                          Issuer: {selectedNftForOffer.issuer} -{" "}
-                          {selectedNftForOffer.nftokenTaxon}
-                        </Typography>
-                      </div>
-                      <Button
-                        onClick={closeOfferModal}
-                        className="min-w-[36px] h-[36px] text-black dark:text-white"
-                        sx={{
-                          fontSize: "1.2rem",
-                          fontWeight: "bold",
-                          lineHeight: 1,
-                          padding: 0,
-                          minHeight: "auto",
-                        }}
+                  {selectedNFTGroup &&
+                    selectedNFTGroup.nfts.map((nft, idx) => (
+                      <div
+                        key={idx}
+                        onClick={() => openOfferModal(nft)}
+                        className="cursor-pointer hover:scale-105 transition-transform duration-300"
                       >
-                        ✕
-                      </Button>
-                    </div>
+                        <NFTCard
+                          myNftData={nft}
+                          isGroup={false}
+                          isImgOnly={false}
+                        />
+                      </div>
+                    ))}
+                </Carousel>
+              </div>
+            </Box>
+          </Modal>
 
-                    <NFTCard
-                      myNftData={selectedNftForOffer}
-                      isGroup={false}
-                      isImgOnly={true}
-                    />
+          <Modal
+            open={offerModalOpen}
+            onClose={closeOfferModal}
+            footer={null}
+            closable={true}
+            maskClosable={true}
+            closeAfterTransition
+            bodyStyle={{ borderRadius: "10px", padding: "16px" }}
+          >
+            <div>
+              {selectedNftForOffer !== null && (
+                <Box className="bg-white dark:bg-[#15191E] text-black dark:text-white rounded-xl p-6 shadow-lg max-h-[90vh] max-w-full md:max-w-[500px] w-full mx-auto top-1/2 left-1/2 absolute transform -translate-x-1/2 -translate-y-1/2 overflow-y-auto transition-colors duration-300">
+                  <div className="flex justify-between items-center mb-4">
+                    <div>
+                      <Typography
+                        variant="subtitle1"
+                        className="font-semibold text-black dark:text-white"
+                      >
+                        {selectedNftForOffer.metadata.name}
+                      </Typography>
+                      <Typography
+                        variant="subtitle2"
+                        className="text-sm text-gray-600 dark:text-gray-300"
+                      >
+                        Issuer: {selectedNftForOffer.issuer} -{" "}
+                        {selectedNftForOffer.nftokenTaxon}
+                      </Typography>
+                    </div>
+                    <Button
+                      onClick={closeOfferModal}
+                      className="min-w-[36px] h-[36px] text-black dark:text-white"
+                      sx={{
+                        fontSize: "1.2rem",
+                        fontWeight: "bold",
+                        lineHeight: 1,
+                        padding: 0,
+                        minHeight: "auto",
+                      }}
+                    >
+                      ✕
+                    </Button>
+                  </div>
+
+                  <NFTCard
+                    myNftData={selectedNftForOffer}
+                    isGroup={false}
+                    isImgOnly={true}
+                  />
+                  <Typography
+                    variant="subtitle2"
+                    className="text-center font-semibold text-black dark:text-white"
+                  >
+                    IssuerFee : {(selectedNftForOffer.transferFee * 1) / 1000} %
+                  </Typography>
+
+                  {selectedNftForOffer.metadata?.attributes?.length > 0 && (
+                    <div className="mb-6">
+                      <Typography
+                        variant="subtitle2"
+                        className="font-semibold mb-2 text-black dark:text-white"
+                      >
+                        Attributes
+                      </Typography>
+                      <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4">
+                        {selectedNftForOffer.metadata.attributes.map(
+                          (attr, idx) => (
+                            <Box
+                              key={index}
+                              className="bg-gray-100 dark:bg-[#1c1f26] rounded-md p-3 w-full transition-colors"
+                            >
+                              <Typography className="text-sm text-gray-600 dark:text-gray-400 mb-1">
+                                {attr.trait_type}
+                              </Typography>
+                              <Typography className="text-black dark:text-white font-semibold mb-1">
+                                {attr.value}
+                              </Typography>
+                              {attr.rarity && (
+                                <Chip
+                                  label={`${attr.rarity}%`}
+                                  size="small"
+                                  sx={{
+                                    backgroundColor: "#6c3df4",
+                                    color: "white",
+                                    fontSize: "0.75rem",
+                                    fontWeight: 600,
+                                  }}
+                                />
+                              )}
+                            </Box>
+                          )
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  {!(
+                    selectedNftForOffer.userName === wgtParameters.displayName
+                  ) && (
                     <Typography
-                      variant="subtitle2"
+                      variant="h5"
                       className="text-center font-semibold text-black dark:text-white"
                     >
-                      IssuerFee : {(selectedNftForOffer.transferFee * 1) / 1000} %
+                      Offer to buy from {selectedNftForOffer.userName}
                     </Typography>
+                  )}
 
-                    {selectedNftForOffer.metadata?.attributes?.length > 0 && (
-                      <div className="mb-6">
+                  {selectedNftForOffer.userName ===
+                    wgtParameters.displayName && (
+                    <>
+                      <div className="flex justify-center items-center gap-4">
                         <Typography
-                          variant="subtitle2"
-                          className="font-semibold mb-2 text-black dark:text-white"
+                          className={`font-medium ${
+                            state.isSell
+                              ? "text-black dark:text-white"
+                              : "text-gray-400 dark:text-gray-500"
+                          }`}
                         >
-                          Attributes
+                          Sell
                         </Typography>
-                        <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4">
-                          {selectedNftForOffer.metadata.attributes.map(
-                            (attr, idx) => (
-                              <Box
-                                key={index}
-                                className="bg-gray-100 dark:bg-[#1c1f26] rounded-md p-3 w-full transition-colors"
-                              >
-                                <Typography className="text-sm text-gray-600 dark:text-gray-400 mb-1">
-                                  {attr.trait_type}
-                                </Typography>
-                                <Typography className="text-black dark:text-white font-semibold mb-1">
-                                  {attr.value}
-                                </Typography>
-                                {attr.rarity && (
-                                  <Chip
-                                    label={`${attr.rarity}%`}
-                                    size="small"
-                                    sx={{
-                                      backgroundColor: "#6c3df4",
-                                      color: "white",
-                                      fontSize: "0.75rem",
-                                      fontWeight: 600,
-                                    }}
-                                  />
-                                )}
-                              </Box>
-                            )
-                          )}
-                        </div>
+                        <Switch
+                          checked={!state.isSell}
+                          onChange={toggleSellMode}
+                          color="primary"
+                        />
+                        <Typography
+                          className={`font-medium ${
+                            !state.isSell
+                              ? "text-black dark:text-white"
+                              : "text-gray-400 dark:text-gray-500"
+                          }`}
+                        >
+                          Transfer
+                        </Typography>
                       </div>
-                    )}
 
-                    {!(
-                      selectedNftForOffer.userName === wgtParameters.displayName
-                    ) && (
-                        <Typography
-                          variant="h5"
-                          className="text-center font-semibold text-black dark:text-white"
-                        >
-                          Offer to buy from {selectedNftForOffer.userName}
-                        </Typography>
-                      )}
+                      <Select
+                        value={state.selectedUser}
+                        onChange={(e) =>
+                          updateField("selectedUser", e.target.value)
+                        }
+                        fullWidth
+                        variant="outlined"
+                        size="small"
+                        className="mb-4 bg-white dark:bg-gray-800 dark:text-white rounded"
+                        sx={{
+                          "& .MuiOutlinedInput-notchedOutline": {
+                            borderColor: "gray",
+                          },
+                          "&:hover .MuiOutlinedInput-notchedOutline": {
+                            borderColor: "blue",
+                          },
+                          "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                            borderColor: "green",
+                          },
+                          "& .MuiInputBase-input": {
+                            color: "black",
+                          },
+                        }}
+                      >
+                        <MenuItem key={"all"} value={"all"}>
+                          All Others
+                        </MenuItem>
+                        {membersList.map((user) => (
+                          <MenuItem key={user.userId} value={user.name}>
+                            {user.name}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </>
+                  )}
 
-                    {selectedNftForOffer.userName === wgtParameters.displayName && (
-                      <>
-                        <div className="flex justify-center items-center gap-4">
-                          <Typography
-                            className={`font-medium ${state.isSell
-                              ? "text-black dark:text-white"
-                              : "text-gray-400 dark:text-gray-500"
-                              }`}
-                          >
-                            Sell
-                          </Typography>
-                          <Switch
-                            checked={!state.isSell}
-                            onChange={toggleSellMode}
-                            color="primary"
-                          />
-                          <Typography
-                            className={`font-medium ${!state.isSell
-                              ? "text-black dark:text-white"
-                              : "text-gray-400 dark:text-gray-500"
-                              }`}
-                          >
-                            Transfer
-                          </Typography>
-                        </div>
-
-                        <Select
-                          value={state.selectedUser}
-                          onChange={(e) =>
-                            updateField("selectedUser", e.target.value)
-                          }
-                          fullWidth
-                          variant="outlined"
-                          size="small"
-                          className="mb-4 bg-white dark:bg-gray-800 dark:text-white rounded"
-                          sx={{
-                            "& .MuiOutlinedInput-notchedOutline": {
-                              borderColor: "gray",
-                            },
-                            "&:hover .MuiOutlinedInput-notchedOutline": {
-                              borderColor: "blue",
-                            },
-                            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                  {state.isSell && (
+                    <div className="flex flex-col md:flex-row gap-3 mb-5">
+                      <TextField
+                        type="number"
+                        label="Set a Price"
+                        value={state.amount}
+                        inputProps={{ min: 1 }}
+                        onChange={(e) => updateField("amount", e.target.value)}
+                        fullWidth
+                        size="small"
+                        className="bg-white text-black dark:bg-[#15191E] dark:text-white rounded-md"
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position="start">🪙</InputAdornment>
+                          ),
+                          classes: {
+                            input: "text-black dark:text-white", // ✅ Tailwind text color for input
+                          },
+                        }}
+                        InputLabelProps={{
+                          className: "text-gray-700 dark:text-gray-300", // ✅ Tailwind text color for label
+                        }}
+                        sx={{
+                          "& .MuiOutlinedInput-root": {
+                            "& fieldset": {
                               borderColor: "green",
                             },
-                            "& .MuiInputBase-input": {
-                              color: "black",
+                            "&:hover fieldset": {
+                              borderColor: "blue",
                             },
-                          }}
-                        >
-                          <MenuItem key={"all"} value={"all"}>
-                            All Others
-                          </MenuItem>
-                          {membersList.map((user) => (
-                            <MenuItem key={user.userId} value={user.name}>
-                              {user.name}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                      </>
-                    )}
-
-                    {state.isSell && (
-                      <div className="flex flex-col md:flex-row gap-3 mb-5">
-                        <TextField
-                          type="number"
-                          label="Set a Price"
-                          value={state.amount}
-                          inputProps={{ min: 1 }}
-                          onChange={(e) => updateField("amount", e.target.value)}
-                          fullWidth
-                          size="small"
-                          className="bg-white text-black dark:bg-[#15191E] dark:text-white rounded-md"
-                          InputProps={{
-                            startAdornment: (
-                              <InputAdornment position="start">🪙</InputAdornment>
-                            ),
-                            classes: {
-                              input: "text-black dark:text-white", // ✅ Tailwind text color for input
+                            "&.Mui-focused fieldset": {
+                              borderColor: "purple",
                             },
-                          }}
-                          InputLabelProps={{
-                            className: "text-gray-700 dark:text-gray-300", // ✅ Tailwind text color for label
-                          }}
-                          sx={{
-                            "& .MuiOutlinedInput-root": {
-                              "& fieldset": {
-                                borderColor: "green",
-                              },
-                              "&:hover fieldset": {
-                                borderColor: "blue",
-                              },
-                              "&.Mui-focused fieldset": {
-                                borderColor: "purple",
-                              },
-                            },
-                          }}
-                        />
-                        <Select
-                          value={state.token}
-                          onChange={(e) => updateField("token", e.target.value)}
-                          fullWidth
-                          size="small"
-                          className="bg-white dark:bg-gray-800 dark:text-white rounded"
-                          sx={{
-                            "& .MuiOutlinedInput-notchedOutline": {
-                              borderColor: "gray", // default border
-                            },
-                            "&:hover .MuiOutlinedInput-notchedOutline": {
-                              borderColor: "blue", // hover border
-                            },
-                            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                              borderColor: "green", // focused border
-                            },
-                            "& .MuiInputBase-input": {
-                              color: "black dark:white", // 👈 text color
-                            },
-                          }}
-                        >
-                          {uniqueCurrencies.map((trustLine) => (
-                            <MenuItem
-                              key={trustLine.currency}
-                              value={trustLine.decodedCurrency}
-                            >
-                              {trustLine.decodedCurrency}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                      </div>
-                    )}
-
-                    <div className="text-center">
-                      <Button
-                        variant="contained"
-                        size="large"
-                        className="rounded-md w-1/2"
-                        onClick={() => makeOffer(state.isSell, selectedNftForOffer)}
+                          },
+                        }}
+                      />
+                      <Select
+                        value={state.token}
+                        onChange={(e) => updateField("token", e.target.value)}
+                        fullWidth
+                        size="small"
+                        className="bg-white dark:bg-gray-800 dark:text-white rounded"
+                        sx={{
+                          "& .MuiOutlinedInput-notchedOutline": {
+                            borderColor: "gray", // default border
+                          },
+                          "&:hover .MuiOutlinedInput-notchedOutline": {
+                            borderColor: "blue", // hover border
+                          },
+                          "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                            borderColor: "green", // focused border
+                          },
+                          "& .MuiInputBase-input": {
+                            color: "black dark:white", // 👈 text color
+                          },
+                        }}
                       >
-                        {state.isSell
-                          ? !(
+                        {uniqueCurrencies.map((trustLine) => (
+                          <MenuItem
+                            key={trustLine.currency}
+                            value={trustLine.decodedCurrency}
+                          >
+                            {trustLine.decodedCurrency}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </div>
+                  )}
+                  <Typography
+                    variant="h3"
+                    className="text-center font-semibold text-black dark:text-white"
+                  >
+                    Total : {state.amount} + 1% Fee = { ( state.amount * 1 ) * 1.01} {state.token}
+                  </Typography>
+
+                  <div className="text-center">
+                    <Button
+                      variant="contained"
+                      size="large"
+                      className="rounded-md w-1/2"
+                      onClick={() =>
+                        makeOffer(state.isSell, selectedNftForOffer)
+                      }
+                    >
+                      {state.isSell
+                        ? !(
                             selectedNftForOffer.userName ===
                             wgtParameters.displayName
                           )
-                            ? "Offer Buy"
-                            : "Offer Sell"
-                          : "Transfer"}
-                      </Button>
-                    </div>
-                  </Box>
-                )}
-              </div>
-            </Modal>
-            <TransactionModal
-              isOpen={isQrModalVisible}
-              onClose={() => setIsQrModalVisible(false)}
-              qrCodeUrl={qrCodeUrl}
-              transactionStatus={transactionStatus}
-            />
-            <NFTMessageBox
-              isOpen={isMessageBoxVisible}
-              onClose={() => setIsMessageBoxVisible(false)}
-              type={messageBoxType}
-              message={messageBoxText}
-            />
-          </div>
-        )
-      }
+                          ? "Offer Buy"
+                          : "Offer Sell"
+                        : "Transfer"}
+                    </Button>
+                  </div>
+                </Box>
+              )}
+            </div>
+          </Modal>
+          <TransactionModal
+            isOpen={isQrModalVisible}
+            onClose={() => setIsQrModalVisible(false)}
+            qrCodeUrl={qrCodeUrl}
+            transactionStatus={transactionStatus}
+          />
+          <NFTMessageBox
+            isOpen={isMessageBoxVisible}
+            onClose={() => setIsMessageBoxVisible(false)}
+            type={messageBoxType}
+            message={messageBoxText}
+          />
+        </div>
+      )}
     </>
   );
 };
