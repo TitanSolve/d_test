@@ -25,6 +25,27 @@ import TransactionModal from "../TransactionModal";
 import NFTMessageBox from "../NFTMessageBox";
 import LoadingOverlayForCard from "../LoadingOverlayForCard";
 
+const decodeCurrency = (currency) => {
+  try {
+    // Return standard 3-letter codes directly
+    if (currency.length <= 3) return currency;
+
+    // Check if it's a 40-char hex string
+    const isHex = /^[A-Fa-f0-9]{40}$/.test(currency);
+    if (!isHex) return currency;
+
+    // Attempt to decode buffer to ASCII
+    const buf = Buffer.from(currency, "hex");
+    const ascii = buf.toString("ascii").replace(/\0/g, "").trim();
+
+    // If the decoded value is printable ASCII, return it
+    const isPrintable = /^[\x20-\x7E]+$/.test(ascii);
+    return isPrintable ? ascii : currency;
+  } catch (e) {
+    return currency;
+  }
+};
+
 const ParticipantCard = ({
   index,
   membersList,
@@ -95,16 +116,38 @@ const ParticipantCard = ({
   };
 
   const openOfferModal = async (nft) => {
+    setIsLoading(true);
+    const xrpl = require("xrpl");
+    const client = new xrpl.Client(API_URLS.xrplMainnetUrl); // mainnet
+    await client.connect();
+
+    // const info = await client.request({
+    //   command: "account_info",
+    //   account: "r9syfthWEycVKuy9bz2awsxrTNK3NBBT6h",
+    //   ledger_index: "validated"
+    // });
+    // console.log("-------Account info: ", info);
+
+    const response = await client.request({
+      command: "account_lines",
+      account: nft.issuer,
+    });
+    console.log("-------Account lines: ", response);
+    const decodedLines = response.result.lines.map((line) => ({
+      ...line,
+      currency: line.currency,
+      decodedCurrency: decodeCurrency(line.currency),
+    }));
+
+    console.log("minter's decodedLines", decodedLines);
+
+    await client.disconnect();
+
     const myName = wgtParameters.displayName;
     const own = membersList.find((u) => u.name === myName /*"This Guy"*/);
     const currentUser = membersList.find((u) => u.name === nft.userName);
     const myTrustLines = own.trustLines;
     const currentUserTrustLines = currentUser.trustLines;
-    // console.log("me", own);
-    // console.log("MyTrustLines", myTrustLines);
-    // console.log("currentUser", currentUser);
-    // console.log("currentUserTrustLines", currentUserTrustLines);
-
     const sharedTrustLines = myTrustLines.filter((myLine) =>
       currentUserTrustLines.some(
         (theirLine) =>
@@ -124,12 +167,30 @@ const ParticipantCard = ({
         ])
       ).values()
     );
-    const hasXRP = unique.some((item) => item.decodedCurrency === "XRP");
+
+    // Step 1: Combine `unique` and `decodedLines`
+    const combined = [
+      ...unique,
+      ...decodedLines.map((line) => ({
+        currency: line.currency,
+        decodedCurrency: line.decodedCurrency,
+      })),
+    ];
+
+    // Step 2: Deduplicate based only on currency
+    const finalUnique = Array.from(
+      new Map(combined.map((line) => [line.currency, line])).values()
+    );
+
+    console.log("finalUnique", finalUnique);
+
+    const hasXRP = finalUnique.some((item) => item.decodedCurrency === "XRP");
     if (!hasXRP) {
-      unique.push({ currency: "XRP", decodedCurrency: "XRP" });
+      finalUnique.push({ currency: "XRP", decodedCurrency: "XRP" });
     }
-    setUniqueCurrencies(unique);
+    setUniqueCurrencies(finalUnique);
     setSelectedNftForOffer(nft);
+    setIsLoading(false);
     setOfferModalOpen(true);
   };
 
@@ -737,7 +798,8 @@ const ParticipantCard = ({
                     variant="subtitle2"
                     className="text-center font-semibold text-black dark:text-white"
                   >
-                    Total : {state.amount} + 1% Fee = { ((state.amount * 1) * 1.01).toFixed(4) } {state.token}
+                    Total : {state.amount} + 1% Fee ={" "}
+                    {(state.amount * 1 * 1.01).toFixed(4)} {state.token}
                   </Typography>
 
                   <div className="text-center">
