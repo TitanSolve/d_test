@@ -139,7 +139,7 @@ const ParticipantCard = ({
       decodedCurrency: decodeCurrency(line.currency),
     }));
 
-    console.log("minter's decodedLines", decodedLines);
+    console.log("decodedLines", decodedLines);
 
     await client.disconnect();
 
@@ -161,6 +161,7 @@ const ParticipantCard = ({
         sharedTrustLines.map((line) => [
           `${line.account}_${line.currency}`,
           {
+            account: line.account,
             currency: line.currency,
             decodedCurrency: line.decodedCurrency,
           },
@@ -168,27 +169,25 @@ const ParticipantCard = ({
       ).values()
     );
 
-    // Step 1: Combine `unique` and `decodedLines`
-    const combined = [
-      ...unique,
-      ...decodedLines.map((line) => ({
+    // 2. Filter and map to only 'currency' and 'decodedCurrency'
+    const overlapped = decodedLines
+      .filter((line) =>
+        unique.some(
+          (u) => u.account === line.account && u.currency === line.currency
+        )
+      )
+      .map((line) => ({
         currency: line.currency,
         decodedCurrency: line.decodedCurrency,
-      })),
-    ];
+      }));
 
-    // Step 2: Deduplicate based only on currency
-    const finalUnique = Array.from(
-      new Map(combined.map((line) => [line.currency, line])).values()
-    );
+    console.log("Overlapped trust lines (currency only):", overlapped);
 
-    console.log("finalUnique", finalUnique);
-
-    const hasXRP = finalUnique.some((item) => item.decodedCurrency === "XRP");
+    const hasXRP = overlapped.some((item) => item.decodedCurrency === "XRP");
     if (!hasXRP) {
-      finalUnique.push({ currency: "XRP", decodedCurrency: "XRP" });
+      overlapped.push({ currency: "XRP", decodedCurrency: "XRP" });
     }
-    setUniqueCurrencies(finalUnique);
+    setUniqueCurrencies(overlapped);
     setSelectedNftForOffer(nft);
     setIsLoading(false);
     setOfferModalOpen(true);
