@@ -23,17 +23,6 @@ const OfferReceivedCard = ({
   const [isMessageBoxVisible, setIsMessageBoxVisible] = useState(false);
   const [messageBoxType, setMessageBoxType] = useState("success");
   const [messageBoxText, setMessageBoxText] = useState("");
-  const [roomMessage, setRommMessage] = useState("");
-  const [sendRoomMsg, setSendRoomMsg] = useState(false);
-
-  useEffect(() => {
-    if (sendRoomMsg && roomMessage !== "") {
-      console.log("sendRoomMsg", sendRoomMsg);
-      widgetApi.sendRoomEvent("m.room.message", {
-        body: roomMessage,
-      });
-    }
-  }, [sendRoomMsg]);
 
   useEffect(() => {
     setMadeOffers(sellOffers);
@@ -48,13 +37,13 @@ const OfferReceivedCard = ({
 
     let isOfferFound = false;
     let sellOfferIndex = "";
-    let brokerFee = (parseFloat(buyOffer.amount - 12) * 0.01).toString();
+    let brokerFee = (parseFloat(buyOffer.amount) * 0.01).toString();
     for (const offer of madeOffers) {
       console.log("offer--->", offer);
       if (offer.NFTokenID === buyOffer.NFTokenID) {
         isOfferFound = true;
         sellOfferIndex = offer.nft_offer_index;
-        brokerFee = ((buyOffer.amount * 1 - 12) * 0.01).toFixed(0);
+        brokerFee = ( (buyOffer.amount * 1) * 0.01 ).toString();
         console.log("brokerFee--->", brokerFee, buyOffer.amount, offer.amount);
         break;
       }
@@ -106,7 +95,7 @@ const OfferReceivedCard = ({
       console.log("No matching offer found for the selected NFT.");
       let sellAmount = "0";
       sellAmount = (
-        (buyOffer.amount * 1 - 12 - (buyOffer.amount * 1 - 12) / 100) /
+        (buyOffer.amount * 1 - (buyOffer.amount * 1) / 100) /
         1000000
       ).toString();
 
@@ -192,7 +181,7 @@ const OfferReceivedCard = ({
       if (offer.NFTokenID === buyOffer.NFTokenID) {
         isOfferFound = true;
         sellOfferIndex = offer.nft_offer_index;
-        brokerFee = ((buyOffer.amount * 1 - 12) * 0.01).toFixed(0);
+        brokerFee = ( (buyOffer.amount * 1) * 0.01 ).toString();
         break;
       }
     }
@@ -310,8 +299,7 @@ const OfferReceivedCard = ({
       <div className="flex flex-col sm:items-end text-center sm:text-right w-full sm:w-auto gap-1">
         <div>
           <span className="text-xl font-bold text-gray-900 dark:text-white">
-            Amount: {(((buyOffer.amount * 1 - 12) * 1) / 1000000).toFixed(6)}
-            {/* Amount: {(((buyOffer.amount * 1 - 12) * 0.99) / 1000000).toFixed(6)} */}
+            Amount : {(buyOffer.amount * 1) / 1000000}
           </span>
           <p className="text-gray-500 dark:text-gray-400 text-sm">
             Received Offer
