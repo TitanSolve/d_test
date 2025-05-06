@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useWidgetApi } from '@matrix-widget-toolkit/react';
+import { useWidgetApi } from "@matrix-widget-toolkit/react";
 import { Tabs, Tab, Box, Typography, CircularProgress } from "@mui/material";
 import { motion, AnimatePresence } from "framer-motion";
 import { STATE_EVENT_ROOM_MEMBER } from "@matrix-widget-toolkit/api";
@@ -7,12 +7,12 @@ import axios from "axios";
 import NFTs from "../pages/NFTs";
 import Offers from "../pages/Offers";
 import API_URLS from "../config";
-import xrpl from "xrpl"
+import xrpl from "xrpl";
 import nft_default_pic from "../assets/nft.png";
 import { WidgetApi } from "matrix-widget-api";
 import { Tooltip } from "@mui/material";
 import { ThemeProvider, useTheme } from "../context/ThemeContext";
-import "./index.css"
+import "./index.css";
 import { Buffer } from "buffer";
 import LoadingOverlay from "./LoadingOverlay";
 
@@ -43,28 +43,28 @@ const getImageData = async (nft) => {
 const decodeCurrency = (currency) => {
   try {
     // Return standard 3-letter codes directly
-    if (currency.length <= 3) return currency
+    if (currency.length <= 3) return currency;
 
     // Check if it's a 40-char hex string
-    const isHex = /^[A-Fa-f0-9]{40}$/.test(currency)
-    if (!isHex) return currency
+    const isHex = /^[A-Fa-f0-9]{40}$/.test(currency);
+    if (!isHex) return currency;
 
     // Attempt to decode buffer to ASCII
-    const buf = Buffer.from(currency, 'hex')
-    const ascii = buf.toString('ascii').replace(/\0/g, '').trim()
+    const buf = Buffer.from(currency, "hex");
+    const ascii = buf.toString("ascii").replace(/\0/g, "").trim();
 
     // If the decoded value is printable ASCII, return it
-    const isPrintable = /^[\x20-\x7E]+$/.test(ascii)
-    return isPrintable ? ascii : currency
+    const isPrintable = /^[\x20-\x7E]+$/.test(ascii);
+    return isPrintable ? ascii : currency;
   } catch (e) {
-    return currency
+    return currency;
   }
-}
+};
 
 async function getTrustLinesAsArray(wallets) {
-  const xrpl = require('xrpl');
-  const client = new xrpl.Client(API_URLS.xrplMainnetUrl) // mainnet
-  await client.connect()
+  const xrpl = require("xrpl");
+  const client = new xrpl.Client(API_URLS.xrplMainnetUrl); // mainnet
+  await client.connect();
 
   // const info = await client.request({
   //   command: "account_info",
@@ -73,35 +73,35 @@ async function getTrustLinesAsArray(wallets) {
   // });
   // console.log("-------Account info: ", info);
 
-  const trustLinesArray = []
+  const trustLinesArray = [];
 
   for (const address of wallets) {
     try {
       const response = await client.request({
         command: "account_lines",
         account: address,
-      })
+      });
 
-      const decodedLines = response.result.lines.map(line => ({
+      const decodedLines = response.result.lines.map((line) => ({
         ...line,
         currency: line.currency,
-        decodedCurrency: decodeCurrency(line.currency)
-      }))
+        decodedCurrency: decodeCurrency(line.currency),
+      }));
 
       trustLinesArray.push({
         wallet: address,
-        trustLines: decodedLines
-      })
+        trustLines: decodedLines,
+      });
     } catch (err) {
       trustLinesArray.push({
         wallet: address,
         error: err.data?.error_message || err.message,
-        trustLines: []
-      })
+        trustLines: [],
+      });
     }
   }
 
-  await client.disconnect()
+  await client.disconnect();
   return trustLinesArray;
 }
 
@@ -119,34 +119,43 @@ const MatrixClientProvider = () => {
       setLoading(true);
       try {
         const res = await widgetApi.sendRoomEvent("m.room.message", {
-          body: "Hello from the widget!",});
+          msgtype: "m.notice",
+          body: "🔔 This is a system-like notice from the widget.",
+        });
         console.log("Response from sendRoomEvent: ", res);
 
-        
-        const events = await widgetApi.receiveStateEvents(STATE_EVENT_ROOM_MEMBER);
-        const usersList = events.map(item => ({
+        const events = await widgetApi.receiveStateEvents(
+          STATE_EVENT_ROOM_MEMBER
+        );
+        const usersList = events.map((item) => ({
           name: item.content.displayname,
-          userId: item.sender
+          userId: item.sender,
         }));
 
-        const userIds = usersList.map(member => member.userId.split(":")[0].replace("@", ""));
+        const userIds = usersList.map((member) =>
+          member.userId.split(":")[0].replace("@", "")
+        );
         console.log("userIds : ", userIds);
         const trustLinesArray = await getTrustLinesAsArray(userIds);
 
-        const own = usersList.find((u) => u.name === widgetApi.widgetParameters.displayName);
+        const own = usersList.find(
+          (u) => u.name === widgetApi.widgetParameters.displayName
+        );
         const ownWalletAddress = own.userId?.split(":")[0].replace("@", "");
         console.log("ownWalletAddress : ", ownWalletAddress);
         setMyWalletAddress(ownWalletAddress);
 
-        const usersWithTrustLines = usersList.map(user => {
-          const walletAddress = user.userId.split(":")[0].replace("@", "")
-          const trustData = trustLinesArray.find(t => t.wallet === walletAddress)
+        const usersWithTrustLines = usersList.map((user) => {
+          const walletAddress = user.userId.split(":")[0].replace("@", "");
+          const trustData = trustLinesArray.find(
+            (t) => t.wallet === walletAddress
+          );
           return {
             ...user,
             trustLines: trustData?.trustLines || [],
-            trustLineError: trustData?.error || null
-          }
-        })
+            trustLineError: trustData?.error || null,
+          };
+        });
 
         console.log("usersWithTrustLines : ", usersWithTrustLines);
 
@@ -156,12 +165,15 @@ const MatrixClientProvider = () => {
 
         for (const walletAddress of userIds) {
           try {
-            const response = await fetch(`${API_URLS.marketPlace}/api/v2/nfts?owner=${walletAddress}`, {
-              method: "GET",
-              headers: {
-                "x-bithomp-token": "0b833219-c387-4b3f-9606-0e4bd82e5862"
+            const response = await fetch(
+              `${API_URLS.marketPlace}/api/v2/nfts?owner=${walletAddress}`,
+              {
+                method: "GET",
+                headers: {
+                  "x-bithomp-token": "0b833219-c387-4b3f-9606-0e4bd82e5862",
+                },
               }
-            });
+            );
 
             if (!response.ok) {
               throw new Error("Failed to fetch NFT data");
@@ -172,24 +184,30 @@ const MatrixClientProvider = () => {
 
             const enrichedNfts = await Promise.all(
               nfts.map(async (nft) => {
-                const imageURI = nft.metadata?.image?.replace("ipfs://", "https://ipfs.io/ipfs/") || "";
+                const imageURI =
+                  nft.metadata?.image?.replace(
+                    "ipfs://",
+                    "https://ipfs.io/ipfs/"
+                  ) || "";
                 return {
                   ...nft,
                   imageURI,
                   ownerUsername: nft.ownerDetails?.username || null,
-                  collectionName: nft.collection || null
+                  collectionName: nft.collection || null,
                 };
               })
             );
 
             nft_list[walletAddress] = enrichedNfts; // Assign to wallet key
           } catch (error) {
-            console.error(`Error fetching NFTs for ${walletAddress}:`, error.message);
+            console.error(
+              `Error fetching NFTs for ${walletAddress}:`,
+              error.message
+            );
           }
         }
 
         console.log("Grouped NFT list by wallet:", nft_list);
-
 
         // const response = await fetch(`${API_URLS.backendUrl}/get-users-nfts`, {
         //   method: "POST",
@@ -220,7 +238,7 @@ const MatrixClientProvider = () => {
                 return {
                   ...nft,
                   userName,
-                  userId
+                  userId,
                 };
               })
             );
@@ -253,8 +271,6 @@ const MatrixClientProvider = () => {
         );
         console.log("Merged members with NFT data:", mergedMembers);
         setMyNftData(mergedMembers);
-
-
 
         //load Offer data
         // const client = new xrpl.Client(API_URLS.xrplMainnetUrl);
@@ -310,7 +326,6 @@ const MatrixClientProvider = () => {
         // }
 
         // console.log("incomingNFTs----->", incomingNFTs);
-
       } catch (error) {
         console.error("Error loading data:", error);
       } finally {
@@ -324,29 +339,33 @@ const MatrixClientProvider = () => {
   const panelVariants = {
     hidden: { opacity: 0, x: 50 },
     visible: { opacity: 1, x: 0 },
-    exit: { opacity: 0, x: -50 }
+    exit: { opacity: 0, x: -50 },
   };
 
   const refreshOffers = () => {
     console.log("Refresh Offers");
-  }
+  };
 
   return (
     <>
       {loading ? (
         <LoadingOverlay message="Loading..." />
       ) : (
-        < Box sx={{
-          width: "100%",
-          borderRadius: 2,
-          boxShadow: 1,
-          bgcolor: "background.paper",
-          transition: "background-color 0.3s ease",
-        }}
+        <Box
+          sx={{
+            width: "100%",
+            borderRadius: 2,
+            boxShadow: 1,
+            bgcolor: "background.paper",
+            transition: "background-color 0.3s ease",
+          }}
           className="dark:bg-[#15191E] dark:text-white bg-white text-black"
         >
           {/* Toggle Button */}
-          <Tooltip title={`Switch to ${theme === "light" ? "Dark" : "Light"} Mode`} arrow>
+          <Tooltip
+            title={`Switch to ${theme === "light" ? "Dark" : "Light"} Mode`}
+            arrow
+          >
             <button
               onClick={toggleTheme}
               className="fixed top-4 right-4 z-50 p-2 md:p-3 rounded-full bg-gray-100 dark:bg-[#15191E] text-gray-800 dark:text-white shadow-lg hover:scale-105 active:scale-95 transition-all duration-300 ease-in-out border border-gray-300 dark:border-gray-700 backdrop-blur-md"
@@ -362,41 +381,45 @@ const MatrixClientProvider = () => {
             textColor="primary"
             indicatorColor="primary"
           >
-            <Tab
-              label="NFTs"
-              className="text-black dark:text-white"
-            />
-            <Tab
-              label="Offers"
-              className="text-black dark:text-white"
-            />
+            <Tab label="NFTs" className="text-black dark:text-white" />
+            <Tab label="Offers" className="text-black dark:text-white" />
           </Tabs>
           <Box sx={{ p: 2, position: "relative", overflow: "hidden" }}>
             <AnimatePresence mode="wait">
               <motion.div
-                
                 variants={panelVariants}
                 initial="hidden"
                 animate="visible"
                 exit="exit"
                 transition={{ duration: 0.4, ease: "easeInOut" }}
               >
-                <div style={{ display: selectedIndex === 0 ? "block" : "none" }}>
-                  <NFTs membersList={membersList} myNftData={myNftData} getImageData={getImageData} wgtParameters={widgetApi.widgetParameters} refreshOffers={refreshOffers} />
+                <div
+                  style={{ display: selectedIndex === 0 ? "block" : "none" }}
+                >
+                  <NFTs
+                    membersList={membersList}
+                    myNftData={myNftData}
+                    getImageData={getImageData}
+                    wgtParameters={widgetApi.widgetParameters}
+                    refreshOffers={refreshOffers}
+                  />
                 </div>
-                <div style={{ display: selectedIndex === 1 ? "block" : "none" }}>
-                  <Offers myWalletAddress={myOwnWalletAddress} membersList={membersList} myNftData={myNftData} />
+                <div
+                  style={{ display: selectedIndex === 1 ? "block" : "none" }}
+                >
+                  <Offers
+                    myWalletAddress={myOwnWalletAddress}
+                    membersList={membersList}
+                    myNftData={myNftData}
+                  />
                 </div>
-
               </motion.div>
             </AnimatePresence>
           </Box>
-        </Box >
-      )
-      }
+        </Box>
+      )}
     </>
   );
 };
 
 export default MatrixClientProvider;
-
