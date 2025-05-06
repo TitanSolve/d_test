@@ -87,7 +87,8 @@ const ParticipantCard = ({
   const [sendRoomMsg, setSendRoomMsg] = useState(false);
 
   useEffect(() => {
-    if(sendRoomMsg !== "") {
+    if(sendRoomMsg && roomMessage !== "") {
+      console.log("sendRoomMsg", sendRoomMsg);
       widgetApi.sendRoomEvent("m.room.message", {
         body: roomMessage,
       });
