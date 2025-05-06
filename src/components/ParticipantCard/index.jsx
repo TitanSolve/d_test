@@ -87,9 +87,11 @@ const ParticipantCard = ({
   const [sendRoomMsg, setSendRoomMsg] = useState(false);
 
   useEffect(() => {
-    widgetApi.sendRoomEvent("m.room.message", {
-      body: roomMessage,
-    });
+    if(sendRoomMsg !== "") {
+      widgetApi.sendRoomEvent("m.room.message", {
+        body: roomMessage,
+      });
+    }
   }, [sendRoomMsg]);
 
   const toggleSellMode = () =>
