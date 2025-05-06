@@ -118,7 +118,6 @@ const MatrixClientProvider = () => {
     const loadData = async () => {
       setLoading(true);
       try {
-
         const events = await widgetApi.receiveStateEvents(
           STATE_EVENT_ROOM_MEMBER
         );
@@ -269,25 +268,90 @@ const MatrixClientProvider = () => {
 
         // load Offer data
         const xrpl = require("xrpl");
-        const client = new xrpl.Client(API_URLS.xrplMainnetUrl);
+
+        const client = new xrpl.Client("wss://s2.ripple.com"); // Or your API_URLS.xrplMainnetUrl
         await client.connect();
-        let allTxs = [];
+
+        const account = "rnPoaP9Hb2YZ1hj6JyYbHGRvUS69cyfqry";
+
+        const activeOffers = new Map(); // offerId -> offerData
         let marker = null;
 
         do {
           const response = await client.request({
             command: "account_tx",
-            account: "rnPoaP9Hb2YZ1hj6JyYbHGRvUS69cyfqry",
+            account,
             limit: 200,
-            ...(marker && { marker }) // only include marker if it exists
-          })
+            ...(marker && { marker }),
+          });
 
-          const txs = response.result.transactions
-          allTxs.push(...txs)
-          marker = response.result.marker // if there's more, marker will exist
-        } while (marker)
+          const txs = response.result.transactions;
 
-        console.log("Offers data:---------->", allTxs);
+          for (const txWrapper of txs) {
+            const tx = txWrapper.tx;
+            const meta = txWrapper.meta;
+
+            // ✅ Handle NFT offer creation
+            if (tx.TransactionType === "NFTokenCreateOffer") {
+              const offerNode = meta.AffectedNodes?.find(
+                (n) => n.CreatedNode?.LedgerEntryType === "NFTokenOffer"
+              );
+
+              const offerId = offerNode?.CreatedNode?.LedgerIndex;
+              const isSell =
+                (tx.Flags & xrpl.NFTokenCreateOfferFlags.tfSellNFToken) !== 0;
+
+              if (offerId) {
+                activeOffers.set(offerId, {
+                  offerId,
+                  nftId: tx.NFTokenID,
+                  amount: tx.Amount,
+                  isSell,
+                  destination: tx.Destination || null,
+                  expiration: tx.Expiration || null,
+                });
+              }
+            }
+
+            // ❌ Handle offer cancellation
+            if (
+              tx.TransactionType === "NFTokenCancelOffer" &&
+              tx.Account === account
+            ) {
+              for (const offerId of tx.NFTokenOffers || []) {
+                activeOffers.delete(offerId);
+              }
+            }
+
+            // ❌ Handle offer acceptance
+            if (tx.TransactionType === "NFTokenAcceptOffer") {
+              const buyId = tx.NFTokenBuyOffer;
+              const sellId = tx.NFTokenSellOffer;
+              if (buyId) activeOffers.delete(buyId);
+              if (sellId) activeOffers.delete(sellId);
+            }
+          }
+
+          marker = response.result.marker;
+        } while (marker);
+
+        await client.disconnect();
+
+        // 🔄 Separate into buy and sell offers
+        const buyOffers = [];
+        const sellOffers = [];
+
+        for (const offer of activeOffers.values()) {
+          if (offer.isSell) {
+            sellOffers.push(offer);
+          } else {
+            buyOffers.push(offer);
+          }
+        }
+
+        // ✅ Output active offers
+        console.log("✅ Active Buy Offers:", buyOffers);
+        console.log("✅ Active Sell Offers:", sellOffers);
 
         // const incomingNFTs = [];
         // for (const tx of allTxs) {
