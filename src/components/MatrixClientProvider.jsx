@@ -286,6 +286,7 @@ const MatrixClientProvider = () => {
           });
 
           const txs = response.result.transactions;
+          console.log("Transactions:", txs);
 
           for (const txWrapper of txs) {
             const tx = txWrapper.tx;
@@ -312,6 +313,8 @@ const MatrixClientProvider = () => {
                 });
               }
             }
+
+            console.log("tx-->", tx);
 
             // ❌ Handle offer cancellation
             if (
