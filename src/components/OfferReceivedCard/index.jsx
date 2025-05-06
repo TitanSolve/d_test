@@ -54,7 +54,7 @@ const OfferReceivedCard = ({
       if (offer.NFTokenID === buyOffer.NFTokenID) {
         isOfferFound = true;
         sellOfferIndex = offer.nft_offer_index;
-        brokerFee = ( (buyOffer.amount * 1 - 12 ) * 0.01).toFixed(0);
+        brokerFee = ((buyOffer.amount * 1 - 12) * 0.01).toFixed(0);
         console.log("brokerFee--->", brokerFee, buyOffer.amount, offer.amount);
         break;
       }
@@ -192,7 +192,7 @@ const OfferReceivedCard = ({
       if (offer.NFTokenID === buyOffer.NFTokenID) {
         isOfferFound = true;
         sellOfferIndex = offer.nft_offer_index;
-        brokerFee = ( (buyOffer.amount * 1 - 12 ) * 0.01).toFixed(0);
+        brokerFee = ((buyOffer.amount * 1 - 12) * 0.01).toFixed(0);
         break;
       }
     }
@@ -310,7 +310,7 @@ const OfferReceivedCard = ({
       <div className="flex flex-col sm:items-end text-center sm:text-right w-full sm:w-auto gap-1">
         <div>
           <span className="text-xl font-bold text-gray-900 dark:text-white">
-            Amount : {(buyOffer.amount * 1 - 12 (buyOffer.amount * 1 - 12) * 0.01 )   / 1000000}
+            Amount: {(((buyOffer.amount * 1 - 12) * 0.99) / 1000000).toFixed(6)}
           </span>
           <p className="text-gray-500 dark:text-gray-400 text-sm">
             Received Offer
