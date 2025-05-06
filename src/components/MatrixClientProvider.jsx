@@ -267,29 +267,26 @@ const MatrixClientProvider = () => {
         console.log("Merged members with NFT data:", mergedMembers);
         setMyNftData(mergedMembers);
 
-        //load Offer data
-        // const client = new xrpl.Client(API_URLS.xrplMainnetUrl);
-        // console.log("Connecting to ", API_URLS.xrplMainnetUrl);
-        // await client.connect();
-        // console.log("Connected to ", API_URLS.xrplMainnetUrl);
+        // load Offer data
+        const client = new xrpl.Client(API_URLS.xrplMainnetUrl);
+        await client.connect();
+        let allTxs = [];
+        let marker = null;
 
-        // let allTxs = [];
-        // let marker = null;
+        do {
+          const response = await client.request({
+            command: "account_tx",
+            account: "rnPoaP9Hb2YZ1hj6JyYbHGRvUS69cyfqry",
+            limit: 200,
+            ...(marker && { marker }) // only include marker if it exists
+          })
 
-        // do {
-        //   const response = await client.request({
-        //     command: "account_tx",
-        //     account: "r34VdeAwi8qs1KF3DTn5T3Y5UAPmbBNWpX",
-        //     limit: 200,
-        //     ...(marker && { marker }) // only include marker if it exists
-        //   })
+          const txs = response.result.transactions
+          allTxs.push(...txs)
+          marker = response.result.marker // if there's more, marker will exist
+        } while (marker)
 
-        //   const txs = response.result.transactions
-        //   allTxs.push(...txs)
-        //   marker = response.result.marker // if there's more, marker will exist
-        // } while (marker)
-
-        // console.log("Offers data:---------->", allTxs);
+        console.log("Offers data:---------->", allTxs);
 
         // const incomingNFTs = [];
         // for (const tx of allTxs) {
