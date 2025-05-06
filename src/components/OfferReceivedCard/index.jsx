@@ -170,9 +170,10 @@ const OfferReceivedCard = ({
       const data = await response.json();
       if (data) {
         console.log(data.refs, "data refs");
-        setQrCodeUrl(data.refs.qr_png);
-        setWebsocketUrl(data.refs.websocket_status);
-        setIsQrModalVisible(true);
+        onAction();
+        // setQrCodeUrl(data.refs.qr_png);
+        // setWebsocketUrl(data.refs.websocket_status);
+        // setIsQrModalVisible(true);
       }
     } catch (error) {
       console.error("Error during fetch:", error);
