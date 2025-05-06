@@ -53,6 +53,7 @@ const ParticipantCard = ({
   wgtParameters,
   getImageData,
   refreshOffers,
+  widgetApi,
 }) => {
   const [state, setState] = useState({
     sortOrder: "newest",
@@ -82,6 +83,14 @@ const ParticipantCard = ({
   const [messageBoxType, setMessageBoxType] = useState("success");
   const [messageBoxText, setMessageBoxText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [roomMessage, setRommMessage] = useState("");
+  const [sendRoomMsg, setSendRoomMsg] = useState(false);
+
+  useEffect(() => {
+    widgetApi.sendRoomEvent("m.room.message", {
+      body: roomMessage,
+    });
+  }, [sendRoomMsg]);
 
   const toggleSellMode = () =>
     setState((prev) => ({ ...prev, isSell: !prev.isSell }));
@@ -200,6 +209,7 @@ const ParticipantCard = ({
 
   const makeOffer = async (isSell, selectedNftForOffer, ownerAddress) => {
     console.log("isSell : ", isSell);
+    console.log("selectedNftForOffer : ", selectedNftForOffer);
     const myName = wgtParameters.displayName;
     const own = membersList.find((u) => u.name === myName /*"This Guy"*/);
     const ownWalletAddress = own?.userId?.split(":")[0].replace("@", "");
@@ -224,7 +234,6 @@ const ParticipantCard = ({
     if (isSell) {
       if (selectedNftForOffer.userName === wgtParameters.displayName) {
         //Create Sell Offer
-
         let offerAmount;
         if (state.token === "XRP") {
           offerAmount = state.amount;
@@ -255,6 +264,11 @@ const ParticipantCard = ({
 
           if (response.data) {
             console.log("Offer created:", response.data);
+
+            const msg = `🔔NFT Sell Offer Created\n${wgtParameters.displayName} has offered ${state.amount} ${state.token} for ${selectedNftForOffer.metadata.name}`;
+            console.log("msg-->", msg);
+            setRommMessage(msg);
+
             setQrCodeUrl(response.data.refs.qr_png);
             setWebsocketUrl(response.data.refs.websocket_status);
             setIsQrModalVisible(true);
@@ -313,6 +327,10 @@ const ParticipantCard = ({
           const data = await response.json();
           console.log("Success:", data);
           if (data) {
+            const msg = `🔔NFT Buy Offer Created\n${wgtParameters.displayName} has offered ${state.amount} ${state.token} for ${selectedNftForOffer.metadata.name} to ${selectedNftForOffer.userName}`;
+            console.log("msg-->", msg);
+            setRommMessage(msg);
+
             setQrCodeUrl(data.refs.qr_png);
             setWebsocketUrl(data.refs.websocket_status);
             setIsQrModalVisible(true);
@@ -354,6 +372,11 @@ const ParticipantCard = ({
         );
         setIsLoading(false);
         console.log(response, "response aman in user card");
+
+        const msg = `🔔NFT Transfer Offer Created\n${wgtParameters.displayName} has offered ${selectedNftForOffer.metadata.name} to ${selectedNftForOffer.userName}`;
+        console.log("msg-->", msg);
+        setRommMessage(msg);
+
         setQrCodeUrl(response.data.refs.qr_png);
         setWebsocketUrl(response.data.refs.websocket_status);
         setIsQrModalVisible(true);
@@ -379,6 +402,7 @@ const ParticipantCard = ({
           setMessageBoxType("success");
           setMessageBoxText("Transaction signed successfully.");
           setIsMessageBoxVisible(true);
+          setSendRoomMsg(true);
           ws.close();
         } else if (data.rejected) {
           setTransactionStatus("Transaction rejected");

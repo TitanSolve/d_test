@@ -118,11 +118,6 @@ const MatrixClientProvider = () => {
     const loadData = async () => {
       setLoading(true);
       try {
-        const res = await widgetApi.sendRoomEvent("m.room.message", {
-          msgtype: "m.notice",
-          body: "🔔 This is a system-like notice from the widget.",
-        });
-        console.log("Response from sendRoomEvent: ", res);
 
         const events = await widgetApi.receiveStateEvents(
           STATE_EVENT_ROOM_MEMBER
@@ -402,6 +397,7 @@ const MatrixClientProvider = () => {
                     getImageData={getImageData}
                     wgtParameters={widgetApi.widgetParameters}
                     refreshOffers={refreshOffers}
+                    widgetApi={widgetApi}
                   />
                 </div>
                 <div
