@@ -268,6 +268,7 @@ const MatrixClientProvider = () => {
         setMyNftData(mergedMembers);
 
         // load Offer data
+        const xrpl = require("xrpl");
         const client = new xrpl.Client(API_URLS.xrplMainnetUrl);
         await client.connect();
         let allTxs = [];
