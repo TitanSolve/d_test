@@ -310,7 +310,8 @@ const OfferReceivedCard = ({
       <div className="flex flex-col sm:items-end text-center sm:text-right w-full sm:w-auto gap-1">
         <div>
           <span className="text-xl font-bold text-gray-900 dark:text-white">
-            Amount: {(((buyOffer.amount * 1 - 12) * 0.99) / 1000000).toFixed(6)}
+            Amount: {(((buyOffer.amount * 1 - 12) * 1) / 1000000).toFixed(6)}
+            {/* Amount: {(((buyOffer.amount * 1 - 12) * 0.99) / 1000000).toFixed(6)} */}
           </span>
           <p className="text-gray-500 dark:text-gray-400 text-sm">
             Received Offer
