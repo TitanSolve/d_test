@@ -289,7 +289,7 @@ const MatrixClientProvider = () => {
           console.log("Transactions:", txs);
 
           for (const txWrapper of txs) {
-            const tx = txWrapper.tx;
+            const tx = txWrapper.tx_json;
             const meta = txWrapper.meta;
 
             // ✅ Handle NFT offer creation
@@ -313,8 +313,6 @@ const MatrixClientProvider = () => {
                 });
               }
             }
-
-            console.log("tx-->", tx);
 
             // ❌ Handle offer cancellation
             if (
