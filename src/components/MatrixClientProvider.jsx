@@ -118,6 +118,11 @@ const MatrixClientProvider = () => {
     const loadData = async () => {
       setLoading(true);
       try {
+        const res = await widgetApi.sendRoomEvent("m.room.message", {
+          body: "Hello from the widget!",});
+        console.log("Response from sendRoomEvent: ", res);
+
+        
         const events = await widgetApi.receiveStateEvents(STATE_EVENT_ROOM_MEMBER);
         const usersList = events.map(item => ({
           name: item.content.displayname,
