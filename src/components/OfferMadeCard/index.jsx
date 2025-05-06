@@ -15,6 +15,17 @@ const OfferMadeCard = ({ sellOffer, index, onAction, myWalletAddress }) => {
   const [isMessageBoxVisible, setIsMessageBoxVisible] = useState(false);
   const [messageBoxType, setMessageBoxType] = useState("success");
   const [messageBoxText, setMessageBoxText] = useState("");
+  const [roomMessage, setRommMessage] = useState("");
+    const [sendRoomMsg, setSendRoomMsg] = useState(false);
+  
+    useEffect(() => {
+      if(sendRoomMsg && roomMessage !== "") {
+        console.log("sendRoomMsg", sendRoomMsg);
+        widgetApi.sendRoomEvent("m.room.message", {
+          body: roomMessage,
+        });
+      }
+    }, [sendRoomMsg]);
 
 
   async function onCancelOffer() {

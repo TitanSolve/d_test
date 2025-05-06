@@ -6,7 +6,7 @@ import OfferReceivedToggle from "../../components/OfferReceivedToggle";
 import API_URLS from "../../config";
 import LoadingOverlay from "../../components/LoadingOverlay";
 
-const Offers = ({ membersList, myWalletAddress, myNftData }) => {
+const Offers = ({ membersList, myWalletAddress, myNftData, widgetApi }) => {
 
   const [nftBuyOffers, setNftBuyOffers] = useState([]);
   const [nftSellOffers, setNftSellOffers] = useState([]);
@@ -51,7 +51,6 @@ const Offers = ({ membersList, myWalletAddress, myNftData }) => {
             ...(nftMeta && {
               imageURI: nftMeta.imageURI,
               name: nftMeta.metadata?.name,
-              buyerName: nftMeta.userName,
               // nftMetadata: nftMeta,
             }),
           };
@@ -289,10 +288,10 @@ const Offers = ({ membersList, myWalletAddress, myNftData }) => {
             update
           </button>
 
-          <IncomingTransferToggle title="Incoming transfers" incomingTransfers={incomingTransferOffers} onAction={refreshOffers} myOwnWalletAddress={myWalletAddress} />
+          <IncomingTransferToggle title="Incoming transfers" incomingTransfers={incomingTransferOffers} onAction={refreshOffers} myOwnWalletAddress={myWalletAddress}/>
           <OutgoingTransferToggle title="Outgoing transfers" count={6} />
-          <OfferReceivedToggle title="Offers Received" madeOffers={nftSellOffers} receivedOffers={nftBuyOffers} myOwnWalletAddress={myWalletAddress} onAction={refreshOffers} refreshSellOffers={fetchSellOffers} />
-          <OfferMadeToggle title="Offers Made" madeOffers={nftSellOffers} myOwnWalletAddress={myWalletAddress} onAction={refreshOffers} />
+          <OfferReceivedToggle title="Offers Received" madeOffers={nftSellOffers} receivedOffers={nftBuyOffers} myOwnWalletAddress={myWalletAddress} onAction={refreshOffers} refreshSellOffers={fetchSellOffers} widgetApi={widgetApi}/>
+          <OfferMadeToggle title="Offers Made" madeOffers={nftSellOffers} myOwnWalletAddress={myWalletAddress} onAction={refreshOffers} widgetApi={widgetApi}/>
         </div>
       )}
     </>

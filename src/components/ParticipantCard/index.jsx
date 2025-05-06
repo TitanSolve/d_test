@@ -291,7 +291,7 @@ const ParticipantCard = ({
       else {
         let offerAmount;
         if (state.token === "XRP") {
-          offerAmount = (parseFloat(state.amount) * 1.01).toString();
+          offerAmount = (parseFloat(state.amount) * 1.01 + 0.000012).toString();
         } else {
           offerAmount = {
             currency: currentCurrency.currency,

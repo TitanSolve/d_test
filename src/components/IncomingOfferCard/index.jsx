@@ -4,12 +4,25 @@ import API_URLS from "../../config";
 import { Button } from "@mui/material";
 import TransactionModal from "../TransactionModal";
 
-
-const IncomingOfferCard = ({ transfer, index, onAction, myWalletAddress }) => {
+const IncomingOfferCard = ({
+  transfer,
+  index,
+  onAction,
+  myWalletAddress,
+}) => {
   const [qrCodeUrl, setQrCodeUrl] = useState("");
   const [websocketUrl, setWebsocketUrl] = useState("");
   const [transactionStatus, setTransactionStatus] = useState("");
   const [isQrModalVisible, setIsQrModalVisible] = useState(false);
+
+  useEffect(() => {
+    if (sendRoomMsg && roomMessage !== "") {
+      console.log("sendRoomMsg", sendRoomMsg);
+      widgetApi.sendRoomEvent("m.room.message", {
+        body: roomMessage,
+      });
+    }
+  }, [sendRoomMsg]);
 
   async function onAcceptTransfer() {
     console.log("Accept clicked for item:", transfer);
@@ -78,13 +91,19 @@ const IncomingOfferCard = ({ transfer, index, onAction, myWalletAddress }) => {
           className="w-16 h-16 rounded-lg object-cover shadow-sm"
         />
         <div className="flex flex-col text-center sm:text-left overflow-hidden">
-          <span className="font-semibold text-gray-900 dark:text-white text-base sm:text-lg truncate w-full">{transfer.name}</span>
+          <span className="font-semibold text-gray-900 dark:text-white text-base sm:text-lg truncate w-full">
+            {transfer.name}
+          </span>
           {/* <span className="text-gray-500 dark:text-gray-400 text-sm sm:text-base truncate w-full">Exclusive NFT Collection TextRP Feature Pack TextRP Feature Pack TextRP Feature Pack</span> */}
         </div>
       </div>
       <div className="flex flex-col items-center sm:items-end text-center sm:text-right w-full sm:w-auto">
-        <span className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white sm:whitespace-nowrap">0 XRP</span>
-        <span className="text-gray-500 dark:text-gray-400 text-sm sm:text-base sm:whitespace-nowrap">Transfer Offer</span>
+        <span className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white sm:whitespace-nowrap">
+          0 XRP
+        </span>
+        <span className="text-gray-500 dark:text-gray-400 text-sm sm:text-base sm:whitespace-nowrap">
+          Transfer Offer
+        </span>
       </div>
       <div className="flex flex-col sm:flex-row items-center justify-between w-full sm:w-auto space-y-4 sm:space-y-0 sm:space-x-4">
         <Button
@@ -93,7 +112,7 @@ const IncomingOfferCard = ({ transfer, index, onAction, myWalletAddress }) => {
           block
           style={{ borderRadius: "6px", alignItems: "center" }}
           className="dark:bg-green-600 dark:hover:bg-green-500"
-        // className="w-full sm:w-auto bg-red-500 text-white px-4 sm:px-5 py-2 rounded-lg hover:bg-red-600 transition shadow-md text-center">
+          // className="w-full sm:w-auto bg-red-500 text-white px-4 sm:px-5 py-2 rounded-lg hover:bg-red-600 transition shadow-md text-center">
         >
           Accept
         </Button>
@@ -102,7 +121,7 @@ const IncomingOfferCard = ({ transfer, index, onAction, myWalletAddress }) => {
           block
           style={{ borderRadius: "6px", alignItems: "center" }}
           className="dark:bg-red-600 dark:hover:bg-red-500"
-        // className="w-full sm:w-auto bg-red-500 text-white px-4 sm:px-5 py-2 rounded-lg hover:bg-red-600 transition shadow-md text-center">
+          // className="w-full sm:w-auto bg-red-500 text-white px-4 sm:px-5 py-2 rounded-lg hover:bg-red-600 transition shadow-md text-center">
         >
           Deny
         </Button>

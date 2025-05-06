@@ -407,6 +407,7 @@ const MatrixClientProvider = () => {
                     myWalletAddress={myOwnWalletAddress}
                     membersList={membersList}
                     myNftData={myNftData}
+                    widgetApi={widgetApi}
                   />
                 </div>
               </motion.div>

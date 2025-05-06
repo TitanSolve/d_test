@@ -63,7 +63,7 @@ const IncomingListToggle = ({ title, incomingTransfers, onAction, myOwnWalletAdd
           {count > 0 && (
             <div className="space-y-4">
               { incomingTransferOffers.map((incomingTransfer, index) => (
-                <IncomingOfferCard transfer={incomingTransfer} key={index} onAction={onAction} myWalletAddress={myOwnWalletAddress} />
+                <IncomingOfferCard transfer={incomingTransfer} key={index} onAction={onAction} myWalletAddress={myOwnWalletAddress}/>
               ))}
             </div>
           )}
