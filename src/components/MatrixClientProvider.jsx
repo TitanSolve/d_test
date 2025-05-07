@@ -284,6 +284,7 @@ const MatrixClientProvider = () => {
         });
 
         const allOffers = response.result.account_objects;
+        console.log("allOffers : ", allOffers);
 
         // Step 2: Split into ≤ 4 chunks for batch verification
         const chunks = [];
