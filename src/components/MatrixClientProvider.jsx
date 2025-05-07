@@ -269,12 +269,13 @@ const MatrixClientProvider = () => {
         // load Offer data
         const xrpl = require("xrpl");
 
-        const client = new xrpl.Client("wss://s2.ripple.com"); // Or your API_URLS.xrplMainnetUrl
+        const client = new xrpl.Client("wss://s2.ripple.com"); // or your API URL
         await client.connect();
 
         const account = "rnPoaP9Hb2YZ1hj6JyYbHGRvUS69cyfqry";
 
         const activeOffers = new Map(); // offerId -> offerData
+        const deletedOfferIds = new Set();
         let marker = null;
 
         do {
@@ -285,51 +286,39 @@ const MatrixClientProvider = () => {
             ...(marker && { marker }),
           });
 
-          const txs = response.result.transactions;
-          console.log("Transactions:", txs);
+          for (const tx of response.result.transactions) {
+            const txType = tx.tx_json.TransactionType;
+            const meta = tx.meta;
 
-          for (const txWrapper of txs) {
-            const tx = txWrapper.tx_json;
-            const meta = txWrapper.meta;
+            // Step 1: Track deleted offers (cancelled or accepted)
+            meta.AffectedNodes.forEach((node) => {
+              if (node.DeletedNode?.LedgerEntryType === "NFTokenOffer") {
+                deletedOfferIds.add(node.DeletedNode.LedgerIndex);
+              }
+            });
 
-            // ✅ Handle NFT offer creation
-            if (tx.TransactionType === "NFTokenCreateOffer") {
-              const offerNode = meta.AffectedNodes?.find(
-                (n) => n.CreatedNode?.LedgerEntryType === "NFTokenOffer"
+            // Step 2: Track created offers
+            if (txType === "NFTokenCreateOffer") {
+              const offerNode = meta.AffectedNodes.find(
+                (node) => node.CreatedNode?.LedgerEntryType === "NFTokenOffer"
               );
-
               const offerId = offerNode?.CreatedNode?.LedgerIndex;
-              const isSell =
-                (tx.Flags & xrpl.NFTokenCreateOfferFlags.tfSellNFToken) !== 0;
+              const fields = offerNode?.CreatedNode?.NewFields;
 
-              if (offerId) {
+              if (offerId && fields && !deletedOfferIds.has(offerId)) {
+                const isSell =
+                  (tx.tx_json.Flags & xrpl.NFTokenCreateOfferFlags.tfSellNFToken) !==
+                  0;
+
                 activeOffers.set(offerId, {
                   offerId,
-                  nftId: tx.NFTokenID,
-                  amount: tx.Amount,
+                  nftId: fields.NFTokenID,
+                  amount: fields.Amount,
+                  destination: fields.Destination || null,
                   isSell,
-                  destination: tx.Destination || null,
-                  expiration: tx.Expiration || null,
+                  owner: fields.Owner,
                 });
               }
-            }
-
-            // ❌ Handle offer cancellation
-            if (
-              tx.TransactionType === "NFTokenCancelOffer" &&
-              tx.Account === account
-            ) {
-              for (const offerId of tx.NFTokenOffers || []) {
-                activeOffers.delete(offerId);
-              }
-            }
-
-            // ❌ Handle offer acceptance
-            if (tx.TransactionType === "NFTokenAcceptOffer") {
-              const buyId = tx.NFTokenBuyOffer;
-              const sellId = tx.NFTokenSellOffer;
-              if (buyId) activeOffers.delete(buyId);
-              if (sellId) activeOffers.delete(sellId);
             }
           }
 
@@ -338,19 +327,20 @@ const MatrixClientProvider = () => {
 
         await client.disconnect();
 
-        // 🔄 Separate into buy and sell offers
+        // Group active offers
         const buyOffers = [];
         const sellOffers = [];
 
         for (const offer of activeOffers.values()) {
-          if (offer.isSell) {
-            sellOffers.push(offer);
-          } else {
-            buyOffers.push(offer);
+          if (!deletedOfferIds.has(offer.offerId)) {
+            if (offer.isSell) {
+              sellOffers.push(offer);
+            } else {
+              buyOffers.push(offer);
+            }
           }
         }
 
-        // ✅ Output active offers
         console.log("✅ Active Buy Offers:", buyOffers);
         console.log("✅ Active Sell Offers:", sellOffers);
 
