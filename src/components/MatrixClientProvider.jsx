@@ -285,7 +285,7 @@ const MatrixClientProvider = () => {
         await client.disconnect();
 
         // ✅ Extract and group
-        consol.log("objects--->", response.result);
+        console.log("objects--->", response.result);
         const allOffers = response.result.account_objects;
 
         const buyOffers = [];
