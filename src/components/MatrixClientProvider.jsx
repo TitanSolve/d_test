@@ -269,80 +269,48 @@ const MatrixClientProvider = () => {
         // load Offer data
         const xrpl = require("xrpl");
 
-        const client = new xrpl.Client("wss://s2.ripple.com"); // or your API URL
+        const client = new xrpl.Client("wss://s2.ripple.com"); // Or your own XRPL node
         await client.connect();
 
         const account = "rnPoaP9Hb2YZ1hj6JyYbHGRvUS69cyfqry";
 
-        const activeOffers = new Map(); // offerId -> offerData
-        const deletedOfferIds = new Set();
-        let marker = null;
-
-        do {
-          const response = await client.request({
-            command: "account_tx",
-            account,
-            limit: 200,
-            ...(marker && { marker }),
-          });
-
-          for (const tx of response.result.transactions) {
-            const txType = tx.tx_json.TransactionType;
-            const meta = tx.meta;
-
-            // Step 1: Track deleted offers (cancelled or accepted)
-            meta.AffectedNodes.forEach((node) => {
-              if (node.DeletedNode?.LedgerEntryType === "NFTokenOffer") {
-                deletedOfferIds.add(node.DeletedNode.LedgerIndex);
-              }
-            });
-
-            // Step 2: Track created offers
-            if (txType === "NFTokenCreateOffer") {
-              const offerNode = meta.AffectedNodes.find(
-                (node) => node.CreatedNode?.LedgerEntryType === "NFTokenOffer"
-              );
-              const offerId = offerNode?.CreatedNode?.LedgerIndex;
-              const fields = offerNode?.CreatedNode?.NewFields;
-
-              if (offerId && fields && !deletedOfferIds.has(offerId)) {
-                const isSell =
-                  (tx.tx_json.Flags & xrpl.NFTokenCreateOfferFlags.tfSellNFToken) !==
-                  0;
-
-                activeOffers.set(offerId, {
-                  offerId,
-                  nftId: fields.NFTokenID,
-                  amount: fields.Amount,
-                  destination: fields.Destination || null,
-                  isSell,
-                  owner: fields.Owner,
-                });
-              }
-            }
-          }
-
-          marker = response.result.marker;
-        } while (marker);
+        // ✅ This one call returns all active offers
+        const response = await client.request({
+          command: "account_objects",
+          account,
+          type: "nft_offer", // Only active NFT offers
+          ledger_index: "validated",
+        });
 
         await client.disconnect();
 
-        // Group active offers
+        // ✅ Extract and group
+        consol.log("objects--->", response.result);
+        const allOffers = response.result.account_objects;
+
         const buyOffers = [];
         const sellOffers = [];
 
-        for (const offer of activeOffers.values()) {
-          if (!deletedOfferIds.has(offer.offerId)) {
-            if (offer.isSell) {
-              sellOffers.push(offer);
-            } else {
-              buyOffers.push(offer);
-            }
+        for (const offer of allOffers) {
+          const isSell =
+            (offer.Flags & xrpl.NFTokenCreateOfferFlags.tfSellNFToken) !== 0;
+          const parsed = {
+            offerId: offer.index,
+            nftId: offer.NFTokenID,
+            amount: offer.Amount,
+            destination: offer.Destination || null,
+            isSell,
+            owner: offer.Owner,
+          };
+          if (isSell) {
+            sellOffers.push(parsed);
+          } else {
+            buyOffers.push(parsed);
           }
         }
 
-        console.log("✅ Active Buy Offers:", buyOffers);
-        console.log("✅ Active Sell Offers:", sellOffers);
+        console.log("✅ ACTIVE BUY OFFERS:", buyOffers);
+        console.log("✅ ACTIVE SELL OFFERS:", sellOffers);
 
         // const incomingNFTs = [];
         // for (const tx of allTxs) {
