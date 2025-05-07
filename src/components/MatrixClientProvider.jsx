@@ -271,7 +271,7 @@ const MatrixClientProvider = () => {
         const client = new xrpl.Client("wss://s2.ripple.com");
         await client.connect();
 
-        const account = "r34VdeAwi8qs1KF3DTn5T3Y5UAPmbBNWpX";
+        const account = "rnPoaP9Hb2YZ1hj6JyYbHGRvUS69cyfqry";
 
         // 1️⃣ Get all your NFT offers
         const response = await client.request({
