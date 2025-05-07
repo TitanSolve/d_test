@@ -283,6 +283,7 @@ const MatrixClientProvider = () => {
         });
 
         const allOffers = response.result.account_objects;
+        console.log("all Offers--->", allOffers);
 
         // 2️⃣ Split into 4 groups (for ≤ 4 ledger_entry batch calls)
         const chunks = [];
