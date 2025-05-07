@@ -304,6 +304,8 @@ const MatrixClientProvider = () => {
             )
           );
 
+          console.log("subrequests--->", subrequests);
+
           for (const result of subrequests) {
             if (result.status === "fulfilled" && result.value) {
               const offer = result.value;
