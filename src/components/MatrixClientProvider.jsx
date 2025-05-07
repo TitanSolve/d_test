@@ -275,18 +275,7 @@ const MatrixClientProvider = () => {
         const account = "r34VdeAwi8qs1KF3DTn5T3Y5UAPmbBNWpX";
         const destinationAddress = "r9syfthWEycVKuy9bz2awsxrTNK3NBBT6h";
 
-        // Step 1: Get all NFTs currently owned by the account
-        const nftResponse = await client.request({
-          command: "account_nfts",
-          account,
-          ledger_index: "validated",
-        });
-
-        const ownedNftIds = new Set(
-          nftResponse.result.account_nfts.map((nft) => nft.NFTokenID)
-        );
-
-        // Step 2: Get all NFT offers created by this account
+        // Step 1: Get all NFT offers from account
         const response = await client.request({
           command: "account_objects",
           account,
@@ -296,7 +285,7 @@ const MatrixClientProvider = () => {
 
         const allOffers = response.result.account_objects;
 
-        // Step 3: Split into ≤ 4 chunks for batch verification
+        // Step 2: Split into ≤ 4 chunks for batch verification
         const chunks = [];
         const chunkSize = Math.ceil(allOffers.length / 4);
         for (let i = 0; i < allOffers.length; i += chunkSize) {
@@ -307,7 +296,7 @@ const MatrixClientProvider = () => {
         const rippleEpoch = 946684800;
         const now = Math.floor(Date.now() / 1000);
 
-        // Step 4: Check each offer still exists and is valid
+        // Step 3: Check each offer still exists and is valid
         for (const chunk of chunks) {
           const subrequests = await Promise.allSettled(
             chunk.map((offer) =>
@@ -329,10 +318,9 @@ const MatrixClientProvider = () => {
               const isValid =
                 typeof offer.Amount === "string" &&
                 offer.NFTokenID &&
-                offer.Owner === account &&
                 offer.Destination === destinationAddress &&
                 (!offer.Expiration || offer.Expiration > now - rippleEpoch) &&
-                ownedNftIds.has(offer.NFTokenID); // ✅ You still own the NFT
+                (!isSell || offer.Owner === account); // ✅ Only enforce owner for SELL offers
 
               if (isValid) {
                 confirmedOffers.push({
@@ -350,17 +338,17 @@ const MatrixClientProvider = () => {
 
         await client.disconnect();
 
-        // Step 5: Split offers
+        // Step 4: Split offers
         const sellOffers = confirmedOffers.filter((o) => o.isSell);
         const buyOffers = confirmedOffers.filter((o) => !o.isSell);
 
         // ✅ Output
-        console.log(
-          `✅ VALID SELL OFFERS owned by ${account} (you still hold the NFT):`
-        );
+        console.log(`✅ VALID SELL OFFERS (owner === account) → ${account}`);
         console.log(sellOffers);
 
-        console.log(`✅ VALID BUY OFFERS owned by ${account} (for your NFTs):`);
+        console.log(
+          `✅ VALID BUY OFFERS (may be others' offers targeting your NFTs)`
+        );
         console.log(buyOffers);
 
         // const incomingNFTs = [];
