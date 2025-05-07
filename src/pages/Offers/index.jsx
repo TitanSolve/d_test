@@ -255,7 +255,7 @@ const Offers = ({ membersList, myWalletAddress, myNftData, widgetApi }) => {
     console.log("usersWalletAddresses", usersWalletAddresses);
 
     const payload = {
-      wallets: userIds,
+      wallets: usersWalletAddresses,
     };
     const response = await fetch(
       `${API_URLS.backendUrl}/getUserOfferForWallets`,
