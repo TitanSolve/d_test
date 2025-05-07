@@ -280,7 +280,8 @@ const MatrixClientProvider = () => {
             body: JSON.stringify(payload),
           }
         );
-        console.log(response, "users offers");
+        const data = await response.json(); // ✅ parse the JSON body
+        console.log("✅ Users' offers:", data);
 
         // load Offer data
         // const xrpl = require("xrpl");
