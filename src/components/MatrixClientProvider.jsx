@@ -269,48 +269,68 @@ const MatrixClientProvider = () => {
         // load Offer data
         const xrpl = require("xrpl");
 
-        const client = new xrpl.Client("wss://s2.ripple.com"); // Or your own XRPL node
+        const client = new xrpl.Client("wss://s2.ripple.com");
         await client.connect();
 
         const account = "rnPoaP9Hb2YZ1hj6JyYbHGRvUS69cyfqry";
 
-        // ✅ This one call returns all active offers
+        // 1️⃣ Get all your NFT offers
         const response = await client.request({
           command: "account_objects",
           account,
-          type: "nft_offer", // Only active NFT offers
+          type: "nft_offer",
           ledger_index: "validated",
         });
 
-        await client.disconnect();
-
-        // ✅ Extract and group
-        console.log("objects--->", response.result);
         const allOffers = response.result.account_objects;
 
-        const buyOffers = [];
-        const sellOffers = [];
+        // 2️⃣ Split into 4 groups (for ≤ 4 ledger_entry batch calls)
+        const chunks = [];
+        const chunkSize = Math.ceil(allOffers.length / 4);
+        for (let i = 0; i < allOffers.length; i += chunkSize) {
+          chunks.push(allOffers.slice(i, i + chunkSize));
+        }
 
-        for (const offer of allOffers) {
-          const isSell =
-            (offer.Flags & xrpl.NFTokenCreateOfferFlags.tfSellNFToken) !== 0;
-          const parsed = {
-            offerId: offer.index,
-            nftId: offer.NFTokenID,
-            amount: offer.Amount,
-            destination: offer.Destination || null,
-            isSell,
-            owner: offer.Owner,
-          };
-          if (isSell) {
-            sellOffers.push(parsed);
-          } else {
-            buyOffers.push(parsed);
+        const confirmedOffers = [];
+
+        for (const chunk of chunks) {
+          // Batch verify existence via ledger_entry
+          const subrequests = await Promise.allSettled(
+            chunk.map((offer) =>
+              client
+                .request({ command: "ledger_entry", index: offer.index })
+                .then((res) => ({ ok: true, offer: res.result.node }))
+                .catch(() => null)
+            )
+          );
+
+          for (const result of subrequests) {
+            if (result.status === "fulfilled" && result.value?.offer) {
+              const offer = result.value.offer;
+              const isSell =
+                (offer.Flags & xrpl.NFTokenCreateOfferFlags.tfSellNFToken) !==
+                0;
+
+              confirmedOffers.push({
+                offerId: offer.index,
+                nftId: offer.NFTokenID,
+                amount: offer.Amount,
+                isSell,
+                destination: offer.Destination || null,
+                owner: offer.Owner,
+              });
+            }
           }
         }
 
-        console.log("✅ ACTIVE BUY OFFERS:", buyOffers);
-        console.log("✅ ACTIVE SELL OFFERS:", sellOffers);
+        await client.disconnect();
+
+        // 3️⃣ Group into buy/sell
+        const buyOffers = confirmedOffers.filter((o) => !o.isSell);
+        const sellOffers = confirmedOffers.filter((o) => o.isSell);
+
+        console.log("✅ Active BUY OFFERS:", buyOffers);
+        console.log("✅ Active SELL OFFERS:", sellOffers);
 
         // const incomingNFTs = [];
         // for (const tx of allTxs) {
