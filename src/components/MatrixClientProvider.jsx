@@ -266,23 +266,6 @@ const MatrixClientProvider = () => {
         console.log("Merged members with NFT data:", mergedMembers);
         setMyNftData(mergedMembers);
 
-
-        const payload = {
-          wallets: userIds,
-        };
-        const response = await fetch(
-          `${API_URLS.backendUrl}/getUserOfferForWallets`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(payload),
-          }
-        );
-        const data = await response.json(); // ✅ parse the JSON body
-        console.log("✅ Users' offers:", data);
-
         // load Offer data
         // const xrpl = require("xrpl");
 

@@ -7,7 +7,6 @@ import API_URLS from "../../config";
 import LoadingOverlay from "../../components/LoadingOverlay";
 
 const Offers = ({ membersList, myWalletAddress, myNftData, widgetApi }) => {
-
   const [nftBuyOffers, setNftBuyOffers] = useState([]);
   const [nftSellOffers, setNftSellOffers] = useState([]);
   const [incomingTransferOffers, setIncomingTransferOffers] = useState([]);
@@ -24,7 +23,10 @@ const Offers = ({ membersList, myWalletAddress, myNftData, widgetApi }) => {
     console.log("Fetching NFT buy offers...", requestOptions);
 
     try {
-      const response = await fetch(`${API_URLS.backendUrl}/getUserNftsWithBuyOffers`, requestOptions);
+      const response = await fetch(
+        `${API_URLS.backendUrl}/getUserNftsWithBuyOffers`,
+        requestOptions
+      );
       const data = await response.json();
       console.log("getUserNftsWithBuyOffers ---->", data);
 
@@ -74,7 +76,10 @@ const Offers = ({ membersList, myWalletAddress, myNftData, widgetApi }) => {
     };
     console.log("Fetching NFT sell offers...", requestOptions);
     try {
-      const response = await fetch(`${API_URLS.backendUrl}/getMembersNftsWithSellOffers`, requestOptions);
+      const response = await fetch(
+        `${API_URLS.backendUrl}/getMembersNftsWithSellOffers`,
+        requestOptions
+      );
       const data = await response.json();
 
       const memberData = myNftData.find(
@@ -171,7 +176,10 @@ const Offers = ({ membersList, myWalletAddress, myNftData, widgetApi }) => {
         body: JSON.stringify({ address: tempAddress }),
       };
 
-      const response = await fetch(`${API_URLS.backendUrl}/getMembersNftsWithSellOffers`, requestOptions);
+      const response = await fetch(
+        `${API_URLS.backendUrl}/getMembersNftsWithSellOffers`,
+        requestOptions
+      );
       const data = await response.json();
       const memberData = myNftData.find((u) => u.userId === currentAddress);
 
@@ -188,20 +196,20 @@ const Offers = ({ membersList, myWalletAddress, myNftData, widgetApi }) => {
 
       // ✅ Build filtered offers and merge matching NFT metadata
       const filteredOffers = data.flatMap((item) =>
-        item.NftBuyOffers
-          .filter((offer) => offer.destination === myWalletAddress)
-          .map((offer) => {
-            const nftMeta = nftMap[item.NFTokenID];
-            return {
-              ...offer,
-              URI: item.URI,
-              NFTokenID: item.NFTokenID,
-              ...(nftMeta && {
-                imageURI: nftMeta.imageURI,
-                name: nftMeta.metadata?.name,
-              }),
-            };
-          })
+        item.NftBuyOffers.filter(
+          (offer) => offer.destination === myWalletAddress
+        ).map((offer) => {
+          const nftMeta = nftMap[item.NFTokenID];
+          return {
+            ...offer,
+            URI: item.URI,
+            NFTokenID: item.NFTokenID,
+            ...(nftMeta && {
+              imageURI: nftMeta.imageURI,
+              name: nftMeta.metadata?.name,
+            }),
+          };
+        })
       );
       return filteredOffers;
     } catch (error) {
@@ -239,12 +247,59 @@ const Offers = ({ membersList, myWalletAddress, myNftData, widgetApi }) => {
   //   }
   // };
 
+  const fetchAllUsersOfers = async () => {
+    const usersWalletAddresses = membersList.map((member) => {
+      const address = member.userId.split(":")[0].replace("@", "");
+      return address;
+    });
+    console.log("usersWalletAddresses", usersWalletAddresses);
+
+    const payload = {
+      wallets: userIds,
+    };
+    const response = await fetch(
+      `${API_URLS.backendUrl}/getUserOfferForWallets`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      }
+    );
+    const offerData = await response.json(); // [{ wallet, offers: [...] }]
+    console.log("✅ Users' offers:", offerData);
+
+    // Step 2: Build NFT mapping from mergedMembers
+    const walletNftMap = {};
+    myNftData.forEach((member) => {
+      const wallet = member.walletAddress;
+      const nftIds = member.groupedNfts.flatMap((group) =>
+        group.nfts.map((nft) => nft.NFTokenID)
+      );
+      walletNftMap[wallet] = new Set(nftIds);
+    });
+    console.log("NFT mapping for each wallet:", walletNftMap);
+
+    // Step 3: Match each offer to a wallet's NFTs
+    const result = offerData.map(({ wallet, offers }) => {
+      const nftSet = walletNftMap[wallet] || new Set();
+      const relatedOffers = offers.filter((offer) => nftSet.has(offer.nftId));
+
+      return {
+        wallet,
+        relatedOffers,
+      };
+    });
+
+    console.log("🎯 Offers matched to each wallet's NFTs:", result);
+  };
+
   const refreshOffers = async () => {
     console.log("Offers->refreshOffers", myWalletAddress);
     setLoading(true);
 
     try {
-
       // Transfer----------
       // const allOffersArrays = await Promise.all(
       //   membersList.map((member) => fetchIncomingTransferOffers(member.userId))
@@ -256,12 +311,14 @@ const Offers = ({ membersList, myWalletAddress, myNftData, widgetApi }) => {
       // ---------------------------
 
       //Sell Offers
-      await fetchSellOffers();
+      // await fetchSellOffers();
       //---------------------
 
       //Buy Offers
-      await fetchReceivedBuyOffers();
+      // await fetchReceivedBuyOffers();
       //---------------------
+
+      await fetchAllUsersOfers();
     } catch (error) {
       console.error("Error refreshing offers:", error);
     } finally {
@@ -288,10 +345,29 @@ const Offers = ({ membersList, myWalletAddress, myNftData, widgetApi }) => {
             update
           </button>
 
-          <IncomingTransferToggle title="Incoming transfers" incomingTransfers={incomingTransferOffers} onAction={refreshOffers} myOwnWalletAddress={myWalletAddress}/>
+          <IncomingTransferToggle
+            title="Incoming transfers"
+            incomingTransfers={incomingTransferOffers}
+            onAction={refreshOffers}
+            myOwnWalletAddress={myWalletAddress}
+          />
           <OutgoingTransferToggle title="Outgoing transfers" count={6} />
-          <OfferReceivedToggle title="Offers Received" madeOffers={nftSellOffers} receivedOffers={nftBuyOffers} myOwnWalletAddress={myWalletAddress} onAction={refreshOffers} refreshSellOffers={fetchSellOffers} widgetApi={widgetApi}/>
-          <OfferMadeToggle title="Offers Made" madeOffers={nftSellOffers} myOwnWalletAddress={myWalletAddress} onAction={refreshOffers} widgetApi={widgetApi}/>
+          <OfferReceivedToggle
+            title="Offers Received"
+            madeOffers={nftSellOffers}
+            receivedOffers={nftBuyOffers}
+            myOwnWalletAddress={myWalletAddress}
+            onAction={refreshOffers}
+            refreshSellOffers={fetchSellOffers}
+            widgetApi={widgetApi}
+          />
+          <OfferMadeToggle
+            title="Offers Made"
+            madeOffers={nftSellOffers}
+            myOwnWalletAddress={myWalletAddress}
+            onAction={refreshOffers}
+            widgetApi={widgetApi}
+          />
         </div>
       )}
     </>
