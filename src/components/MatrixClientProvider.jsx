@@ -299,14 +299,14 @@ const MatrixClientProvider = () => {
             chunk.map((offer) =>
               client
                 .request({ command: "ledger_entry", index: offer.index })
-                .then((res) => ({ ok: true, offer: res.result.node }))
+                .then((res) => res.result.node)
                 .catch(() => null)
             )
           );
 
           for (const result of subrequests) {
-            if (result.status === "fulfilled" && result.value?.offer) {
-              const offer = result.value.offer;
+            if (result.status === "fulfilled" && result.value) {
+              const offer = result.value;
               const isSell =
                 (offer.Flags & xrpl.NFTokenCreateOfferFlags.tfSellNFToken) !==
                 0;
