@@ -328,14 +328,14 @@ const Offers = ({ membersList, myWalletAddress, myNftData, widgetApi }) => {
         return offer.receivedOffers;
       }
     });
-    setNftSellOffers(madeOffers_);
+    setNftSellOffers(madeOffers_ ? madeOffers_ : []);
 
     const receivedOffers_ = result.find((offer) => {
       if (offer.wallet === myWalletAddress) {
         return offer.sellOffers;
       }
     });
-    setNftBuyOffers(receivedOffers_);
+    setNftBuyOffers(receivedOffers_? receivedOffers_ : []);
   };
 
   const refreshOffers = async () => {
