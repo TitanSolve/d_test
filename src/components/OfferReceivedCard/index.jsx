@@ -48,21 +48,21 @@ const OfferReceivedCard = ({
 
     let isOfferFound = false;
     let sellOfferIndex = "";
-    let brokerFee = ((buyOffer.amount * 1 - 12) / 1.01 * 0.01).toFixed(0);
+    let brokerFee = ((buyOffer.offer.amount * 1 - 12) / 1.01 * 0.01).toFixed(0);
     for (const offer of madeOffers) {
       console.log("offer--->", offer);
-      if (offer.NFTokenID === buyOffer.NFTokenID) {
+      if (offer.nft.nftokenID === buyOffer.nft.nftokenID) {
         isOfferFound = true;
-        sellOfferIndex = offer.nft_offer_index;
-        brokerFee = ((buyOffer.amount * 1 - 12) / 1.01 * 0.01).toFixed(0);
-        console.log("brokerFee--->", brokerFee, buyOffer.amount, offer.amount);
+        sellOfferIndex = offer.offer.offerId;
+        brokerFee = ((buyOffer.offer.amount * 1 - 12) / 1.01 * 0.01).toFixed(0);
+        console.log("brokerFee--->", brokerFee, buyOffer.offer.amount, offer.offer.amount);
         break;
       }
     }
     if (isOfferFound) {
       const requestBody = {
-        nftId: buyOffer.NFTokenID,
-        buyOfferId: buyOffer.nft_offer_index,
+        nftId: buyOffer.nft.nftokenID,
+        buyOfferId: buyOffer.offer.offerId,
         sellOfferId: sellOfferIndex,
         brokerFee: brokerFee,
       };
@@ -106,11 +106,11 @@ const OfferReceivedCard = ({
       console.log("No matching offer found for the selected NFT.");
       let sellAmount = "0";
       sellAmount = (
-        (buyOffer.amount * 1 - 12) / 1.01 / 1000000
+        (buyOffer.offer.amount * 1 - 12) / 1.01 / 1000000
       ).toString();
 
       const payload = {
-        nft: buyOffer.NFTokenID,
+        nft: buyOffer.nft.nftokenID,
         amount: sellAmount,
         receiver: "all",
         sender: myWalletAddress,
@@ -150,8 +150,8 @@ const OfferReceivedCard = ({
     console.log("Cancel clicked for item:", buyOffer);
     setTransactionStatus("");
     const requestBody = {
-      account: buyOffer.owner,
-      offerId: buyOffer.nft_offer_index,
+      account: buyOffer.offer.offerOwner,
+      offerId: buyOffer.offer.offerId,
     };
     try {
       const response = await fetch(`${API_URLS.backendUrl}/cancel-nft-offer`, {
@@ -189,17 +189,17 @@ const OfferReceivedCard = ({
     let brokerFee = (parseFloat(buyOffer.amount) * 1.01).toString();
     for (const offer of refreshedSellOffers) {
       console.log("offer--->", offer);
-      if (offer.NFTokenID === buyOffer.NFTokenID) {
+      if (offer.nft.nftokenID === buyOffer.nft.nftokenID) {
         isOfferFound = true;
-        sellOfferIndex = offer.nft_offer_index;
-        brokerFee = ((buyOffer.amount * 1 - 12) / 1.01 * 0.01).toFixed(0);
+        sellOfferIndex = offer.offer.offerId;
+        brokerFee = ((buyOffer.offer.amount * 1 - 12) / 1.01 * 0.01).toFixed(0);
         break;
       }
     }
     if (isOfferFound) {
       const requestBody = {
-        nftId: buyOffer.NFTokenID,
-        buyOfferId: buyOffer.nft_offer_index,
+        nftId: buyOffer.nft.nftokenID,
+        buyOfferId: buyOffer.offer.offerId,
         sellOfferId: sellOfferIndex,
         brokerFee: brokerFee,
       };

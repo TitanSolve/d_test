@@ -30,8 +30,8 @@ const OfferMadeCard = ({ sellOffer, index, onAction, myWalletAddress }) => {
     console.log("Cancel clicked for item:", sellOffer);
     setTransactionStatus("");
     const requestBody = {
-      account: sellOffer.owner,
-      offerId: sellOffer.nft_offer_index,
+      account: sellOffer.offer.offerOwner,
+      offerId: sellOffer.offer.offerId,
     };
     try {
       setIsLoading(true);
@@ -111,7 +111,7 @@ const OfferMadeCard = ({ sellOffer, index, onAction, myWalletAddress }) => {
                 Amount : {(sellOffer.offer.amount * 1) / 1000000}
               </span>
               <p className="text-gray-500 dark:text-gray-400 text-sm">
-                My Sell Offer
+                { sellOffer.offer.isSell ? "My Sell Offer" : "My Buy Offer" }
               </p>
             </div>
             <div className="flex flex-col sm:flex-row items-center justify-between w-full sm:w-auto space-y-4 sm:space-y-0 sm:space-x-4">
