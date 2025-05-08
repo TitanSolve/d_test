@@ -275,7 +275,7 @@ const Offers = ({ membersList, myWalletAddress, myNftData, widgetApi }) => {
     myNftData.forEach((member) => {
       const wallet = member.walletAddress;
       const nftIds = member.groupedNfts.flatMap((group) =>
-        group.nfts.map((nft) => nft.NFTokenID)
+        group.nfts.map((nft) => nft.nftokenID)
       );
       walletNftMap[wallet] = new Set(nftIds);
     });
