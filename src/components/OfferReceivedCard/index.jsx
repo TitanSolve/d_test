@@ -295,7 +295,7 @@ const OfferReceivedCard = ({
     <div className="flex flex-col sm:flex-row items-center bg-white dark:bg-[#1a1d21] p-5 rounded-2xl shadow-xl w-full max-w-3xl border border-gray-200 dark:border-gray-700 gap-1 transition-all duration-300">
       <div className="w-full sm:w-auto flex justify-center">
         <img
-          src={buyOffer.imageURI}
+          src={buyOffer.nft.imageURI}
           alt="NFT Preview"
           className="w-32 h-32 sm:w-40 sm:h-40 rounded-xl object-cover shadow-md border border-gray-300 dark:border-gray-600"
         />
@@ -303,14 +303,14 @@ const OfferReceivedCard = ({
 
       <div className="flex flex-col text-center sm:text-left gap-1 flex-grow">
         <span className="font-semibold text-gray-900 dark:text-white text-lg sm:text-xl truncate">
-          {buyOffer.name}
+          {buyOffer.nft.name}
         </span>
       </div>
 
       <div className="flex flex-col sm:items-end text-center sm:text-right w-full sm:w-auto gap-1">
         <div>
           <span className="text-xl font-bold text-gray-900 dark:text-white">
-            Amount: {(((buyOffer.amount * 1 - 12) / 1.01) / 1000000).toFixed(6)}
+            Amount: {(((buyOffer.offer.amount * 1 - 12) / 1.01) / 1000000).toFixed(6)}
             {/* Amount: {(((buyOffer.amount * 1 - 12) * 0.99) / 1000000).toFixed(6)} */}
           </span>
           <p className="text-gray-500 dark:text-gray-400 text-sm">

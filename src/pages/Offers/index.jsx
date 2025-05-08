@@ -328,7 +328,7 @@ const Offers = ({ membersList, myWalletAddress, myNftData, widgetApi }) => {
         return offer.receivedOffers;
       }
     });
-    setNftBuyOffers(myBuyOffer);
+    setNftSellOffers(madeOffers_);
 
     const receivedOffers_ = result.find((offer) => {
       if (offer.wallet === myWalletAddress) {
