@@ -37,7 +37,7 @@ const OfferReceivedCard = ({
 
   useEffect(() => {
     setMadeOffers(sellOffers);
-    console.log("sellOffer-->", sellOffers);
+    console.log("OfferReceivedCard->sellOffer-->", sellOffers);
   }, [sellOffers]);
 
   async function onAcceptOffer() {

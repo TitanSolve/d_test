@@ -13,7 +13,7 @@ const OfferReceivedToggle = ({ title, madeOffers, receivedOffers, onAction, myOw
   useEffect(() => {
     setBuyOffers(receivedOffers);
     setCount(receivedOffers.length);
-    console.log("buyOffer-->", receivedOffers);
+    console.log("OfferReceivedToggle->buyOffer-->", receivedOffers);
   }, [receivedOffers]);
 
   useEffect(() => {
