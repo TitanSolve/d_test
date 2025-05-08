@@ -323,19 +323,12 @@ const Offers = ({ membersList, myWalletAddress, myNftData, widgetApi }) => {
     console.log("🎯 Final user offers (made + received):", result);
 
     setUsersOffer(result);
-    const madeOffers_ = result.find((offer) => {
-      if (offer.wallet === myWalletAddress) {
-        return offer.madeOffers;
-      }
-    });
+    const offerForMyWallet = result.find((offer) => offer.wallet === myWalletAddress);
+    const madeOffers_ = offerForMyWallet ? offerForMyWallet.madeOffers : [];
     console.log("madeOffers", madeOffers_);
     setNftSellOffers(madeOffers_ ? madeOffers_ : []);
 
-    const receivedOffers_ = result.find((offer) => {
-      if (offer.wallet === myWalletAddress) {
-        return offer.receivedOffers;
-      }
-    });
+    const receivedOffers_ = offerForMyWallet ? offerForMyWallet.receivedOffers : [];
     console.log("receivedOffers", receivedOffers_);
     setNftBuyOffers(receivedOffers_? receivedOffers_ : []);
   };
