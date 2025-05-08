@@ -284,13 +284,22 @@ const Offers = ({ membersList, myWalletAddress, myNftData, widgetApi }) => {
     // Step 3: Match each offer to a wallet's NFTs
     const result = offerData.map(({ wallet, offers }) => {
       const nftSet = walletNftMap[wallet] || new Set();
-      const relatedOffers = offers.filter((offer) => nftSet.has(offer.nftId));
-
+    
+      const sellOffers = offers.filter(
+        (offer) => offer.isSell && nftSet.has(offer.nftId)
+      );
+    
+      const buyOffers = offers.filter(
+        (offer) => !offer.isSell && !nftSet.has(offer.nftId)
+      );
+    
       return {
         wallet,
-        relatedOffers,
+        sellOffers,
+        buyOffers,
       };
     });
+    
 
     console.log("🎯 Offers matched to each wallet's NFTs:", result);
   };
