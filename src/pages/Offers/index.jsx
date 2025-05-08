@@ -12,6 +12,7 @@ const Offers = ({ membersList, myWalletAddress, myNftData, widgetApi }) => {
   const [incomingTransferOffers, setIncomingTransferOffers] = useState([]);
   const [loading, setLoading] = useState(false); // Add loading state
   const [sellOffers, setSellOffers] = useState([]);
+  const [usersOffer, setUsersOffer] = useState([]);
 
   async function fetchReceivedBuyOffers() {
     const requestOptions = {
@@ -285,23 +286,54 @@ const Offers = ({ membersList, myWalletAddress, myNftData, widgetApi }) => {
     const result = offerData.map(({ wallet, offers }) => {
       const nftSet = walletNftMap[wallet] || new Set();
     
+      // 1. Sell offers (I own the NFT and I'm selling it)
       const sellOffers = offers.filter(
         (offer) => offer.isSell && nftSet.has(offer.nftId)
       );
     
+      // 2. Buy offers (I want to buy NFTs I don't own)
       const buyOffers = offers.filter(
         (offer) => !offer.isSell && !nftSet.has(offer.nftId)
       );
+    
+      // 3. Received offers (someone else wants to buy MY NFT)
+      const receivedOffers = [];
+    
+      for (const other of offerData) {
+        if (other.wallet === wallet) continue; // Skip self
+    
+        const incoming = other.offers.filter(
+          (offer) =>
+            !offer.isSell && // must be a buy offer
+            nftSet.has(offer.nftId) // for one of my NFTs
+        );
+    
+        receivedOffers.push(...incoming);
+      }
     
       return {
         wallet,
         sellOffers,
         buyOffers,
+        receivedOffers,
       };
-    });
+    });    
     
-
     console.log("🎯 Offers matched to each wallet's NFTs:", result);
+    setUsersOffer(result);
+    const myBuyOffer = result.find((offer) => {
+      if (offer.wallet === myWalletAddress) {
+        return offer.buyOffers;
+      }
+    });
+    setNftBuyOffers(myBuyOffer)
+
+    const mySellOffer = result.find((offer) => {
+      if (offer.wallet === myWalletAddress) {
+        return offer.sellOffers;
+      }
+    });
+    setNftBuyOffers(mySellOffer)
   };
 
   const refreshOffers = async () => {
