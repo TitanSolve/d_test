@@ -296,9 +296,9 @@ const Offers = ({ membersList, myWalletAddress, myNftData, widgetApi }) => {
       // Classify this wallet’s own offers
       for (const offer of offers) {
         if (offer.isSell && nftSet.has(offer.nftId)) {
-          sellOffers.push(offer, nftMapById.get(offer.nftId));
+          sellOffers.push({ offer, nft: nftMapById.get(offer.nftId) });
         } else if (!offer.isSell && !nftSet.has(offer.nftId)) {
-          buyOffers.push(offer, nftMapById.get(offer.nftId));
+          buyOffers.push({ offer, nft: nftMapById.get(offer.nftId) });
         }
       }
 
@@ -308,7 +308,7 @@ const Offers = ({ membersList, myWalletAddress, myNftData, widgetApi }) => {
 
         for (const offer of other.offers) {
           if (!offer.isSell && nftSet.has(offer.nftId)) {
-            receivedOffers.push(offer, nftMapById.get(offer.nftId));
+            receivedOffers.push({ offer, nft: nftMapById.get(offer.nftId) });
           }
         }
       }
