@@ -249,12 +249,9 @@ const Offers = ({ membersList, myWalletAddress, myNftData, widgetApi }) => {
   // };
 
   const fetchAllUsersOfers = async () => {
-    const usersWalletAddresses = membersList.map((member) => {
-      const address = member.userId.split(":")[0].replace("@", "");
-      return address;
-    });
-    console.log("usersWalletAddresses", usersWalletAddresses);
-
+    const usersWalletAddresses = membersList.map((member) =>
+      member.userId.split(":")[0].replace("@", "")
+    );
     const payload = {
       wallets: usersWalletAddresses,
     };
@@ -273,7 +270,13 @@ const Offers = ({ membersList, myWalletAddress, myNftData, widgetApi }) => {
 
     // Step 2: Build NFT mapping from mergedMembers
     const walletNftMap = {};
+    const nftMapById = new Map();
     myNftData.forEach((member) => {
+      member.groupedNfts.forEach((group) => {
+        group.nfts.forEach((nft) => {
+          nftMapById.set(nft.id, { ...nft });
+        });
+      });
       const wallet = member.walletAddress;
       const nftIds = member.groupedNfts.flatMap((group) =>
         group.nfts.map((nft) => nft.nftokenID)
@@ -282,58 +285,57 @@ const Offers = ({ membersList, myWalletAddress, myNftData, widgetApi }) => {
     });
     console.log("NFT mapping for each wallet:", walletNftMap);
 
-    // Step 3: Match each offer to a wallet's NFTs
+    // Step 3: Organize offers
     const result = offerData.map(({ wallet, offers }) => {
       const nftSet = walletNftMap[wallet] || new Set();
-    
-      // 1. Sell offers (I own the NFT and I'm selling it)
-      const sellOffers = offers.filter(
-        (offer) => offer.isSell && nftSet.has(offer.nftId)
-      );
-    
-      // 2. Buy offers (I want to buy NFTs I don't own)
-      const buyOffers = offers.filter(
-        (offer) => !offer.isSell && !nftSet.has(offer.nftId)
-      );
-    
-      // 3. Received offers (someone else wants to buy MY NFT)
+
+      const sellOffers = [];
+      const buyOffers = [];
       const receivedOffers = [];
-    
-      for (const other of offerData) {
-        if (other.wallet === wallet) continue; // Skip self
-    
-        const incoming = other.offers.filter(
-          (offer) =>
-            !offer.isSell && // must be a buy offer
-            nftSet.has(offer.nftId) // for one of my NFTs
-        );
-    
-        receivedOffers.push(...incoming);
+
+      // Classify this wallet’s own offers
+      for (const offer of offers) {
+        if (offer.isSell && nftSet.has(offer.nftId)) {
+          sellOffers.push(offer, nftMapById.get(offer.nftId));
+        } else if (!offer.isSell && !nftSet.has(offer.nftId)) {
+          buyOffers.push(offer, nftMapById.get(offer.nftId));
+        }
       }
-    
+
+      // Find incoming buy offers from others for this wallet’s NFTs
+      for (const other of offerData) {
+        if (other.wallet === wallet) continue;
+
+        for (const offer of other.offers) {
+          if (!offer.isSell && nftSet.has(offer.nftId)) {
+            receivedOffers.push(offer, nftMapById.get(offer.nftId));
+          }
+        }
+      }
+
       return {
         wallet,
-        sellOffers,
-        buyOffers,
+        madeOffers: [...sellOffers, ...buyOffers],
         receivedOffers,
       };
-    });    
-    
-    console.log("🎯 Offers matched to each wallet's NFTs:", result);
+    });
+
+    console.log("🎯 Final user offers (made + received):", result);
+
     setUsersOffer(result);
-    const myBuyOffer = result.find((offer) => {
+    const madeOffers_ = result.find((offer) => {
       if (offer.wallet === myWalletAddress) {
-        return offer.buyOffers;
+        return offer.receivedOffers;
       }
     });
-    setNftBuyOffers(myBuyOffer)
+    setNftBuyOffers(myBuyOffer);
 
-    const mySellOffer = result.find((offer) => {
+    const receivedOffers_ = result.find((offer) => {
       if (offer.wallet === myWalletAddress) {
         return offer.sellOffers;
       }
     });
-    setNftBuyOffers(mySellOffer)
+    setNftBuyOffers(receivedOffers_);
   };
 
   const refreshOffers = async () => {
