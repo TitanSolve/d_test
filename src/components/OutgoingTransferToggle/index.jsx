@@ -4,7 +4,7 @@ import OutgoingOfferCard from "../OutgoingOfferCard";
 import { ChevronDownIcon } from "@heroicons/react/solid";
 import { Button } from "antd";
 
-const IncomingListToggle = ({
+const OutgoingTransferToggle = ({
   title,
   outgoingTransfers,
   onAction,
@@ -84,4 +84,4 @@ const IncomingListToggle = ({
   );
 };
 
-export default IncomingListToggle;
+export default OutgoingTransferToggle;

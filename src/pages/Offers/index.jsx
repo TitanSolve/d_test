@@ -385,13 +385,13 @@ const Offers = ({ membersList, myWalletAddress, myNftData, widgetApi }) => {
 
           <IncomingTransferToggle
             title="Incoming transfers"
-            transfers={madeOffers}
+            incomingTransfers={madeOffers}
             onAction={refreshOffers}
             myOwnWalletAddress={myWalletAddress}
           />
           <OutgoingTransferToggle
             title="Outgoing transfers"
-            transfers={receivedOffers}
+            outgoingTransfers={receivedOffers}
             onAction={refreshOffers}
             myOwnWalletAddress={myWalletAddress}
           />
