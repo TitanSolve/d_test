@@ -11,31 +11,24 @@ const OutgoingOfferCard = ({
   myWalletAddress,
 }) => {
   const [qrCodeUrl, setQrCodeUrl] = useState("");
+  const [websocketUrl, setWebsocketUrl] = useState("");
   const [transactionStatus, setTransactionStatus] = useState("");
   const [isQrModalVisible, setIsQrModalVisible] = useState(false);
 
-  useEffect(() => {
-    if (sendRoomMsg && roomMessage !== "") {
-      console.log("sendRoomMsg", sendRoomMsg);
-      widgetApi.sendRoomEvent("m.room.message", {
-        body: roomMessage,
-      });
-    }
-  }, [sendRoomMsg]);
-
   async function onRejectTransfer() {
-    console.log("Cancel clicked for item:", transfer);
-    setTransactionStatus("");
+    console.log("Accept clicked for item:", transfer);
     const requestBody = {
-      account: transfer.offer.offerOwner,
-      offerId: buyOffer.offer.offerId,
+      address: myWalletAddress,
+      OfferId: transfer.offer.offerId,
+      buyOrSell: 0,
     };
     try {
-      const response = await fetch(`${API_URLS.backendUrl}/cancel-nft-offer`, {
+      const response = await fetch(`${API_URLS.backendUrl}/accept-offer`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
+
         body: JSON.stringify(requestBody),
       });
       console.log(requestBody, "requestBody");
@@ -47,12 +40,34 @@ const OutgoingOfferCard = ({
       const data = await response.json();
       if (data) {
         console.log(data.refs, "data refs");
-        onAction();
+        setQrCodeUrl(data.refs.qr_png);
+        setWebsocketUrl(data.refs.websocket_status);
+        setIsQrModalVisible(true);
       }
     } catch (error) {
       console.error("Error during fetch:", error);
     }
   }
+
+  useEffect(() => {
+    if (websocketUrl) {
+      const ws = new WebSocket(websocketUrl);
+
+      ws.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        if (data.signed) {
+          setTransactionStatus("Transaction signed");
+          setIsQrModalVisible(false);
+          onAction();
+        } else if (data.rejected) {
+          setTransactionStatus("Transaction rejected");
+        }
+      };
+      return () => {
+        ws.close();
+      };
+    }
+  }, [websocketUrl]);
 
   return (
     <motion.div
@@ -90,6 +105,12 @@ const OutgoingOfferCard = ({
           Reject
         </Button>
       </div>
+      <TransactionModal
+        isOpen={isQrModalVisible}
+        onClose={() => setIsQrModalVisible(false)}
+        qrCodeUrl={qrCodeUrl}
+        transactionStatus={transactionStatus}
+      />
     </motion.div>
   );
 };
