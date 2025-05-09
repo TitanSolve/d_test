@@ -4,16 +4,28 @@ import OfferReceivedCard from "../OfferReceivedCard";
 import { ChevronDownIcon, XIcon } from "@heroicons/react/solid";
 import { Button } from "antd";
 
-const OfferReceivedToggle = ({ title, madeOffers, receivedOffers, onAction, myOwnWalletAddress, refreshSellOffers }) => {
+const OfferReceivedToggle = ({
+  title,
+  madeOffers,
+  receivedOffers,
+  onAction,
+  myOwnWalletAddress,
+  refreshSellOffers,
+}) => {
   const [isVisible, setIsVisible] = useState(false);
   const [buyOffers, setBuyOffers] = useState([]);
   const [sellOffers, setSellOffers] = useState([]);
   const [count, setCount] = useState(0);
 
   useEffect(() => {
-    setBuyOffers(receivedOffers);
-    setCount(receivedOffers.length);
-    console.log("OfferReceivedToggle->buyOffer-->", receivedOffers);
+    if (receivedOffers.length > 0) {
+      const filteredTransfers = receivedOffers.filter(
+        (transfer) => transfer.offer.amount !== "0"
+      );
+      setBuyOffers(filteredTransfers);
+      setCount(filteredTransfers.length);
+      console.log("OfferReceivedToggle->buyOffer-->", filteredTransfers);
+    }
   }, [receivedOffers]);
 
   useEffect(() => {
@@ -28,7 +40,9 @@ const OfferReceivedToggle = ({ title, madeOffers, receivedOffers, onAction, myOw
       >
         <span className="text-lg font-semibold">{title}</span>
         <ChevronDownIcon
-          className={`w-6 h-6 transition-transform ${isVisible ? "rotate-180" : "rotate-0"}`}
+          className={`w-6 h-6 transition-transform ${
+            isVisible ? "rotate-180" : "rotate-0"
+          }`}
         />
       </button>
       {isVisible && (
@@ -39,27 +53,38 @@ const OfferReceivedToggle = ({ title, madeOffers, receivedOffers, onAction, myOw
           className="mt-4 bg-white dark:bg-[#15191E] text-black dark:text-white p-5 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 transition-colors"
         >
           <div className="flex justify-end sm:justify-between items-center mb-4">
-            <span className="text-lg font-semibold text-gray-900 dark:text-white hidden sm:block">Listed Items</span>
+            <span className="text-lg font-semibold text-gray-900 dark:text-white hidden sm:block">
+              Listed Items
+            </span>
             {count > 0 ? (
               <div className="flex justify-between items-center gap-2">
-                <Button 
-                    type="primary"
-                    block
-                    // className="flex items-center gap-2 bg-red-500 text-white hover:bg-red-400 px-4 py-2 rounded-lg  transition"
-                    style={{ borderRadius: "6px", alignItems: "center" }}
-                    className="dark:bg-red-600 dark:hover:bg-red-500"
+                <Button
+                  type="primary"
+                  block
+                  // className="flex items-center gap-2 bg-red-500 text-white hover:bg-red-400 px-4 py-2 rounded-lg  transition"
+                  style={{ borderRadius: "6px", alignItems: "center" }}
+                  className="dark:bg-red-600 dark:hover:bg-red-500"
                 >
                   Reject All
                 </Button>
               </div>
             ) : (
-              <span className="text-gray-500 dark:text-gray-400">No listed items available.</span>
+              <span className="text-gray-500 dark:text-gray-400">
+                No listed items available.
+              </span>
             )}
           </div>
           {count > 0 && (
             <div className="space-y-4">
-              { buyOffers.map((offer, index) => (
-                <OfferReceivedCard sellOffers={sellOffers} buyOffer={offer} key={index} onAction={onAction} myWalletAddress={myOwnWalletAddress} refreshSellOffers={refreshSellOffers} />
+              {buyOffers.map((offer, index) => (
+                <OfferReceivedCard
+                  sellOffers={sellOffers}
+                  buyOffer={offer}
+                  key={index}
+                  onAction={onAction}
+                  myWalletAddress={myOwnWalletAddress}
+                  refreshSellOffers={refreshSellOffers}
+                />
               ))}
             </div>
           )}
@@ -68,6 +93,5 @@ const OfferReceivedToggle = ({ title, madeOffers, receivedOffers, onAction, myOw
     </div>
   );
 };
-
 
 export default OfferReceivedToggle;

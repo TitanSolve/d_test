@@ -740,11 +740,13 @@ const ParticipantCard = ({
                         <MenuItem key={"all"} value={"all"}>
                           All Others
                         </MenuItem>
-                        {membersList.map((user) => (
-                          <MenuItem key={user.userId} value={user.name}>
-                            {user.name}
-                          </MenuItem>
-                        ))}
+                        {membersList.map((user) =>
+                          user.name !== wgtParameters.displayName ? (
+                            <MenuItem key={user.userId} value={user.name}>
+                              {user.name}
+                            </MenuItem>
+                          ) : null
+                        )}
                       </Select>
                     </>
                   )}
