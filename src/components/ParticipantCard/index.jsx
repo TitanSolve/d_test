@@ -87,7 +87,7 @@ const ParticipantCard = ({
   const [sendRoomMsg, setSendRoomMsg] = useState(false);
 
   useEffect(() => {
-    if(sendRoomMsg && roomMessage !== "") {
+    if (sendRoomMsg && roomMessage !== "") {
       console.log("sendRoomMsg", sendRoomMsg);
       widgetApi.sendRoomEvent("m.room.message", {
         body: roomMessage,
@@ -132,13 +132,6 @@ const ParticipantCard = ({
     const xrpl = require("xrpl");
     const client = new xrpl.Client(API_URLS.xrplMainnetUrl); // mainnet
     await client.connect();
-
-    // const info = await client.request({
-    //   command: "account_info",
-    //   account: "r9syfthWEycVKuy9bz2awsxrTNK3NBBT6h",
-    //   ledger_index: "validated"
-    // });
-    // console.log("-------Account info: ", info);
 
     const response = await client.request({
       command: "account_lines",
@@ -411,7 +404,6 @@ const ParticipantCard = ({
           ws.close();
 
           //update Offer List
-          
         } else if (data.rejected) {
           setTransactionStatus("Transaction rejected");
           setIsQrModalVisible(false);
@@ -825,13 +817,17 @@ const ParticipantCard = ({
                       </Select>
                     </div>
                   )}
-                  <Typography
-                    variant="subtitle2"
-                    className="text-center font-semibold text-black dark:text-white"
-                  >
-                    Total : {state.amount} + 1% Fee ={" "}
-                    {(state.amount * 1 * 1.01).toFixed(4)} {state.token}
-                  </Typography>
+                  {state.isSell ? (
+                    <Typography
+                      variant="subtitle2"
+                      className="text-center font-semibold text-black dark:text-white"
+                    >
+                      Total : {state.amount} + 1% Fee ={" "}
+                      {(state.amount * 1 * 1.01).toFixed(4)} {state.token}
+                    </Typography>
+                  ) : (
+                    ""
+                  )}
 
                   <div className="text-center">
                     <Button
