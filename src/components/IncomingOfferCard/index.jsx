@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import API_URLS from "../../config";
-import { Button } from "@mui/material";
+import { Button } from "antd";
 import TransactionModal from "../TransactionModal";
 
 const IncomingOfferCard = ({ transfer, index, onAction, myWalletAddress }) => {
@@ -58,10 +58,10 @@ const IncomingOfferCard = ({ transfer, index, onAction, myWalletAddress }) => {
     setTransactionStatus("");
     const requestBody = {
       account: transfer.offer.offerOwner,
-      offerId: buyOffer.offer.offerId,
+      offerId: transfer.offer.offerId,
     };
     try {
-      const response = await fetch(`${API_URLS.backendUrl}/cancel-nft-offer`, {
+      const response = await fetch(`${API_URLS.backendUrl}/cancel-nft-offer-with-sign`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -77,7 +77,9 @@ const IncomingOfferCard = ({ transfer, index, onAction, myWalletAddress }) => {
       const data = await response.json();
       if (data) {
         console.log(data.refs, "data refs");
-        onAction();
+        setQrCodeUrl(data.refs.qr_png);
+        setWebsocketUrl(data.refs.websocket_status);
+        setIsQrModalVisible(true);
       }
     } catch (error) {
       console.error("Error during fetch:", error);
