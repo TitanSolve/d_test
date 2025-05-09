@@ -16,10 +16,10 @@ const OutgoingOfferCard = ({
   const [isQrModalVisible, setIsQrModalVisible] = useState(false);
 
   async function onRejectTransfer() {
-    console.log("Accept clicked for item:", transfer);
+    console.log("onRejectTransfer for item:", transfer);
     const requestBody = {
-      address: myWalletAddress,
-      OfferId: transfer.offer.offerId,
+      account: myWalletAddress,
+      offerId: transfer.offer.offerId,
       buyOrSell: 0,
     };
     try {
@@ -28,7 +28,6 @@ const OutgoingOfferCard = ({
         headers: {
           "Content-Type": "application/json",
         },
-
         body: JSON.stringify(requestBody),
       });
       console.log(requestBody, "requestBody");
