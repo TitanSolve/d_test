@@ -403,15 +403,20 @@ const ParticipantCard = ({
           setTransactionStatus("Transaction signed.");
           setIsQrModalVisible(false);
           setMessageBoxType("success");
-          setMessageBoxText("Transaction signed successfully.");
+          setMessageBoxText("Offer created successfully.");
           setIsMessageBoxVisible(true);
           setSendRoomMsg(true);
+          setPreviewModalOpen(false);
+          setOfferModalOpen(false);
           ws.close();
+
+          //update Offer List
+          
         } else if (data.rejected) {
           setTransactionStatus("Transaction rejected");
           setIsQrModalVisible(false);
           setMessageBoxType("error");
-          setMessageBoxText("Transaction rejected.");
+          setMessageBoxText("Offer creation failed.");
           setIsMessageBoxVisible(true);
           ws.close();
         }

@@ -7,8 +7,8 @@ import API_URLS from "../../config";
 import LoadingOverlay from "../../components/LoadingOverlay";
 
 const Offers = ({ membersList, myWalletAddress, myNftData, widgetApi }) => {
-  const [nftBuyOffers, setNftBuyOffers] = useState([]);
-  const [nftSellOffers, setNftSellOffers] = useState([]);
+  const [receivedOffers, setReceivedOffers] = useState([]);
+  const [madeOffers, setMadeOffers] = useState([]);
   const [incomingTransferOffers, setIncomingTransferOffers] = useState([]);
   const [loading, setLoading] = useState(false); // Add loading state
   const [sellOffers, setSellOffers] = useState([]);
@@ -326,11 +326,11 @@ const Offers = ({ membersList, myWalletAddress, myNftData, widgetApi }) => {
     const offerForMyWallet = result.find((offer) => offer.wallet === myWalletAddress);
     const madeOffers_ = offerForMyWallet ? offerForMyWallet.madeOffers : [];
     console.log("madeOffers", madeOffers_);
-    setNftSellOffers(madeOffers_ ? madeOffers_ : []);
+    setMadeOffers(madeOffers_ ? madeOffers_ : []);
 
     const receivedOffers_ = offerForMyWallet ? offerForMyWallet.receivedOffers : [];
     console.log("receivedOffers", receivedOffers_);
-    setNftBuyOffers(receivedOffers_? receivedOffers_ : []);
+    setReceivedOffers(receivedOffers_? receivedOffers_ : []);
   };
 
   const refreshOffers = async () => {
@@ -385,15 +385,20 @@ const Offers = ({ membersList, myWalletAddress, myNftData, widgetApi }) => {
 
           <IncomingTransferToggle
             title="Incoming transfers"
-            incomingTransfers={incomingTransferOffers}
+            transfers={madeOffers}
             onAction={refreshOffers}
             myOwnWalletAddress={myWalletAddress}
           />
-          <OutgoingTransferToggle title="Outgoing transfers" count={6} />
+          <OutgoingTransferToggle
+            title="Outgoing transfers"
+            transfers={receivedOffers}
+            onAction={refreshOffers}
+            myOwnWalletAddress={myWalletAddress}
+          />
           <OfferReceivedToggle
             title="Offers Received"
-            madeOffers={nftSellOffers}
-            receivedOffers={nftBuyOffers}
+            madeOffers={madeOffers}
+            receivedOffers={receivedOffers}
             myOwnWalletAddress={myWalletAddress}
             onAction={refreshOffers}
             refreshSellOffers={fetchSellOffers}
@@ -401,7 +406,7 @@ const Offers = ({ membersList, myWalletAddress, myNftData, widgetApi }) => {
           />
           <OfferMadeToggle
             title="Offers Made"
-            madeOffers={nftSellOffers}
+            madeOffers={madeOffers}
             myOwnWalletAddress={myWalletAddress}
             onAction={refreshOffers}
             widgetApi={widgetApi}

@@ -1,11 +1,28 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import OutgoingOfferCard from "../OutgoingOfferCard";
-import { ChevronDownIcon, XIcon } from "@heroicons/react/solid";
+import { ChevronDownIcon } from "@heroicons/react/solid";
 import { Button } from "antd";
 
-const OutgoingTransferToggle = ({ title, count }) => {
+const IncomingListToggle = ({
+  title,
+  outgoingTransfers,
+  onAction,
+  myOwnWalletAddress,
+}) => {
   const [isVisible, setIsVisible] = useState(false);
+  const [transfers, setOutgoingTransferOffers] = useState([]);
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    if (outgoingTransfers.length > 0) {
+      const filteredTransfers = outgoingTransfers.filter(
+        (transfer) => transfer.offer.amount === "0"
+      );
+      setOutgoingTransferOffers(filteredTransfers);
+      setCount(filteredTransfers.length);
+    }
+  }, [outgoingTransfers]);
 
   return (
     <div className="w-full max-w-2xl mx-auto p-4">
@@ -15,40 +32,56 @@ const OutgoingTransferToggle = ({ title, count }) => {
       >
         <span className="text-lg font-semibold">{title}</span>
         <ChevronDownIcon
-          className={`w-6 h-6 transform transition-transform duration-300 ${isVisible ? "rotate-180" : "rotate-0"}`}
+          className={`w-6 h-6 transition-transform ${
+            isVisible ? "rotate-180" : "rotate-0"
+          }`}
         />
       </button>
-
       {isVisible && (
-        <div className="mt-4 bg-white dark:bg-[#15191E] p-5 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
-          <div className="flex justify-between items-center mb-4">
+        <motion.div
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: "auto" }}
+          exit={{ opacity: 0, height: 0 }}
+          className="mt-4 bg-white dark:bg-[#15191E] text-black dark:text-white p-5 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 transition-colors"
+        >
+          <div className="flex justify-end sm:justify-between items-center mb-4">
             <span className="text-lg font-semibold text-gray-900 dark:text-white hidden sm:block">
               Listed Items
             </span>
             {count > 0 ? (
-              <Button
-                type="primary"
-                className="dark:bg-red-600 dark:hover:bg-red-500 text-white rounded-md font-semibold px-4 py-1"
-              >
-                <XIcon className="w-5 h-5 mr-1 inline" /> Cancel All
-              </Button>
+              <div className="flex justify-between items-center gap-2">
+                <Button
+                  type="primary"
+                  block
+                  // className="flex items-center gap-2 bg-red-500 text-white hover:bg-red-400 px-4 py-2 rounded-lg  transition"
+                  style={{ borderRadius: "6px", alignItems: "center" }}
+                  className="dark:bg-red-600 dark:hover:bg-red-500"
+                >
+                  Reject All
+                </Button>
+              </div>
             ) : (
-              <span className="text-gray-500 dark:text-gray-400">No listed items available.</span>
+              <span className="text-gray-500 dark:text-gray-400">
+                No listed items available.
+              </span>
             )}
           </div>
-
           {count > 0 && (
             <div className="space-y-4">
-              {[...Array(count)].map((_, index) => (
-                <OutgoingOfferCard key={index} />
+              {transfers.map((outgoingTransfer, index) => (
+                <OutgoingOfferCard
+                  transfer={outgoingTransfer}
+                  key={index}
+                  onAction={onAction}
+                  myWalletAddress={myOwnWalletAddress}
+                />
               ))}
             </div>
           )}
-        </div>
+        </motion.div>
       )}
     </div>
   );
 };
 
-
-export default OutgoingTransferToggle;
+export default IncomingListToggle;
