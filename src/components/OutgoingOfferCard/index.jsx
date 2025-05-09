@@ -23,7 +23,7 @@ const OutgoingOfferCard = ({
       buyOrSell: 0,
     };
     try {
-      const response = await fetch(`${API_URLS.backendUrl}/cancel-nft-offer`, {//-with-sign
+      const response = await fetch(`${API_URLS.backendUrl}/cancel-nft-offer-with-sign`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

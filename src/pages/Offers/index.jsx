@@ -307,7 +307,7 @@ const Offers = ({ membersList, myWalletAddress, myNftData, widgetApi }) => {
         if (other.wallet === wallet) continue;
 
         for (const offer of other.offers) {
-          if (!offer.isSell && nftSet.has(offer.nftId)) {
+          if (!offer.isSell && nftSet.has(offer.nftId) || offer.destination === myWalletAddress ) {
             receivedOffers.push({ offer, nft: nftMapById.get(offer.nftId) });
           }
         }
