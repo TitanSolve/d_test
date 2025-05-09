@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import API_URLS from "../../config";
-import { Button } from "@mui/material";
 import TransactionModal from "../TransactionModal";
+import { Button } from "antd";
 
 const OutgoingOfferCard = ({
   transfer,
@@ -23,7 +23,7 @@ const OutgoingOfferCard = ({
       buyOrSell: 0,
     };
     try {
-      const response = await fetch(`${API_URLS.backendUrl}/accept-offer`, {
+      const response = await fetch(`${API_URLS.backendUrl}/cancel-nft-offer`, {//-with-sign
         method: "POST",
         headers: {
           "Content-Type": "application/json",
