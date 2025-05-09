@@ -10,14 +10,14 @@ const IncomingOfferCard = ({ transfer, index, onAction, myWalletAddress }) => {
   const [transactionStatus, setTransactionStatus] = useState("");
   const [isQrModalVisible, setIsQrModalVisible] = useState(false);
 
-  useEffect(() => {
-    if (sendRoomMsg && roomMessage !== "") {
-      console.log("sendRoomMsg", sendRoomMsg);
-      widgetApi.sendRoomEvent("m.room.message", {
-        body: roomMessage,
-      });
-    }
-  }, [sendRoomMsg]);
+  // useEffect(() => {
+  //   if (sendRoomMsg && roomMessage !== "") {
+  //     console.log("sendRoomMsg", sendRoomMsg);
+  //     widgetApi.sendRoomEvent("m.room.message", {
+  //       body: roomMessage,
+  //     });
+  //   }
+  // }, [sendRoomMsg]);
 
   async function onAcceptTransfer() {
     console.log("Accept clicked for item:", transfer);
