@@ -9,15 +9,7 @@ const IncomingOfferCard = ({ transfer, index, onAction, myWalletAddress }) => {
   const [websocketUrl, setWebsocketUrl] = useState("");
   const [transactionStatus, setTransactionStatus] = useState("");
   const [isQrModalVisible, setIsQrModalVisible] = useState(false);
-
-  // useEffect(() => {
-  //   if (sendRoomMsg && roomMessage !== "") {
-  //     console.log("sendRoomMsg", sendRoomMsg);
-  //     widgetApi.sendRoomEvent("m.room.message", {
-  //       body: roomMessage,
-  //     });
-  //   }
-  // }, [sendRoomMsg]);
+  const [pendingOfferAction, setPendingOfferAction] = useState(null);
 
   async function onAcceptTransfer() {
     console.log("Accept clicked for item:", transfer);
@@ -27,6 +19,10 @@ const IncomingOfferCard = ({ transfer, index, onAction, myWalletAddress }) => {
       buyOrSell: 0,
     };
     try {
+      setPendingOfferAction({
+        type: "accept",
+      });
+
       const response = await fetch(`${API_URLS.backendUrl}/accept-offer`, {
         method: "POST",
         headers: {
@@ -61,13 +57,19 @@ const IncomingOfferCard = ({ transfer, index, onAction, myWalletAddress }) => {
       offerId: transfer.offer.offerId,
     };
     try {
-      const response = await fetch(`${API_URLS.backendUrl}/cancel-nft-offer-with-sign`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(requestBody),
+      setPendingOfferAction({
+        type: "cancel",
       });
+      const response = await fetch(
+        `${API_URLS.backendUrl}/cancel-nft-offer-with-sign`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestBody),
+        }
+      );
       console.log(requestBody, "requestBody");
 
       if (!response.ok) {
@@ -95,9 +97,12 @@ const IncomingOfferCard = ({ transfer, index, onAction, myWalletAddress }) => {
         if (data.signed) {
           setTransactionStatus("Transaction signed");
           setIsQrModalVisible(false);
+          console.log("pendingOfferAction-->", pendingOfferAction.type);
           onAction();
+          setPendingOfferAction(null);
         } else if (data.rejected) {
           setTransactionStatus("Transaction rejected");
+          setPendingOfferAction(null);
         }
       };
       return () => {
