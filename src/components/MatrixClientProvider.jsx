@@ -138,10 +138,10 @@ const MatrixClientProvider = () => {
 
         await client.connect();
         console.log("Connected to XRPL");
-        // await client.request({
-        //   command: "subscribe",
-        //   accounts: userIds,
-        // });
+        await client.request({
+          command: "subscribe",
+          accounts: userIds,
+        });
 
         console.log("userIds : ", userIds);
         const trustLinesArray = await getTrustLinesAsArray(userIds);
