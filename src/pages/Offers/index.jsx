@@ -343,7 +343,7 @@ const Offers = ({ membersList, myWalletAddress, myNftData, widgetApi, isRefreshi
 
   const refreshOffers = async () => {
     console.log("Offers->refreshOffers", myWalletAddress);
-    updateUsersNFTs = ("00082710E1F1320473B32EEA2D834B64AFE064EF2B27324E86D2E6A305842607",
+    updateUsersNFTs("00082710E1F1320473B32EEA2D834B64AFE064EF2B27324E86D2E6A305842607",
       "rnPoaP9Hb2YZ1hj6JyYbHGRvUS69cyfqry",
       "rwLohLFAT2zDooHcusuWVQRc7R81q4nKNK");
     // setLoading(true);
