@@ -43,8 +43,9 @@ const OfferMadeCard = ({ sellOffer, index, onAction, myWalletAddress }) => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
+      console.log(data, "data received from server");
       setIsLoading(false);
-      if (data.meta.TransactionResult === "tesSUCCESS") {
+      if (data.result.meta.TransactionResult === "tesSUCCESS") {
         console.log(data, "returned data");
         setMessageBoxType("success");
         setMessageBoxText("Offer cancelled successfully.");
@@ -52,7 +53,7 @@ const OfferMadeCard = ({ sellOffer, index, onAction, myWalletAddress }) => {
       } else {
         console.log("No data received from the server.");
         setMessageBoxType("error");
-        setMessageBoxText("Failed to cancel the offer. \nPlease try again.\n error: " + data.meta.TransactionResult);
+        setMessageBoxText("Failed to cancel the offer. \nPlease try again.\n error: " + data.result.meta.TransactionResult);
         setIsMessageBoxVisible(true);
       }
     } catch (error) {
