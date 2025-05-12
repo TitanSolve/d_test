@@ -408,17 +408,26 @@ const MatrixClientProvider = () => {
     exit: { opacity: 0, x: -50 },
   };
 
-  const refreshOffers = (offers) => {
-    console.log("Refresh Offers--->", offers);
+  const refreshOffers = () => {
+    console.log("Refresh Offers--->");
     setIsRefreshing(isRefreshing === 0 ? 1 : isRefreshing === 1 ? 2 : 1);
   };
 
-  const updateUsersNFTs = async ( nftId, seller, buyer ) => {
+  const updateUsersNFTs = async (nftId, seller, buyer) => {
     console.log("updateUsersNFTs--->", nftId, seller, buyer);
-    let selectedNft;
-    selectedNft = myNftData.find((user) => user.walletAddress === seller)?.groupedNfts
-      .find((collection) => collection.nfts.find((nft) => nft.NFTokenID === nftId));
+    const selectedUser = myNftData.find(
+      (user) => user.walletAddress === seller
+    );
+    console.log("selectedUser--->", selectedUser);
+    const selectedCollection = selectedUser?.groupedNfts.find((collection) =>
+      collection.nfts.find((nft) => nft.NFTokenID === nftId)
+    );
+    console.log("selectedCollection--->", selectedCollection);
+    const selectedNft = selectedCollection?.nfts.find(
+      (nft) => nft.NFTokenID === nftId
+    );
     console.log("selectedNft--->", selectedNft);
+
     //Remove this nft from seller's collection and add to buyer's collection
     const updatedMyNftData = myNftData.map((user) => {
       if (user.walletAddress === seller) {
@@ -434,8 +443,7 @@ const MatrixClientProvider = () => {
             return collection;
           }),
         };
-      } 
-      else if (user.walletAddress === buyer) {
+      } else if (user.walletAddress === buyer) {
         return {
           ...user,
           groupedNfts: user.groupedNfts.map((collection) => {
@@ -452,7 +460,7 @@ const MatrixClientProvider = () => {
       return user;
     });
     console.log("updatedMyNftData--->", updatedMyNftData);
-    setMyNftData(updatedMyNftData);   
+    // setMyNftData(updatedMyNftData);
   };
 
   return (
