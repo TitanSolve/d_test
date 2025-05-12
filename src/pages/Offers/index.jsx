@@ -6,7 +6,7 @@ import OfferReceivedToggle from "../../components/OfferReceivedToggle";
 import API_URLS from "../../config";
 import LoadingOverlay from "../../components/LoadingOverlay";
 
-const Offers = ({ membersList, myWalletAddress, myNftData, widgetApi }) => {
+const Offers = ({ membersList, myWalletAddress, myNftData, widgetApi, isRefreshing }) => {
   const [receivedOffers, setReceivedOffers] = useState([]);
   const [madeOffers, setMadeOffers] = useState([]);
   const [incomingTransferOffers, setIncomingTransferOffers] = useState([]);
@@ -371,6 +371,13 @@ const Offers = ({ membersList, myWalletAddress, myNftData, widgetApi }) => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    console.log("Offers->useEffect", isRefreshing);
+    if (isRefreshing !== undefined && isRefreshing !== 0) {
+      refreshOffers();
+    }
+  },[isRefreshing]);
 
   useEffect(() => {
     console.log("Offers->useEffect", membersList, myWalletAddress);

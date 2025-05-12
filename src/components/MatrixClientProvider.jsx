@@ -104,6 +104,7 @@ const MatrixClientProvider = () => {
   const [membersList, setMembersList] = useState([]);
   const { theme, toggleTheme } = useTheme();
   const [myOwnWalletAddress, setMyWalletAddress] = useState("");
+  const [isRefreshing, setIsRefreshing] = useState(0);
 
   useEffect(() => {
     const loadData = async () => {
@@ -401,8 +402,9 @@ const MatrixClientProvider = () => {
     exit: { opacity: 0, x: -50 },
   };
 
-  const refreshOffers = ( offers ) => {
+  const refreshOffers = (offers) => {
     console.log("Refresh Offers--->", offers);
+    setIsRefreshing(isRefreshing === 0 ? 1 : isRefreshing === 1 ? 2 : 1);
   };
 
   return (
@@ -472,6 +474,7 @@ const MatrixClientProvider = () => {
                     membersList={membersList}
                     myNftData={myNftData}
                     widgetApi={widgetApi}
+                    isRefreshing={isRefreshing}
                   />
                 </div>
               </motion.div>
