@@ -419,10 +419,10 @@ const MatrixClientProvider = () => {
       (user) => user.walletAddress === seller
     );
     console.log("selectedUser--->", selectedUser);
-    const selectedCollection = selectedUser?.groupedNfts.find((collection) =>
-      collection.nfts.find((nft) => nft.NFTokenID === nftId)
+    const selectedNfts = selectedUser?.groupedNfts.find((nfts) =>
+      nfts.find((nft) => nft.NFTokenID === nftId)
     );
-    console.log("selectedCollection--->", selectedCollection);
+    console.log("selectedNfts--->", selectedCollection);
     const selectedNft = selectedCollection?.nfts.find(
       (nft) => nft.NFTokenID === nftId
     );
