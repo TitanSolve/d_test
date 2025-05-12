@@ -103,6 +103,9 @@ const IncomingOfferCard = ({ transfer, index, onAction, myWalletAddress }) => {
             
           // }
           setPendingOfferAction(null);
+        }  else if( data.signed === false ){
+          setIsQrModalVisible(false);
+          ws.close();
         } else if (data.rejected) {
           setTransactionStatus("Transaction rejected");
           setPendingOfferAction(null);

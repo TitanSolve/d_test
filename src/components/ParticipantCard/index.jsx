@@ -392,7 +392,7 @@ const ParticipantCard = ({
       ws.onmessage = (event) => {
         const data = JSON.parse(event.data);
         console.log(data, "data aman in user card qr code");
-        if (data.signed) {
+        if (data.signed === true) {
           setTransactionStatus("Transaction signed.");
           setIsQrModalVisible(false);
           setMessageBoxType("success");
@@ -405,6 +405,9 @@ const ParticipantCard = ({
 
           //update Offer List
           refreshOffers();
+        } else if( data.signed === false ){
+          setIsQrModalVisible(false);
+          ws.close();
         } else if (data.rejected) {
           setTransactionStatus("Transaction rejected");
           setIsQrModalVisible(false);
