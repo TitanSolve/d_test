@@ -112,6 +112,7 @@ const MatrixClientProvider = () => {
     const connectClient = async () => {
       try {
         await client.connect();
+        console.log("Connected to XRPL");
       } catch (error) {
         console.error("Failed to connect to XRPL:", error);
       }
