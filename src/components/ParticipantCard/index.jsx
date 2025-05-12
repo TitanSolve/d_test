@@ -114,7 +114,6 @@ const ParticipantCard = ({
   };
 
   const openPreviewModal = (group) => {
-    refreshOffers("add");
     if (group.nfts.length > 1) {
       setSelectedNFTGroup(group);
       setPreviewModalOpen(true);
@@ -129,7 +128,6 @@ const ParticipantCard = ({
   };
 
   const openOfferModal = async (nft) => {
-    refreshOffers({"type":"add"});
     setIsLoading(true);
     const xrpl = require("xrpl");
     const client = new xrpl.Client(API_URLS.xrplMainnetUrl); // mainnet
@@ -406,7 +404,7 @@ const ParticipantCard = ({
           ws.close();
 
           //update Offer List
-          refreshOffers({type:"add"});
+          refreshOffers({"type":"add"});
         } else if (data.rejected) {
           setTransactionStatus("Transaction rejected");
           setIsQrModalVisible(false);
