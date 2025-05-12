@@ -113,10 +113,16 @@ const MatrixClientProvider = () => {
         const events = await widgetApi.receiveStateEvents(
           STATE_EVENT_ROOM_MEMBER
         );
-        const usersList = events.map((item) => ({
-          name: item.content.displayname,
-          userId: item.sender,
-        }));
+        console.log("events : ", events);
+        const usersList = events
+          .filter((item) => {
+            // Only include users with membership state 'join' or having displayname
+            return item.content.membership === "join";
+          })
+          .map((item) => ({
+            name: item.content.displayname,
+            userId: item.sender,
+          }));
 
         const userIds = usersList.map((member) =>
           member.userId.split(":")[0].replace("@", "")
