@@ -11,6 +11,7 @@ const OfferReceivedToggle = ({
   onAction,
   myOwnWalletAddress,
   refreshSellOffers,
+  updateUsersNFTs,
 }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [buyOffers, setBuyOffers] = useState([]);
@@ -84,6 +85,7 @@ const OfferReceivedToggle = ({
                   onAction={onAction}
                   myWalletAddress={myOwnWalletAddress}
                   refreshSellOffers={refreshSellOffers}
+                  updateUsersNFTs={updateUsersNFTs}
                 />
               ))}
             </div>

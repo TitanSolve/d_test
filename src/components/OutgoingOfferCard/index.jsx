@@ -42,6 +42,7 @@ const OutgoingOfferCard = ({
         setQrCodeUrl(data.refs.qr_png);
         setWebsocketUrl(data.refs.websocket_status);
         setIsQrModalVisible(true);
+        onAction();
       }
     } catch (error) {
       console.error("Error during fetch:", error);

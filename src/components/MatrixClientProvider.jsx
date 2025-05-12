@@ -413,6 +413,48 @@ const MatrixClientProvider = () => {
     setIsRefreshing(isRefreshing === 0 ? 1 : isRefreshing === 1 ? 2 : 1);
   };
 
+  const updateUsersNFTs = async ( nftId, seller, buyer ) => {
+    console.log("updateUsersNFTs--->", nftId, seller, buyer);
+    let selectedNft;
+    selectedNft = myNftData.find((user) => user.walletAddress === seller)?.groupedNfts
+      .find((collection) => collection.nfts.find((nft) => nft.NFTokenID === nftId));
+    console.log("selectedNft--->", selectedNft);
+    //Remove this nft from seller's collection and add to buyer's collection
+    const updatedMyNftData = myNftData.map((user) => {
+      if (user.walletAddress === seller) {
+        return {
+          ...user,
+          groupedNfts: user.groupedNfts.map((collection) => {
+            if (collection.nfts.find((nft) => nft.NFTokenID === nftId)) {
+              return {
+                ...collection,
+                nfts: collection.nfts.filter((nft) => nft.NFTokenID !== nftId),
+              };
+            }
+            return collection;
+          }),
+        };
+      } 
+      else if (user.walletAddress === buyer) {
+        return {
+          ...user,
+          groupedNfts: user.groupedNfts.map((collection) => {
+            if (collection.collection === selectedNft.collectionName) {
+              return {
+                ...collection,
+                nfts: [...collection.nfts, selectedNft],
+              };
+            }
+            return collection;
+          }),
+        };
+      }
+      return user;
+    });
+    console.log("updatedMyNftData--->", updatedMyNftData);
+    setMyNftData(updatedMyNftData);   
+  };
+
   return (
     <>
       {loading ? (
@@ -481,6 +523,7 @@ const MatrixClientProvider = () => {
                     myNftData={myNftData}
                     widgetApi={widgetApi}
                     isRefreshing={isRefreshing}
+                    updateUsersNFTs={updateUsersNFTs}
                   />
                 </div>
               </motion.div>

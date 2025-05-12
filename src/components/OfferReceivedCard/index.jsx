@@ -12,6 +12,7 @@ const OfferReceivedCard = ({
   onAction,
   myWalletAddress,
   refreshSellOffers,
+  updateUsersNFTs
 }) => {
   const [qrCodeUrl, setQrCodeUrl] = useState("");
   const [websocketUrl, setWebsocketUrl] = useState("");
@@ -49,12 +50,14 @@ const OfferReceivedCard = ({
     let isOfferFound = false;
     let sellOfferIndex = "";
     let brokerFee = ((buyOffer.offer.amount * 1 - 12) / 1.01 * 0.01).toFixed(0);
+    let sellOfferOwnder = "";
     for (const offer of madeOffers) {
       console.log("offer--->", offer);
       if (offer.nft.nftokenID === buyOffer.nft.nftokenID) {
         isOfferFound = true;
         sellOfferIndex = offer.offer.offerId;
         brokerFee = ((buyOffer.offer.amount * 1 - 12) / 1.01 * 0.01).toFixed(0);
+        sellOfferOwnder = offer.offer.offerOwner;
         console.log("brokerFee--->", brokerFee, buyOffer.offer.amount, offer.offer.amount);
         break;
       }
@@ -94,6 +97,11 @@ const OfferReceivedCard = ({
             setMessageBoxType("success");
             setMessageBoxText("Offer finished successfully");
             onAction();
+            updateUsersNFTs(
+              buyOffer.nft.nftokenID,
+              sellOfferOwnder,
+              buyOffer.offer.offerOwner
+            );
           } else {
             setMessageBoxType("error");
             setMessageBoxText(data.result.meta.TransactionResult);

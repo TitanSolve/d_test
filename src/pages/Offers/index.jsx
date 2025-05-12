@@ -6,7 +6,7 @@ import OfferReceivedToggle from "../../components/OfferReceivedToggle";
 import API_URLS from "../../config";
 import LoadingOverlay from "../../components/LoadingOverlay";
 
-const Offers = ({ membersList, myWalletAddress, myNftData, widgetApi, isRefreshing }) => {
+const Offers = ({ membersList, myWalletAddress, myNftData, widgetApi, isRefreshing, updateUsersNFTs }) => {
   const [receivedOffers, setReceivedOffers] = useState([]);
   const [madeOffers, setMadeOffers] = useState([]);
   const [incomingTransferOffers, setIncomingTransferOffers] = useState([]);
@@ -418,6 +418,7 @@ const Offers = ({ membersList, myWalletAddress, myNftData, widgetApi, isRefreshi
             onAction={refreshOffers}
             refreshSellOffers={fetchSellOffers}
             widgetApi={widgetApi}
+            updateUsersNFTs={updateUsersNFTs}
           />
           <OfferMadeToggle
             title="Offers Made"
