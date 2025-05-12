@@ -415,6 +415,7 @@ const Offers = ({
             incomingTransfers={receivedOffers}
             onAction={refreshOffers}
             myOwnWalletAddress={myWalletAddress}
+            updateUsersNFTs={updateUsersNFTs}
           />
           <OutgoingTransferToggle
             title="Outgoing transfers"

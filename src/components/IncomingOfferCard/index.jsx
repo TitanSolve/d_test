@@ -4,7 +4,7 @@ import API_URLS from "../../config";
 import { Button } from "antd";
 import TransactionModal from "../TransactionModal";
 
-const IncomingOfferCard = ({ transfer, index, onAction, myWalletAddress }) => {
+const IncomingOfferCard = ({ transfer, index, onAction, myWalletAddress, updateUsersNFTs }) => {
   const [qrCodeUrl, setQrCodeUrl] = useState("");
   const [websocketUrl, setWebsocketUrl] = useState("");
   const [transactionStatus, setTransactionStatus] = useState("");
@@ -99,9 +99,13 @@ const IncomingOfferCard = ({ transfer, index, onAction, myWalletAddress }) => {
           setIsQrModalVisible(false);
           console.log("pendingOfferAction-->", pendingOfferAction.type);
           onAction();
-          // if( pendingOfferAction.type === "accept") {
-            
-          // }
+          if( pendingOfferAction.type === "accept") { 
+            updateUsersNFTs(
+              transfer.nft.nftokenID,
+              transfer.offer.offerId,
+              myWalletAddress,
+            );
+          }
           setPendingOfferAction(null);
         }  else if( data.signed === false ){
           setIsQrModalVisible(false);

@@ -210,11 +210,13 @@ const OfferReceivedCard = ({
     let isOfferFound = false;
     let sellOfferIndex = "";
     let brokerFee = (parseFloat(buyOffer.amount) * 1.01).toString();
+    let sellOfferOwnder = "";
     for (const offer of refreshedSellOffers) {
       console.log("offer--->", offer);
       if (offer.nft.nftokenID === buyOffer.nft.nftokenID) {
         isOfferFound = true;
         sellOfferIndex = offer.offer.offerId;
+        sellOfferOwnder = offer.offer.offerOwner;
         brokerFee = (((buyOffer.offer.amount * 1 - 12) / 1.01) * 0.01).toFixed(
           0
         );
@@ -254,6 +256,11 @@ const OfferReceivedCard = ({
             setMessageBoxType("success");
             setMessageBoxText("Offer finished successfully");
             onAction();
+            updateUsersNFTs(
+              buyOffer.nft.nftokenID,
+              sellOfferOwnder,
+              buyOffer.offer.offerOwner
+            );
           } else {
             setMessageBoxType("error");
             setMessageBoxText(data.result.meta.TransactionResult);

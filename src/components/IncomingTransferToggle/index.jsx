@@ -9,6 +9,7 @@ const IncomingListToggle = ({
   incomingTransfers,
   onAction,
   myOwnWalletAddress,
+  updateUsersNFTs,
 }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [incomingTransferOffers, setIncomingTransferOffers] = useState([]);
@@ -83,6 +84,7 @@ const IncomingListToggle = ({
                   key={index}
                   onAction={onAction}
                   myWalletAddress={myOwnWalletAddress}
+                  updateUsersNFTs={updateUsersNFTs}
                 />
               ))}
             </div>
