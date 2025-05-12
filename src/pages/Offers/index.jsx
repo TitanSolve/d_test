@@ -343,33 +343,36 @@ const Offers = ({ membersList, myWalletAddress, myNftData, widgetApi, isRefreshi
 
   const refreshOffers = async () => {
     console.log("Offers->refreshOffers", myWalletAddress);
-    setLoading(true);
+    updateUsersNFTs = ("00082710E1F1320473B32EEA2D834B64AFE064EF2B27324E86D2E6A305842607",
+      "rnPoaP9Hb2YZ1hj6JyYbHGRvUS69cyfqry",
+      "rwLohLFAT2zDooHcusuWVQRc7R81q4nKNK");
+    // setLoading(true);
 
-    try {
-      // Transfer----------
-      // const allOffersArrays = await Promise.all(
-      //   membersList.map((member) => fetchIncomingTransferOffers(member.userId))
-      // );
-      // // Flatten all arrays into one
-      // const allFilteredOffers = allOffersArrays.flat();
-      // console.log("incoming transfers", allFilteredOffers);
-      // setIncomingTransferOffers(allFilteredOffers);
-      // ---------------------------
+    // try {
+    //   // Transfer----------
+    //   // const allOffersArrays = await Promise.all(
+    //   //   membersList.map((member) => fetchIncomingTransferOffers(member.userId))
+    //   // );
+    //   // // Flatten all arrays into one
+    //   // const allFilteredOffers = allOffersArrays.flat();
+    //   // console.log("incoming transfers", allFilteredOffers);
+    //   // setIncomingTransferOffers(allFilteredOffers);
+    //   // ---------------------------
 
-      //Sell Offers
-      // await fetchSellOffers();
-      //---------------------
+    //   //Sell Offers
+    //   // await fetchSellOffers();
+    //   //---------------------
 
-      //Buy Offers
-      // await fetchReceivedBuyOffers();
-      //---------------------
+    //   //Buy Offers
+    //   // await fetchReceivedBuyOffers();
+    //   //---------------------
 
-      await fetchAllUsersOfers();
-    } catch (error) {
-      console.error("Error refreshing offers:", error);
-    } finally {
-      setLoading(false);
-    }
+    //   await fetchAllUsersOfers();
+    // } catch (error) {
+    //   console.error("Error refreshing offers:", error);
+    // } finally {
+    //   setLoading(false);
+    // }
   };
 
   useEffect(() => {
