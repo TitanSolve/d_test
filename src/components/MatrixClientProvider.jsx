@@ -105,6 +105,24 @@ const MatrixClientProvider = () => {
   const { theme, toggleTheme } = useTheme();
   const [myOwnWalletAddress, setMyWalletAddress] = useState("");
   const [isRefreshing, setIsRefreshing] = useState(0);
+  const xrpl = require("xrpl");
+  const client = new xrpl.Client(API_URLS.xrplMainnetUrl); // mainnet
+
+  useEffect(() => {
+    const connectClient = async () => {
+      try {
+        await client.connect();
+      } catch (error) {
+        console.error("Failed to connect to XRPL:", error);
+      }
+    };
+
+    connectClient();
+
+    return () => {
+      client.disconnect();
+    };
+  }, []);
 
   useEffect(() => {
     const loadData = async () => {
@@ -127,6 +145,12 @@ const MatrixClientProvider = () => {
         const userIds = usersList.map((member) =>
           member.userId.split(":")[0].replace("@", "")
         );
+
+        await client.request({
+          command: "subscribe",
+          accounts: ["rEXAMPLE1...", "rEXAMPLE2..."],
+        });
+
         console.log("userIds : ", userIds);
         const trustLinesArray = await getTrustLinesAsArray(userIds);
 
@@ -412,6 +436,18 @@ const MatrixClientProvider = () => {
     console.log("Refresh Offers--->");
     setIsRefreshing(isRefreshing === 0 ? 1 : isRefreshing === 1 ? 2 : 1);
   };
+
+  client.on("transaction", (tx) => {
+    console.log("Transaction detected:", tx);
+    const type = tx.transaction.TransactionType;
+    if (
+      type === "NFTokenCreateOffer" ||
+      type === "NFTokenCancelOffer" ||
+      type === "NFTokenAcceptOffer"
+    ) {
+      console.log("📦 NFT TX Detected:", tx.transaction);
+    }
+  });
 
   const updateUsersNFTs = async (nftId, seller, buyer) => {
     console.log("updateUsersNFTs--->", nftId, seller, buyer);
