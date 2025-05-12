@@ -415,54 +415,72 @@ const MatrixClientProvider = () => {
 
   const updateUsersNFTs = async (nftId, seller, buyer) => {
     console.log("updateUsersNFTs--->", nftId, seller, buyer);
+
     const selectedUser = myNftData.find(
       (user) => user.walletAddress === seller
     );
-    console.log("selectedUser--->", selectedUser);
+
     const selectedCollection = selectedUser?.groupedNfts.find((group) =>
       group.nfts.some((nft) => nft.nftokenID === nftId)
     );
-    
+
     const selectedNft = selectedCollection?.nfts.find(
       (nft) => nft.nftokenID === nftId
     );
-    
-    console.log("selectedCollection--->", selectedCollection);
-    console.log("selectedNft--->", selectedNft);
 
-    //Remove this nft from seller's collection and add to buyer's collection
+    if (!selectedNft) return;
+
     const updatedMyNftData = myNftData.map((user) => {
+      // 🧼 Remove NFT from seller
       if (user.walletAddress === seller) {
         return {
           ...user,
           groupedNfts: user.groupedNfts.map((collection) => {
-            if (collection.nfts.find((nft) => nft.NFTokenID === nftId)) {
+            if (collection.nfts.some((nft) => nft.nftokenID === nftId)) {
               return {
                 ...collection,
-                nfts: collection.nfts.filter((nft) => nft.NFTokenID !== nftId),
-              };
-            }
-            return collection;
-          }),
-        };
-      } else if (user.walletAddress === buyer) {
-        return {
-          ...user,
-          groupedNfts: user.groupedNfts.map((collection) => {
-            if (collection.collection === selectedNft.collectionName) {
-              return {
-                ...collection,
-                nfts: [...collection.nfts, selectedNft],
+                nfts: collection.nfts.filter((nft) => nft.nftokenID !== nftId),
               };
             }
             return collection;
           }),
         };
       }
+
+      // ➕ Add NFT to buyer
+      else if (user.walletAddress === buyer) {
+        const hasCollection = user.groupedNfts.some(
+          (collection) => collection.collection === selectedNft.collectionName
+        );
+
+        return {
+          ...user,
+          groupedNfts: hasCollection
+            ? user.groupedNfts.map((collection) => {
+                if (collection.collection === selectedNft.collectionName) {
+                  return {
+                    ...collection,
+                    nfts: [...collection.nfts, selectedNft],
+                  };
+                }
+                return collection;
+              })
+            : [
+                ...user.groupedNfts,
+                {
+                  collection: selectedNft.collectionName,
+                  nfts: [selectedNft],
+                },
+              ],
+        };
+      }
+
+      // Other users remain unchanged
       return user;
     });
-    console.log("updatedMyNftData--->", updatedMyNftData);
-    // setMyNftData(updatedMyNftData);
+
+    console.log("✅ updatedMyNftData--->", updatedMyNftData);
+    // setMyNftData(updatedMyNftData); // <- Apply state change
   };
 
   return (
