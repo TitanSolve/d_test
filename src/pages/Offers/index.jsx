@@ -6,7 +6,14 @@ import OfferReceivedToggle from "../../components/OfferReceivedToggle";
 import API_URLS from "../../config";
 import LoadingOverlay from "../../components/LoadingOverlay";
 
-const Offers = ({ membersList, myWalletAddress, myNftData, widgetApi, isRefreshing, updateUsersNFTs }) => {
+const Offers = ({
+  membersList,
+  myWalletAddress,
+  myNftData,
+  widgetApi,
+  isRefreshing,
+  updateUsersNFTs,
+}) => {
   const [receivedOffers, setReceivedOffers] = useState([]);
   const [madeOffers, setMadeOffers] = useState([]);
   const [incomingTransferOffers, setIncomingTransferOffers] = useState([]);
@@ -307,7 +314,10 @@ const Offers = ({ membersList, myWalletAddress, myNftData, widgetApi, isRefreshi
         if (other.wallet === wallet) continue;
 
         for (const offer of other.offers) {
-          if (!offer.isSell && nftSet.has(offer.nftId) || offer.destination === myWalletAddress ) {
+          if (
+            (!offer.isSell && nftSet.has(offer.nftId)) ||
+            offer.destination === myWalletAddress
+          ) {
             receivedOffers.push({ offer, nft: nftMapById.get(offer.nftId) });
           }
         }
@@ -323,8 +333,10 @@ const Offers = ({ membersList, myWalletAddress, myNftData, widgetApi, isRefreshi
     console.log("🎯 Final user offers (made + received):", result);
 
     setUsersOffer(result);
-    const offerForMyWallet = result.find((offer) => offer.wallet === myWalletAddress);
-    
+    const offerForMyWallet = result.find(
+      (offer) => offer.wallet === myWalletAddress
+    );
+
     // Update made offers with proper error handling
     if (offerForMyWallet) {
       const madeOffers_ = offerForMyWallet.madeOffers || [];
@@ -343,36 +355,33 @@ const Offers = ({ membersList, myWalletAddress, myNftData, widgetApi, isRefreshi
 
   const refreshOffers = async () => {
     console.log("Offers->refreshOffers", myWalletAddress);
-    updateUsersNFTs("00082710E1F1320473B32EEA2D834B64AFE064EF2B27324E86D2E6A305842607",
-      "rnPoaP9Hb2YZ1hj6JyYbHGRvUS69cyfqry",
-      "rwLohLFAT2zDooHcusuWVQRc7R81q4nKNK");
-    // setLoading(true);
+    setLoading(true);
 
-    // try {
-    //   // Transfer----------
-    //   // const allOffersArrays = await Promise.all(
-    //   //   membersList.map((member) => fetchIncomingTransferOffers(member.userId))
-    //   // );
-    //   // // Flatten all arrays into one
-    //   // const allFilteredOffers = allOffersArrays.flat();
-    //   // console.log("incoming transfers", allFilteredOffers);
-    //   // setIncomingTransferOffers(allFilteredOffers);
-    //   // ---------------------------
+    try {
+      // Transfer----------
+      // const allOffersArrays = await Promise.all(
+      //   membersList.map((member) => fetchIncomingTransferOffers(member.userId))
+      // );
+      // // Flatten all arrays into one
+      // const allFilteredOffers = allOffersArrays.flat();
+      // console.log("incoming transfers", allFilteredOffers);
+      // setIncomingTransferOffers(allFilteredOffers);
+      // ---------------------------
 
-    //   //Sell Offers
-    //   // await fetchSellOffers();
-    //   //---------------------
+      //Sell Offers
+      // await fetchSellOffers();
+      //---------------------
 
-    //   //Buy Offers
-    //   // await fetchReceivedBuyOffers();
-    //   //---------------------
+      //Buy Offers
+      // await fetchReceivedBuyOffers();
+      //---------------------
 
-    //   await fetchAllUsersOfers();
-    // } catch (error) {
-    //   console.error("Error refreshing offers:", error);
-    // } finally {
-    //   setLoading(false);
-    // }
+      await fetchAllUsersOfers();
+    } catch (error) {
+      console.error("Error refreshing offers:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -380,7 +389,7 @@ const Offers = ({ membersList, myWalletAddress, myNftData, widgetApi, isRefreshi
     if (isRefreshing !== undefined && isRefreshing !== 0) {
       refreshOffers();
     }
-  },[isRefreshing]);
+  }, [isRefreshing]);
 
   useEffect(() => {
     console.log("Offers->useEffect", membersList, myWalletAddress);

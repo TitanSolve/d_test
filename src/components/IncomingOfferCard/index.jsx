@@ -99,6 +99,9 @@ const IncomingOfferCard = ({ transfer, index, onAction, myWalletAddress }) => {
           setIsQrModalVisible(false);
           console.log("pendingOfferAction-->", pendingOfferAction.type);
           onAction();
+          // if( pendingOfferAction.type === "accept") {
+            
+          // }
           setPendingOfferAction(null);
         } else if (data.rejected) {
           setTransactionStatus("Transaction rejected");

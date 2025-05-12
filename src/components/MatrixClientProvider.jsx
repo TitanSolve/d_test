@@ -433,17 +433,22 @@ const MatrixClientProvider = () => {
     const updatedMyNftData = myNftData.map((user) => {
       // 🧼 Remove NFT from seller
       if (user.walletAddress === seller) {
-        return {
-          ...user,
-          groupedNfts: user.groupedNfts.map((collection) => {
+        const updatedCollections = user.groupedNfts
+          .map((collection) => {
             if (collection.nfts.some((nft) => nft.nftokenID === nftId)) {
-              return {
-                ...collection,
-                nfts: collection.nfts.filter((nft) => nft.nftokenID !== nftId),
-              };
+              const remainingNfts = collection.nfts.filter(
+                (nft) => nft.nftokenID !== nftId
+              );
+              if (remainingNfts.length === 0) return null; // ❌ Remove empty collection
+              return { ...collection, nfts: remainingNfts };
             }
             return collection;
-          }),
+          })
+          .filter(Boolean); // 🧼 Remove null entries
+
+        return {
+          ...user,
+          groupedNfts: updatedCollections,
         };
       }
 
@@ -480,7 +485,7 @@ const MatrixClientProvider = () => {
     });
 
     console.log("✅ updatedMyNftData--->", updatedMyNftData);
-    // setMyNftData(updatedMyNftData); // <- Apply state change
+    setMyNftData(updatedMyNftData); // <- Apply state change
   };
 
   return (
