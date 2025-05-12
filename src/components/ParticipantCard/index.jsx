@@ -261,7 +261,7 @@ const ParticipantCard = ({
           if (response.data) {
             console.log("Offer created:", response.data);
 
-            const msg = `🔔NFT Sell Offer Created\n${wgtParameters.displayName} has offered ${state.amount} ${state.token} for ${selectedNftForOffer.metadata.name}`;
+            const msg = `🔔NFT Sell Offer Created\n${wgtParameters.displayName} has offered ${state.amount} ${state.token} for ${state.selectedUser}`;
             console.log("msg-->", msg);
             setRommMessage(msg);
 
@@ -369,7 +369,7 @@ const ParticipantCard = ({
         setIsLoading(false);
         console.log(response, "response aman in user card");
 
-        const msg = `🔔NFT Transfer Offer Created\n${wgtParameters.displayName} has offered ${selectedNftForOffer.metadata.name} to ${selectedNftForOffer.userName}`;
+        const msg = `🔔NFT Transfer Offer Created\n${wgtParameters.displayName} has offered ${selectedNftForOffer.metadata.name} to ${state.selectedUser}`;
         console.log("msg-->", msg);
         setRommMessage(msg);
 
