@@ -148,7 +148,7 @@ const MatrixClientProvider = () => {
 
         await client.request({
           command: "subscribe",
-          accounts: ["rEXAMPLE1...", "rEXAMPLE2..."],
+          accounts: userIds,
         });
 
         console.log("userIds : ", userIds);
