@@ -6,10 +6,6 @@ import LoadingOverlayForCard from "../LoadingOverlayForCard";
 import NFTMessageBox from "../NFTMessageBox";
 
 const OfferMadeCard = ({ sellOffer, index, onAction, myWalletAddress }) => {
-  const [qrCodeUrl, setQrCodeUrl] = useState("");
-  const [websocketUrl, setWebsocketUrl] = useState("");
-  const [transactionStatus, setTransactionStatus] = useState("");
-  const [isQrModalVisible, setIsQrModalVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isMessageBoxVisible, setIsMessageBoxVisible] = useState(false);
   const [messageBoxType, setMessageBoxType] = useState("success");
@@ -49,41 +45,21 @@ const OfferMadeCard = ({ sellOffer, index, onAction, myWalletAddress }) => {
       }
       const data = await response.json();
       setIsLoading(false);
-      if (data) {
-        console.log(data.refs, "data refs");
-        setQrCodeUrl(data.refs.qr_png);
-        setWebsocketUrl(data.refs.websocket_status);
-        setIsQrModalVisible(true);
+      if (data.meta.TransactionResult === "tesSUCCESS") {
+        console.log(data, "returned data");
+        setMessageBoxType("success");
+        setMessageBoxText("Offer cancelled successfully.");
+        setIsMessageBoxVisible(true);
       } else {
         console.log("No data received from the server.");
         setMessageBoxType("error");
-        setMessageBoxText("Failed to cancel the offer. Please try again.");
+        setMessageBoxText("Failed to cancel the offer. \nPlease try again.\n error: " + data.meta.TransactionResult);
         setIsMessageBoxVisible(true);
       }
     } catch (error) {
       console.error("Error during fetch:", error);
     }
   }
-
-  useEffect(() => {
-    if (websocketUrl) {
-      const ws = new WebSocket(websocketUrl);
-
-      ws.onmessage = (event) => {
-        const data = JSON.parse(event.data);
-        if (data.signed) {
-          setTransactionStatus("Transaction signed");
-          setIsQrModalVisible(false);
-          onAction();
-        } else if (data.rejected) {
-          setTransactionStatus("Transaction rejected");
-        }
-      };
-      return () => {
-        ws.close();
-      };
-    }
-  }, [websocketUrl]);
 
   return (
     <>
@@ -127,12 +103,6 @@ const OfferMadeCard = ({ sellOffer, index, onAction, myWalletAddress }) => {
               </Button>
             </div>
           </div>
-          <TransactionModal
-            isOpen={isQrModalVisible}
-            onClose={() => setIsQrModalVisible(false)}
-            qrCodeUrl={qrCodeUrl}
-            transactionStatus={transactionStatus}
-          />
           <NFTMessageBox
             isOpen={isMessageBoxVisible}
             onClose={() => setIsMessageBoxVisible(false)}

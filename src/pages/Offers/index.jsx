@@ -293,7 +293,7 @@ const Offers = ({ membersList, myWalletAddress, myNftData, widgetApi }) => {
       const buyOffers = [];
       const receivedOffers = [];
 
-      // Classify this wallet’s own offers
+      // Classify this wallet's own offers
       for (const offer of offers) {
         if (offer.isSell && nftSet.has(offer.nftId)) {
           sellOffers.push({ offer, nft: nftMapById.get(offer.nftId) });
@@ -302,7 +302,7 @@ const Offers = ({ membersList, myWalletAddress, myNftData, widgetApi }) => {
         }
       }
 
-      // Find incoming buy offers from others for this wallet’s NFTs
+      // Find incoming buy offers from others for this wallet's NFTs
       for (const other of offerData) {
         if (other.wallet === wallet) continue;
 
@@ -324,13 +324,21 @@ const Offers = ({ membersList, myWalletAddress, myNftData, widgetApi }) => {
 
     setUsersOffer(result);
     const offerForMyWallet = result.find((offer) => offer.wallet === myWalletAddress);
-    const madeOffers_ = offerForMyWallet ? offerForMyWallet.madeOffers : [];
-    console.log("madeOffers", madeOffers_);
-    setMadeOffers(madeOffers_ ? madeOffers_ : []);
+    
+    // Update made offers with proper error handling
+    if (offerForMyWallet) {
+      const madeOffers_ = offerForMyWallet.madeOffers || [];
+      console.log("madeOffers", madeOffers_);
+      setMadeOffers(madeOffers_);
 
-    const receivedOffers_ = offerForMyWallet ? offerForMyWallet.receivedOffers : [];
-    console.log("receivedOffers", receivedOffers_);
-    setReceivedOffers(receivedOffers_? receivedOffers_ : []);
+      const receivedOffers_ = offerForMyWallet.receivedOffers || [];
+      console.log("receivedOffers", receivedOffers_);
+      setReceivedOffers(receivedOffers_);
+    } else {
+      // If no offers found for the wallet, set empty arrays
+      setMadeOffers([]);
+      setReceivedOffers([]);
+    }
   };
 
   const refreshOffers = async () => {

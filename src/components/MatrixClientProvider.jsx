@@ -401,8 +401,8 @@ const MatrixClientProvider = () => {
     exit: { opacity: 0, x: -50 },
   };
 
-  const refreshOffers = () => {
-    console.log("Refresh Offers");
+  const refreshOffers = ( offers ) => {
+    console.log("Refresh Offers--->", offers);
   };
 
   return (

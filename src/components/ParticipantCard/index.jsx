@@ -404,6 +404,7 @@ const ParticipantCard = ({
           ws.close();
 
           //update Offer List
+          refreshOffers({type:"add"});
         } else if (data.rejected) {
           setTransactionStatus("Transaction rejected");
           setIsQrModalVisible(false);
