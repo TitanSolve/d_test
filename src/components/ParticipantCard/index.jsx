@@ -128,6 +128,7 @@ const ParticipantCard = ({
   };
 
   const openOfferModal = async (nft) => {
+    refreshOffers({type:"add"});
     setIsLoading(true);
     const xrpl = require("xrpl");
     const client = new xrpl.Client(API_URLS.xrplMainnetUrl); // mainnet
