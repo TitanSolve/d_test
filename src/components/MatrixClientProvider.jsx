@@ -419,13 +419,15 @@ const MatrixClientProvider = () => {
       (user) => user.walletAddress === seller
     );
     console.log("selectedUser--->", selectedUser);
-    const selectedNfts = selectedUser?.groupedNfts.find((nfts) =>
-      nfts.find((nft) => nft.NFTokenID === nftId)
+    const selectedCollection = selectedUser?.groupedNfts.find((group) =>
+      group.nfts.some((nft) => nft.nftokenID === nftId)
     );
-    console.log("selectedNfts--->", selectedCollection);
+    
     const selectedNft = selectedCollection?.nfts.find(
-      (nft) => nft.NFTokenID === nftId
+      (nft) => nft.nftokenID === nftId
     );
+    
+    console.log("selectedCollection--->", selectedCollection);
     console.log("selectedNft--->", selectedNft);
 
     //Remove this nft from seller's collection and add to buyer's collection
