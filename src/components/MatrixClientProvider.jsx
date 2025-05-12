@@ -109,17 +109,6 @@ const MatrixClientProvider = () => {
   const client = new xrpl.Client(API_URLS.xrplMainnetUrl); // mainnet
 
   useEffect(() => {
-    const connectClient = async () => {
-      try {
-        await client.connect();
-        console.log("Connected to XRPL");
-      } catch (error) {
-        console.error("Failed to connect to XRPL:", error);
-      }
-    };
-
-    connectClient();
-
     return () => {
       client.disconnect();
     };
@@ -147,6 +136,8 @@ const MatrixClientProvider = () => {
           member.userId.split(":")[0].replace("@", "")
         );
 
+        await client.connect();
+        console.log("Connected to XRPL");
         await client.request({
           command: "subscribe",
           accounts: userIds,
