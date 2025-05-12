@@ -108,11 +108,11 @@ const MatrixClientProvider = () => {
   const xrpl = require("xrpl");
   const client = new xrpl.Client(API_URLS.xrplMainnetUrl); // mainnet
 
-  useEffect(() => {
-    return () => {
-      client.disconnect();
-    };
-  }, []);
+  // useEffect(() => {
+  //   return () => {
+  //     client.disconnect();
+  //   };
+  // }, []);
 
   useEffect(() => {
     const loadData = async () => {
@@ -136,12 +136,12 @@ const MatrixClientProvider = () => {
           member.userId.split(":")[0].replace("@", "")
         );
 
-        await client.connect();
-        console.log("Connected to XRPL");
-        await client.request({
-          command: "subscribe",
-          accounts: userIds,
-        });
+        // await client.connect();
+        // console.log("Connected to XRPL");
+        // await client.request({
+        //   command: "subscribe",
+        //   accounts: userIds,
+        // });
 
         console.log("userIds : ", userIds);
         const trustLinesArray = await getTrustLinesAsArray(userIds);
