@@ -93,6 +93,7 @@ const OfferReceivedCard = ({
           if (data.result.meta.TransactionResult === "tesSUCCESS") {
             setMessageBoxType("success");
             setMessageBoxText("Offer finished successfully");
+            onAction();
           } else {
             setMessageBoxType("error");
             setMessageBoxText(data.result.meta.TransactionResult);
@@ -171,9 +172,6 @@ const OfferReceivedCard = ({
       if (data) {
         console.log(data.refs, "data refs");
         onAction();
-        // setQrCodeUrl(data.refs.qr_png);
-        // setWebsocketUrl(data.refs.websocket_status);
-        // setIsQrModalVisible(true);
       }
     } catch (error) {
       console.error("Error during fetch:", error);
@@ -225,10 +223,10 @@ const OfferReceivedCard = ({
         const data = await response.json();
         if (data) {
           console.log(data, "data");
-          // onAction();
           if (data.result.meta.TransactionResult === "tesSUCCESS") {
             setMessageBoxType("success");
             setMessageBoxText("Offer finished successfully");
+            onAction();
           } else {
             setMessageBoxType("error");
             setMessageBoxText(data.result.meta.TransactionResult);
