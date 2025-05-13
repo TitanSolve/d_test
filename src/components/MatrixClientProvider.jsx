@@ -106,7 +106,7 @@ const MatrixClientProvider = () => {
   const [myOwnWalletAddress, setMyWalletAddress] = useState("");
   const [isRefreshing, setIsRefreshing] = useState(0);
   const xrpl = require("xrpl");
-  
+  const client = new xrpl.Client(API_URLS.xrplMainnetUrl); // mainnet
 
   // useEffect(() => {
   //   return () => {
@@ -136,7 +136,6 @@ const MatrixClientProvider = () => {
           member.userId.split(":")[0].replace("@", "")
         );
 
-        const client = new xrpl.Client(API_URLS.xrplMainnetUrl); // mainnet
         await client.connect();
         console.log("Connected to XRPL");
         await client.request({
