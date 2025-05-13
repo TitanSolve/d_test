@@ -133,10 +133,10 @@ const MatrixClientProvider = () => {
           member.userId.split(":")[0].replace("@", "")
         );
 
-        // const subscribedUsers_ = userIds.filter(
-        //   (userId) => userId !== myOwnWalletAddress
-        // );
-        setSubscribedUsers(userIds);
+        const subscribedUsers_ = userIds.filter(
+          (userId) => userId !== myOwnWalletAddress
+        );
+        setSubscribedUsers(subscribedUsers_);
 
         console.log("userIds : ", userIds);
         const trustLinesArray = await getTrustLinesAsArray(userIds);
