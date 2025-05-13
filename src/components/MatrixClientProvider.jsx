@@ -455,6 +455,7 @@ const MatrixClientProvider = () => {
           command: "subscribe",
           accounts: subscribedUsers,
         });
+        console.log("✅ Successfully subscribed");
       } catch (err) {
         console.warn("❌ Failed to subscribe:", err.message);
       }
