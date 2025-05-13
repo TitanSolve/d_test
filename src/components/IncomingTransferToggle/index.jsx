@@ -22,6 +22,9 @@ const IncomingListToggle = ({
       );
       setIncomingTransferOffers(filteredTransfers);
       setCount(filteredTransfers.length);
+    } else {
+      setIncomingTransferOffers([]);
+      setCount(0);
     }
   }, [incomingTransfers]);
 

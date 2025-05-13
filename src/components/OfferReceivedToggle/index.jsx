@@ -27,6 +27,9 @@ const OfferReceivedToggle = ({
       setBuyOffers(filteredTransfers);
       setCount(filteredTransfers.length);
       console.log("OfferReceivedToggle->buyOffer-->", filteredTransfers);
+    } else {
+      setBuyOffers([]);
+      setCount(0);
     }
   }, [receivedOffers]);
 
