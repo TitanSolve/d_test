@@ -141,13 +141,6 @@ const MatrixClientProvider = () => {
           (userId) => userId !== myOwnWalletAddress
         );
 
-        await client.connect();
-        console.log("Connected to XRPL");
-        await client.request({
-          command: "subscribe",
-          accounts: subscribedUsers,
-        });
-
         console.log("userIds : ", userIds);
         const trustLinesArray = await getTrustLinesAsArray(userIds);
 
@@ -157,6 +150,13 @@ const MatrixClientProvider = () => {
         const ownWalletAddress = own.userId?.split(":")[0].replace("@", "");
         console.log("ownWalletAddress : ", ownWalletAddress);
         setMyWalletAddress(ownWalletAddress);
+
+        await client.connect();
+        console.log("Connected to XRPL");
+        await client.request({
+          command: "subscribe",
+          accounts: subscribedUsers,
+        });
 
         const usersWithTrustLines = usersList.map((user) => {
           const walletAddress = user.userId.split(":")[0].replace("@", "");
@@ -479,13 +479,15 @@ const MatrixClientProvider = () => {
           //   (nft) => nft.nftokenID === nftId
           // );
 
+          console.log("myNftData : ", myNftData);
+
           const nft = myNftData
             .flatMap((user) => user.groupedNfts)
             .flatMap((group) => group.nfts)
             .find((nft) => nft.nftokenID === nftId);
           console.log("nft : ", nft);
 
-          console.log("isSell : ", isSell, "owner : ", owner);
+          console.log("isSell : ", isSell, "owner : ", owner, "myOwnWalletAddress : ", myOwnWalletAddress);
 
           if (!isSell && owner === myOwnWalletAddress) {
             console.log("Incoming Buy Offer detected");
