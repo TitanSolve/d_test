@@ -105,8 +105,8 @@ const MatrixClientProvider = () => {
   const { theme, toggleTheme } = useTheme();
   const [myOwnWalletAddress, setMyWalletAddress] = useState("");
   const [isRefreshing, setIsRefreshing] = useState(0);
-  // const xrpl = require("xrpl");
-  // const client = new xrpl.Client(API_URLS.xrplMainnetUrl); // mainnet
+  const xrpl = require("xrpl");
+  
 
   // useEffect(() => {
   //   return () => {
@@ -136,12 +136,13 @@ const MatrixClientProvider = () => {
           member.userId.split(":")[0].replace("@", "")
         );
 
-        // await client.connect();
-        // console.log("Connected to XRPL");
-        // await client.request({
-        //   command: "subscribe",
-        //   accounts: userIds,
-        // });
+        const client = new xrpl.Client(API_URLS.xrplMainnetUrl); // mainnet
+        await client.connect();
+        console.log("Connected to XRPL");
+        await client.request({
+          command: "subscribe",
+          accounts: userIds,
+        });
 
         console.log("userIds : ", userIds);
         const trustLinesArray = await getTrustLinesAsArray(userIds);
