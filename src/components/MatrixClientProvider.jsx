@@ -444,7 +444,7 @@ const MatrixClientProvider = () => {
   }
 
   useEffect(() => {
-    if (!client || !myNftData.length || !myOwnWalletAddress) return;
+    if (!client || !myNftData.length || !myOwnWalletAddress || !subscribedUsers.length ) return;
 
     console.log("------------------- client.on-------------------");
     console.log("subscribedUsers : ", subscribedUsers);
