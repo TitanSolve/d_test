@@ -105,8 +105,8 @@ const MatrixClientProvider = () => {
   const { theme, toggleTheme } = useTheme();
   const [myOwnWalletAddress, setMyWalletAddress] = useState("");
   const [isRefreshing, setIsRefreshing] = useState(0);
-  const xrpl = require("xrpl");
-  const client = new xrpl.Client(API_URLS.xrplMainnetUrl); // mainnet
+  // const xrpl = require("xrpl");
+  // const client = new xrpl.Client(API_URLS.xrplMainnetUrl); // mainnet
 
   // useEffect(() => {
   //   return () => {
