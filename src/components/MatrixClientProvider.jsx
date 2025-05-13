@@ -441,11 +441,17 @@ const MatrixClientProvider = () => {
   }
 
   useEffect(() => {
-    if (!client || !myNftData.length || !myOwnWalletAddress || !subscribedUsers.length ) return;
+    if (
+      !client ||
+      !myNftData.length ||
+      !myOwnWalletAddress ||
+      !subscribedUsers.length
+    )
+      return;
 
     console.log("------------------- client.on-------------------");
-    console.log("subscribedUsers : ", subscribedUsers);   
-    console.log("client->isConnected : ", !client.isConnected());  
+    console.log("subscribedUsers : ", subscribedUsers);
+    console.log("client->isConnected : ", !client.isConnected());
 
     const subscribeToAccount = async () => {
       try {
@@ -533,7 +539,11 @@ const MatrixClientProvider = () => {
               .flatMap((group) => group.nfts)
               .find((nft) => nft.nftokenID === nftId);
 
-            if( account === myOwnWalletAddress || destination === myOwnWalletAddress || owner === myOwnWalletAddress) {
+            if (
+              account === myOwnWalletAddress ||
+              destination === myOwnWalletAddress ||
+              owner === myOwnWalletAddress
+            ) {
               console.log("Outgoing Sell Offer Cancellation detected");
               setCancelledOffer({
                 offerId: offerId,
@@ -543,16 +553,17 @@ const MatrixClientProvider = () => {
                 account: account,
                 owner: owner,
               });
+            }
           }
         }
       }
-    };
 
-    client.on("transaction", listener);
+      client.on("transaction", listener);
 
-    // Clean up: remove listener when state changes or component unmounts
-    return () => {
-      client.off("transaction", listener);
+      // Clean up: remove listener when state changes or component unmounts
+      return () => {
+        client.off("transaction", listener);
+      };
     };
   }, [client, myNftData, myOwnWalletAddress]); // ✅ dependencies
 
