@@ -13,6 +13,7 @@ const Offers = ({
   widgetApi,
   isRefreshing,
   updateUsersNFTs,
+  incomingOffer,
 }) => {
   const [receivedOffers, setReceivedOffers] = useState([]);
   const [madeOffers, setMadeOffers] = useState([]);
@@ -20,6 +21,51 @@ const Offers = ({
   const [loading, setLoading] = useState(false); // Add loading state
   const [sellOffers, setSellOffers] = useState([]);
   const [usersOffer, setUsersOffer] = useState([]);
+
+  useEffect(() => {
+    console.log("Offers->useEffect->incoming offer", incomingOffer);
+    if (incomingOffer) {
+      console.log("incomingOffer", incomingOffer);
+
+      const walletNftMap = {};
+      const nftMapById = new Map();
+      myNftData.forEach((member) => {
+        member.groupedNfts.forEach((group) => {
+          group.nfts.forEach((nft) => {
+            nftMapById.set(nft.nftokenID, { ...nft });
+          });
+        });
+        const wallet = member.walletAddress;
+        const nftIds = member.groupedNfts.flatMap((group) =>
+          group.nfts.map((nft) => nft.nftokenID)
+        );
+        walletNftMap[wallet] = new Set(nftIds);
+      });
+
+      if (
+        (!incomingOffer.offer.isSell && walletNftMap[myWalletAddress].has(incomingOffer.nft.nftokenID)) ||
+        incomingOffer.offer.destination === myWalletAddress
+      ) {
+        const receivedOffers_ = receivedOffers || [];
+        receivedOffers_.push(incomingOffer);
+        console.log("incoming offer result : receivedOffers_", receivedOffers_);
+        setReceivedOffers(receivedOffers_);
+      }
+    }
+  }, [incomingOffer]);
+
+  useEffect(() => {
+    console.log("Offers->useEffect->isRefreshing", isRefreshing);
+    if (isRefreshing !== undefined && isRefreshing !== 0) {
+      refreshOffers();
+    }
+  }, [isRefreshing]);
+
+  useEffect(() => {
+    console.log("Offers->useEffect", membersList, myWalletAddress);
+    if (myWalletAddress === "" || membersList.length < 1) return;
+    refreshOffers();
+  }, [membersList, myWalletAddress]);
 
   async function fetchReceivedBuyOffers() {
     const requestOptions = {
@@ -383,19 +429,6 @@ const Offers = ({
       setLoading(false);
     }
   };
-
-  useEffect(() => {
-    console.log("Offers->useEffect", isRefreshing);
-    if (isRefreshing !== undefined && isRefreshing !== 0) {
-      refreshOffers();
-    }
-  }, [isRefreshing]);
-
-  useEffect(() => {
-    console.log("Offers->useEffect", membersList, myWalletAddress);
-    if (myWalletAddress === "" || membersList.length < 1) return;
-    refreshOffers();
-  }, [membersList, myWalletAddress]);
 
   return (
     <>

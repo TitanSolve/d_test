@@ -105,8 +105,9 @@ const MatrixClientProvider = () => {
   const { theme, toggleTheme } = useTheme();
   const [myOwnWalletAddress, setMyWalletAddress] = useState("");
   const [isRefreshing, setIsRefreshing] = useState(0);
+  const [incomingOffer, setIncomingOffer] = useState(null);
   const xrpl = require("xrpl");
-  const client = new xrpl.Client(API_URLS.xrplMainnetUrl); // mainnet
+  const client = new xrpl.Client(API_URLS.xrplMainnetUrl);
 
   // useEffect(() => {
   //   return () => {
@@ -136,11 +137,15 @@ const MatrixClientProvider = () => {
           member.userId.split(":")[0].replace("@", "")
         );
 
+        const subscribedUsers = userIds.filter(
+          (userId) => userId !== myOwnWalletAddress
+        );
+
         await client.connect();
         console.log("Connected to XRPL");
         await client.request({
           command: "subscribe",
-          accounts: userIds,
+          accounts: subscribedUsers,
         });
 
         console.log("userIds : ", userIds);
@@ -429,15 +434,89 @@ const MatrixClientProvider = () => {
     setIsRefreshing(isRefreshing === 0 ? 1 : isRefreshing === 1 ? 2 : 1);
   };
 
+  function extractOfferIdFromMeta(meta) {
+    if (!meta?.AffectedNodes) return null;
+
+    for (const node of meta.AffectedNodes) {
+      if (node.CreatedNode?.LedgerEntryType === "NFTokenOffer") {
+        return node.CreatedNode.LedgerIndex;
+      }
+    }
+    return null;
+  }
+
   client.on("transaction", (tx) => {
     console.log("Transaction detected:", tx);
-    const type = tx.transaction.TransactionType;
-    if (
-      type === "NFTokenCreateOffer" ||
-      type === "NFTokenCancelOffer" ||
-      type === "NFTokenAcceptOffer"
-    ) {
-      console.log("📦 NFT TX Detected:", tx.transaction);
+    const type = tx?.tx_json?.TransactionType;
+    const validated = tx?.validated;
+    if (validated === true) {
+      if (
+        (type === "NFTokenCreateOffer" ||
+          type === "NFTokenCancelOffer" ||
+          type === "NFTokenAcceptOffer") &&
+        tx?.meta?.TransactionResult === "tesSUCCESS"
+      ) {
+        console.log("📦 NFT TX Detected:", tx.tx_json);
+        if (type === "NFTokenCreateOffer") {
+          const offerId = extractOfferIdFromMeta(tx.meta);
+          const isSell =
+            (tx?.tx_json?.Flags &
+              xrpl.NFTokenCreateOfferFlags.tfSellNFToken) !==
+            0;
+          const account = tx?.tx_json?.Account;
+          const owner = tx?.tx_json?.Owner;
+          const destination = tx?.tx_json?.Destination;
+          const amount = tx?.tx_json?.Amount;
+          const nftId = tx?.tx_json?.NFTokenID;
+
+          const selectedUser = myNftData.find(
+            (user) => user.walletAddress === seller
+          );
+          const selectedCollection = selectedUser?.groupedNfts.find((group) =>
+            group.nfts.some((nft) => nft.nftokenID === nftId)
+          );
+          const selectedNft = selectedCollection?.nfts.find(
+            (nft) => nft.nftokenID === nftId
+          );
+
+          const nft = myNftData.forEach((user) => {
+            const selectedCollection = user.groupedNfts.find((group) =>
+              group.nfts.some((nft) => nft.nftokenID === nftId)
+            );
+            const selectedNft = selectedCollection?.nfts.find(
+              (nft) => nft.nftokenID === nftId
+            );
+            if (selectedNft) {
+              return {
+                ...selectedNft,
+              };
+            } else {
+              return null;
+            }
+          });
+          console.log("nft : ", nft);
+
+          if (!isSell && owner === myOwnWalletAddress) {
+            console.log("Incoming Buy Offer detected");
+            const offer = {
+              walletAddress: account,
+              offer: {
+                offerId: offerId,
+                amount: amount,
+                offerOwnder: account,
+                isSell: isSell,
+                destination: destination,
+              },
+              nft: {
+                ...nft,
+              },
+            };
+
+            console.log("Incoming Offer detected:", offer);
+            setIncomingOffer(offer);
+          }
+        }
+      }
     }
   });
 
@@ -459,7 +538,7 @@ const MatrixClientProvider = () => {
     if (!selectedNft) return;
 
     const updatedMyNftData = myNftData.map((user) => {
-      // 🧼 Remove NFT from seller
+      //Remove NFT from seller
       if (user.walletAddress === seller) {
         const updatedCollections = user.groupedNfts
           .map((collection) => {
@@ -467,12 +546,12 @@ const MatrixClientProvider = () => {
               const remainingNfts = collection.nfts.filter(
                 (nft) => nft.nftokenID !== nftId
               );
-              if (remainingNfts.length === 0) return null; // ❌ Remove empty collection
+              if (remainingNfts.length === 0) return null; //Remove empty collection
               return { ...collection, nfts: remainingNfts };
             }
             return collection;
           })
-          .filter(Boolean); // 🧼 Remove null entries
+          .filter(Boolean); //Remove null entries
 
         return {
           ...user,
@@ -480,7 +559,7 @@ const MatrixClientProvider = () => {
         };
       }
 
-      // ➕ Add NFT to buyer
+      //Add NFT to buyer
       else if (user.walletAddress === buyer) {
         const hasCollection = user.groupedNfts.some(
           (collection) => collection.collection === selectedNft.collectionName
@@ -507,11 +586,9 @@ const MatrixClientProvider = () => {
               ],
         };
       }
-
       // Other users remain unchanged
       return user;
     });
-
     console.log("✅ updatedMyNftData--->", updatedMyNftData);
     setMyNftData(updatedMyNftData); // <- Apply state change
   };
@@ -531,7 +608,6 @@ const MatrixClientProvider = () => {
           }}
           className="dark:bg-[#15191E] dark:text-white bg-white text-black"
         >
-          {/* Toggle Button */}
           <Tooltip
             title={`Switch to ${theme === "light" ? "Dark" : "Light"} Mode`}
             arrow
@@ -585,6 +661,7 @@ const MatrixClientProvider = () => {
                     widgetApi={widgetApi}
                     isRefreshing={isRefreshing}
                     updateUsersNFTs={updateUsersNFTs}
+                    incomingOffer={incomingOffer}
                   />
                 </div>
               </motion.div>
