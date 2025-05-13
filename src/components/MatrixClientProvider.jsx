@@ -151,13 +151,6 @@ const MatrixClientProvider = () => {
         console.log("ownWalletAddress : ", ownWalletAddress);
         setMyWalletAddress(ownWalletAddress);
 
-        await client.connect();
-        console.log("Connected to XRPL");
-        await client.request({
-          command: "subscribe",
-          accounts: subscribedUsers,
-        });
-
         const usersWithTrustLines = usersList.map((user) => {
           const walletAddress = user.userId.split(":")[0].replace("@", "");
           const trustData = trustLinesArray.find(
@@ -284,6 +277,75 @@ const MatrixClientProvider = () => {
         );
         console.log("Merged members with NFT data:", mergedMembers);
         setMyNftData(mergedMembers);
+
+        await client.connect();
+        console.log("Connected to XRPL");
+        await client.request({
+          command: "subscribe",
+          accounts: subscribedUsers,
+        });
+
+        client.on("transaction", (tx) => {
+          console.log("Transaction detected:", tx);
+          const type = tx?.tx_json?.TransactionType;
+          const validated = tx?.validated;
+          if (validated === true) {
+            if (
+              (type === "NFTokenCreateOffer" ||
+                type === "NFTokenCancelOffer" ||
+                type === "NFTokenAcceptOffer") &&
+              tx?.meta?.TransactionResult === "tesSUCCESS"
+            ) {
+              console.log("📦 NFT TX Detected:", tx.tx_json);
+              if (type === "NFTokenCreateOffer") {
+                const offerId = extractOfferIdFromMeta(tx.meta);
+                const isSell =
+                  (tx?.tx_json?.Flags &
+                    xrpl.NFTokenCreateOfferFlags.tfSellNFToken) !==
+                  0;
+                const account = tx?.tx_json?.Account;
+                const owner = tx?.tx_json?.Owner;
+                const destination = tx?.tx_json?.Destination;
+                const amount = tx?.tx_json?.Amount;
+                const nftId = tx?.tx_json?.NFTokenID;
+                console.log("myNftData : ", myNftData);
+                const nft = myNftData
+                  .flatMap((user) => user.groupedNfts)
+                  .flatMap((group) => group.nfts)
+                  .find((nft) => nft.nftokenID === nftId);
+                console.log("nft : ", nft);
+                console.log(
+                  "isSell : ",
+                  isSell,
+                  "owner : ",
+                  owner,
+                  "myOwnWalletAddress : ",
+                  myOwnWalletAddress
+                );
+
+                if (!isSell && owner === myOwnWalletAddress) {
+                  console.log("Incoming Buy Offer detected");
+                  const offer = {
+                    walletAddress: account,
+                    offer: {
+                      offerId: offerId,
+                      amount: amount,
+                      offerOwnder: account,
+                      isSell: isSell,
+                      destination: destination,
+                    },
+                    nft: {
+                      ...nft,
+                    },
+                  };
+
+                  console.log("Incoming Offer detected:", offer);
+                  setIncomingOffer(offer);
+                }
+              }
+            }
+          }
+        });
 
         // load Offer data
         // const xrpl = require("xrpl");
@@ -444,74 +506,6 @@ const MatrixClientProvider = () => {
     }
     return null;
   }
-
-  client.on("transaction", (tx) => {
-    console.log("Transaction detected:", tx);
-    const type = tx?.tx_json?.TransactionType;
-    const validated = tx?.validated;
-    if (validated === true) {
-      if (
-        (type === "NFTokenCreateOffer" ||
-          type === "NFTokenCancelOffer" ||
-          type === "NFTokenAcceptOffer") &&
-        tx?.meta?.TransactionResult === "tesSUCCESS"
-      ) {
-        console.log("📦 NFT TX Detected:", tx.tx_json);
-        if (type === "NFTokenCreateOffer") {
-          const offerId = extractOfferIdFromMeta(tx.meta);
-          const isSell =
-            (tx?.tx_json?.Flags &
-              xrpl.NFTokenCreateOfferFlags.tfSellNFToken) !==
-            0;
-          const account = tx?.tx_json?.Account;
-          const owner = tx?.tx_json?.Owner;
-          const destination = tx?.tx_json?.Destination;
-          const amount = tx?.tx_json?.Amount;
-          const nftId = tx?.tx_json?.NFTokenID;
-
-          // const selectedUser = myNftData.find(
-          //   (user) => user.walletAddress === seller
-          // );
-          // const selectedCollection = selectedUser?.groupedNfts.find((group) =>
-          //   group.nfts.some((nft) => nft.nftokenID === nftId)
-          // );
-          // const selectedNft = selectedCollection?.nfts.find(
-          //   (nft) => nft.nftokenID === nftId
-          // );
-
-          console.log("myNftData : ", myNftData);
-
-          const nft = myNftData
-            .flatMap((user) => user.groupedNfts)
-            .flatMap((group) => group.nfts)
-            .find((nft) => nft.nftokenID === nftId);
-          console.log("nft : ", nft);
-
-          console.log("isSell : ", isSell, "owner : ", owner, "myOwnWalletAddress : ", myOwnWalletAddress);
-
-          if (!isSell && owner === myOwnWalletAddress) {
-            console.log("Incoming Buy Offer detected");
-            const offer = {
-              walletAddress: account,
-              offer: {
-                offerId: offerId,
-                amount: amount,
-                offerOwnder: account,
-                isSell: isSell,
-                destination: destination,
-              },
-              nft: {
-                ...nft,
-              },
-            };
-
-            console.log("Incoming Offer detected:", offer);
-            setIncomingOffer(offer);
-          }
-        }
-      }
-    }
-  });
 
   const updateUsersNFTs = async (nftId, seller, buyer) => {
     console.log("updateUsersNFTs--->", nftId, seller, buyer);
