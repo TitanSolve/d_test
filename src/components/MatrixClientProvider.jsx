@@ -537,6 +537,9 @@ const MatrixClientProvider = () => {
             if (offerIds.length > 0) {
               setCancelledOffer(offerIds);
             }
+            else if (type === "NFTokenAcceptOffer") {
+              
+            }
           }
         }
       }

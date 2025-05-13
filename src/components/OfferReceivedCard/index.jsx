@@ -161,8 +161,8 @@ const OfferReceivedCard = ({
         if (data) {
           console.log(data.refs, "data refs");
           setQrCodeUrl(data.refs.qr_png);
-          setWebsocketAutoMakeSellOfferUrl(data.refs.websocket_status);
           setIsQrModalVisible(true);
+          setWebsocketAutoMakeSellOfferUrl(data.refs.websocket_status);
         }
       } catch (error) {
         console.error("Error creating offer:", error);
