@@ -63,14 +63,14 @@ const Offers = ({
   }, [incomingOffer]);
 
   useEffect(() => {
-    if (cancelledOffer) {
+    if (cancelledOffer?.length > 0) {
       console.log("Offers->useEffect->cancelled offer", cancelledOffer);
 
       setMadeOffers((prev) =>
-        prev.filter((offer) => offer.offer.offerId !== cancelledOffer.offerId)
-      );
+        prev.filter((offer) => !cancelledIds.has(offer.offer.offerId))
+      );  
       setReceivedOffers((prev) =>
-        prev.filter((offer) => offer.offer.offerId !== cancelledOffer.offerId)
+        prev.filter((offer) => !cancelledIds.has(offer.offer.offerId))
       );
     }
   }, [cancelledOffer]);
