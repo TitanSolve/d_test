@@ -188,7 +188,7 @@ const Offers = ({
         })
       );
 
-      setNftSellOffers(filteredOffers);
+      // setNftSellOffers(filteredOffers);
       return filteredOffers;
     } catch (error) {
       console.error("Error fetching NFT sell offers:", error);
