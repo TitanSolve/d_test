@@ -536,71 +536,79 @@ const MatrixClientProvider = () => {
             const offerIds = tx?.tx_json?.NFTokenOffers;
             if (offerIds.length > 0) {
               setCancelledOffer(offerIds);
-            } else if (type === "NFTokenAcceptOffer") {
-              const sellOfferId = tx?.tx_json?.NFTokenSellOffer;
-              const buyOfferId = tx?.tx_json?.NFTokenBuyOffer;
-              const buyerWallet = tx?.tx_json?.Account;
-
-              const affectedNodes = tx?.meta?.AffectedNodes;
-              const sellOfferNode = affectedNodes.find(
-                (node) =>
-                  node.DeletedNode?.LedgerEntryType === "NFTokenOffer" &&
-                  node.DeletedNode.FinalFields?.Flags === 1
-              );
-              const sellerWallet =
-                sellOfferNode?.DeletedNode?.FinalFields?.Owner;
-              const nftId = sellOfferNode?.DeletedNode?.FinalFields?.NFTokenID;
-              console.log(
-                "deatils of the offer",
-                sellOfferId,
-                buyOfferId,
-                buyerWallet,
-                sellerWallet,
-                nftId
-              );
-              setCancelledOffer([sellOfferId, buyOfferId]);
-
-              setMyNftData(prevData => {
-                const updatedData = prevData.map(user => {
-                  if (user.walletAddress === seller) {
-                    const updatedGroups = user.groupedNfts
-                      .map(group => {
-                        const updatedNfts = group.nfts.filter(nft => nft.nftokenID !== nftId);
-                        return updatedNfts.length > 0 ? { ...group, nfts: updatedNfts } : null;
-                      })
-                      .filter(group => group !== null);
-                    return { ...user, groupedNfts: updatedGroups };
-                  } else if (user.walletAddress === buyer) {
-                    const sellerUser = prevData.find(u => u.walletAddress === seller);
-                    const nftToTransfer = sellerUser?.groupedNfts
-                      .flatMap(group => group.nfts)
-                      .find(nft => nft.nftokenID === nftId);
-                    if (!nftToTransfer) return user;
-            
-                    const existingGroup = user.groupedNfts.find(
-                      group => group.collection === nftToTransfer.collectionName
-                    );
-                    let newGroupedNfts;
-                    if (existingGroup) {
-                      newGroupedNfts = user.groupedNfts.map(group =>
-                        group.collection === nftToTransfer.collectionName
-                          ? { ...group, nfts: [...group.nfts, nftToTransfer] }
-                          : group
-                      );
-                    } else {
-                      newGroupedNfts = [
-                        ...user.groupedNfts,
-                        { collection: nftToTransfer.collectionName, nfts: [nftToTransfer] }
-                      ];
-                    }
-                    return { ...user, groupedNfts: newGroupedNfts };
-                  }
-                  return user;
-                });
-                console.log("updatedData : ", updatedData);
-                return updatedData;
-              });
             }
+          } else if (type === "NFTokenAcceptOffer") {
+            const sellOfferId = tx?.tx_json?.NFTokenSellOffer;
+            const buyOfferId = tx?.tx_json?.NFTokenBuyOffer;
+            const buyerWallet = tx?.tx_json?.Account;
+
+            const affectedNodes = tx?.meta?.AffectedNodes;
+            const sellOfferNode = affectedNodes.find(
+              (node) =>
+                node.DeletedNode?.LedgerEntryType === "NFTokenOffer" &&
+                node.DeletedNode.FinalFields?.Flags === 1
+            );
+            const sellerWallet = sellOfferNode?.DeletedNode?.FinalFields?.Owner;
+            const nftId = sellOfferNode?.DeletedNode?.FinalFields?.NFTokenID;
+            console.log(
+              "deatils of the offer",
+              sellOfferId,
+              buyOfferId,
+              buyerWallet,
+              sellerWallet,
+              nftId
+            );
+            setCancelledOffer([sellOfferId, buyOfferId]);
+
+            setMyNftData((prevData) => {
+              const updatedData = prevData.map((user) => {
+                if (user.walletAddress === seller) {
+                  const updatedGroups = user.groupedNfts
+                    .map((group) => {
+                      const updatedNfts = group.nfts.filter(
+                        (nft) => nft.nftokenID !== nftId
+                      );
+                      return updatedNfts.length > 0
+                        ? { ...group, nfts: updatedNfts }
+                        : null;
+                    })
+                    .filter((group) => group !== null);
+                  return { ...user, groupedNfts: updatedGroups };
+                } else if (user.walletAddress === buyer) {
+                  const sellerUser = prevData.find(
+                    (u) => u.walletAddress === seller
+                  );
+                  const nftToTransfer = sellerUser?.groupedNfts
+                    .flatMap((group) => group.nfts)
+                    .find((nft) => nft.nftokenID === nftId);
+                  if (!nftToTransfer) return user;
+
+                  const existingGroup = user.groupedNfts.find(
+                    (group) => group.collection === nftToTransfer.collectionName
+                  );
+                  let newGroupedNfts;
+                  if (existingGroup) {
+                    newGroupedNfts = user.groupedNfts.map((group) =>
+                      group.collection === nftToTransfer.collectionName
+                        ? { ...group, nfts: [...group.nfts, nftToTransfer] }
+                        : group
+                    );
+                  } else {
+                    newGroupedNfts = [
+                      ...user.groupedNfts,
+                      {
+                        collection: nftToTransfer.collectionName,
+                        nfts: [nftToTransfer],
+                      },
+                    ];
+                  }
+                  return { ...user, groupedNfts: newGroupedNfts };
+                }
+                return user;
+              });
+              console.log("updatedData : ", updatedData);
+              return updatedData;
+            });
           }
         }
       }
