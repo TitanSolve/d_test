@@ -588,7 +588,7 @@ const MatrixClientProvider = () => {
                       }
                       return { ...group, nfts: filteredNfts };
                     })
-                    .filter((group) => group !== null) as typeof user.groupedNfts;
+                    .filter((group) => group !== null);
             
                   console.log(`✅ Updated groups for seller ${sellerWallet}:`, updatedGroups);
             
