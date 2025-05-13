@@ -107,8 +107,8 @@ const MatrixClientProvider = () => {
   const [isRefreshing, setIsRefreshing] = useState(0);
   const [incomingOffer, setIncomingOffer] = useState(null);
   const [subscribedUsers, setSubscribedUsers] = useState([]);
+  const [client, setClient] = useState(null);
   const xrpl = require("xrpl");
-  const client = new xrpl.Client(API_URLS.xrplMainnetUrl);
 
   // useEffect(() => {
   //   return () => {
@@ -153,8 +153,10 @@ const MatrixClientProvider = () => {
         console.log("ownWalletAddress : ", ownWalletAddress);
         setMyWalletAddress(ownWalletAddress);
 
-        await client.connect();
+        const client_ = new xrpl.Client(API_URLS.xrplMainnetUrl);
+        await client_.connect();
         console.log("Connected to XRPL");
+        setClient(client_);
 
         const usersWithTrustLines = usersList.map((user) => {
           const walletAddress = user.userId.split(":")[0].replace("@", "");
@@ -449,7 +451,7 @@ const MatrixClientProvider = () => {
     console.log("------------------- client.on-------------------");
     console.log("subscribedUsers : ", subscribedUsers);
 
-
+    
     console.log("client->isConnected : ", !client.isConnected());
 
     
@@ -459,7 +461,7 @@ const MatrixClientProvider = () => {
         console.log("📡 Subscribing to accounts:", subscribedUsers);
         await client.request({
           command: "subscribe",
-          accounts: ["rpxot3Z1EgQMpGR4n3jopgrPdTSXaDqmxS"],
+          accounts: subscribedUsers,
         });
         console.log("✅ Successfully subscribed");
       } catch (err) {
