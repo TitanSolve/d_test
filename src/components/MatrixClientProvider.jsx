@@ -576,7 +576,7 @@ const MatrixClientProvider = () => {
                   return { ...user, groupedNfts: updatedGroups };
                 } else if (user.walletAddress === buyerWallet) {
                   const sellerUser = prevData.find(
-                    (u) => u.walletAddress === seller
+                    (u) => u.walletAddress === sellerWallet
                   );
                   const nftToTransfer = sellerUser?.groupedNfts
                     .flatMap((group) => group.nfts)
