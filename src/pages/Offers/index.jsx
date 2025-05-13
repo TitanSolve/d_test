@@ -14,6 +14,7 @@ const Offers = ({
   isRefreshing,
   updateUsersNFTs,
   incomingOffer,
+  cancelledOffer,
 }) => {
   const [receivedOffers, setReceivedOffers] = useState([]);
   const [madeOffers, setMadeOffers] = useState([]);
@@ -42,11 +43,17 @@ const Offers = ({
         walletNftMap[wallet] = new Set(nftIds);
       });
 
-      console.log("incomingOffer detail--->", !incomingOffer.offer.isSell, walletNftMap[myWalletAddress].has(incomingOffer.nft.nftokenID), 
-                  incomingOffer.offer.destination, myWalletAddress);   
+      console.log(
+        "incomingOffer detail--->",
+        !incomingOffer.offer.isSell,
+        walletNftMap[myWalletAddress].has(incomingOffer.nft.nftokenID),
+        incomingOffer.offer.destination,
+        myWalletAddress
+      );
 
       if (
-        (!incomingOffer.offer.isSell && walletNftMap[myWalletAddress].has(incomingOffer.nft.nftokenID)) ||
+        (!incomingOffer.offer.isSell &&
+          walletNftMap[myWalletAddress].has(incomingOffer.nft.nftokenID)) ||
         incomingOffer.offer.destination === myWalletAddress
       ) {
         console.log("incomingOffer accepted-----");
@@ -54,6 +61,19 @@ const Offers = ({
       }
     }
   }, [incomingOffer]);
+
+  useEffect(() => {
+    if (cancelledOffer) {
+      console.log("Offers->useEffect->cancelled offer", cancelledOffer);
+
+      setMadeOffers((prev) =>
+        prev.filter((offer) => offer.offer.offerId !== cancelledOffer.offerId)
+      );
+      setReceivedOffers((prev) =>
+        prev.filter((offer) => offer.offer.offerId !== cancelledOffer.offerId)
+      );
+    }
+  }, [cancelledOffer]);
 
   useEffect(() => {
     console.log("Offers->useEffect->isRefreshing", isRefreshing);

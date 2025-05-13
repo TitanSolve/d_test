@@ -106,15 +106,10 @@ const MatrixClientProvider = () => {
   const [myOwnWalletAddress, setMyWalletAddress] = useState("");
   const [isRefreshing, setIsRefreshing] = useState(0);
   const [incomingOffer, setIncomingOffer] = useState(null);
+  const [cancelledOffer, setCancelledOffer] = useState(null);
   const [subscribedUsers, setSubscribedUsers] = useState([]);
   const [client, setClient] = useState(null);
   const xrpl = require("xrpl");
-
-  // useEffect(() => {
-  //   return () => {
-  //     client.disconnect();
-  //   };
-  // }, []);
 
   useEffect(() => {
     const loadData = async () => {
@@ -449,12 +444,8 @@ const MatrixClientProvider = () => {
     if (!client || !myNftData.length || !myOwnWalletAddress || !subscribedUsers.length ) return;
 
     console.log("------------------- client.on-------------------");
-    console.log("subscribedUsers : ", subscribedUsers);
-
-    
-    console.log("client->isConnected : ", !client.isConnected());
-
-    
+    console.log("subscribedUsers : ", subscribedUsers);   
+    console.log("client->isConnected : ", !client.isConnected());  
 
     const subscribeToAccount = async () => {
       try {
@@ -527,6 +518,31 @@ const MatrixClientProvider = () => {
               console.log("Incoming Offer detected:", offer);
               setIncomingOffer(offer);
             }
+          } else if (type === "NFTokenCancelOffer") {
+            const offerId = extractOfferIdFromMeta(tx.meta);
+            const account = tx?.tx_json?.Account;
+            const nftId = tx?.tx_json?.NFTokenID;
+            const destination = tx?.tx_json?.Destination;
+            const owner = tx?.tx_json?.Owner;
+            const isSell =
+              (tx?.tx_json?.Flags &
+                xrpl.NFTokenCreateOfferFlags.tfSellNFToken) !==
+              0;
+            const nft = myNftData
+              .flatMap((user) => user.groupedNfts)
+              .flatMap((group) => group.nfts)
+              .find((nft) => nft.nftokenID === nftId);
+
+            if( account === myOwnWalletAddress || destination === myOwnWalletAddress || owner === myOwnWalletAddress) {
+              console.log("Outgoing Sell Offer Cancellation detected");
+              setCancelledOffer({
+                offerId: offerId,
+                nftId: nft.nftokenID,
+                isSell: isSell,
+                destination: destination,
+                account: account,
+                owner: owner,
+              });
           }
         }
       }
@@ -682,6 +698,7 @@ const MatrixClientProvider = () => {
                     isRefreshing={isRefreshing}
                     updateUsersNFTs={updateUsersNFTs}
                     incomingOffer={incomingOffer}
+                    cancelledOffer={cancelledOffer}
                   />
                 </div>
               </motion.div>
