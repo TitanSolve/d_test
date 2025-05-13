@@ -448,9 +448,13 @@ const MatrixClientProvider = () => {
   useEffect(() => {
     if (!client || !myNftData.length || !myOwnWalletAddress) return;
 
+    console.log("------------------- client.on-------------------");
+
     const listener = (tx) => {
       const type = tx?.tx_json?.TransactionType;
       const validated = tx?.validated;
+
+      console.log("tx : ", tx);
 
       if (
         validated &&
