@@ -562,7 +562,7 @@ const MatrixClientProvider = () => {
 
             setMyNftData((prevData) => {
               const updatedData = prevData.map((user) => {
-                if (user.walletAddress === seller) {
+                if (user.walletAddress === sellerWallet) {
                   const updatedGroups = user.groupedNfts
                     .map((group) => {
                       const updatedNfts = group.nfts.filter(
@@ -574,7 +574,7 @@ const MatrixClientProvider = () => {
                     })
                     .filter((group) => group !== null);
                   return { ...user, groupedNfts: updatedGroups };
-                } else if (user.walletAddress === buyer) {
+                } else if (user.walletAddress === buyerWallet) {
                   const sellerUser = prevData.find(
                     (u) => u.walletAddress === seller
                   );
