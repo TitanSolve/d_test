@@ -540,16 +540,40 @@ const MatrixClientProvider = () => {
           } else if (type === "NFTokenAcceptOffer") {
             const sellOfferId = tx?.tx_json?.NFTokenSellOffer;
             const buyOfferId = tx?.tx_json?.NFTokenBuyOffer;
-            const buyerWallet = tx?.tx_json?.Account;
 
-            const affectedNodes = tx?.meta?.AffectedNodes;
-            const sellOfferNode = affectedNodes.find(
-              (node) =>
-                node.DeletedNode?.LedgerEntryType === "NFTokenOffer" &&
-                node.DeletedNode.FinalFields?.Flags === 1
-            );
-            const sellerWallet = sellOfferNode?.DeletedNode?.FinalFields?.Owner;
-            const nftId = sellOfferNode?.DeletedNode?.FinalFields?.NFTokenID;
+            let buyerWallet = null;
+            let sellerWallet = null;
+            let nftId = null;
+
+            if (tx?.tx_json?.NFTokenBrokerFee > 15) {
+              for (const node of tx.meta.AffectedNodes) {
+                if (
+                  node.DeletedNode &&
+                  node.DeletedNode.LedgerEntryType === "NFTokenOffer" &&
+                  node.DeletedNode.FinalFields
+                ) {
+                  const offer = node.DeletedNode.FinalFields;
+                  const isSell = (offer.Flags & 1) === 1;
+                  nftId = node?.DeletedNode?.FinalFields?.NFTokenID;
+
+                  if (isSell) {
+                    sellerWallet = offer.Owner;
+                  } else {
+                    buyerWallet = offer.Owner;
+                  }
+                }
+              }
+            } else {
+              buyerWallet = tx?.tx_json?.Account;
+              const affectedNodes = tx?.meta?.AffectedNodes;
+              const sellOfferNode = affectedNodes.find(
+                (node) =>
+                  node.DeletedNode?.LedgerEntryType === "NFTokenOffer" &&
+                  node.DeletedNode.FinalFields?.Flags === 1
+              );
+              sellerWallet = sellOfferNode?.DeletedNode?.FinalFields?.Owner;
+              nftId = sellOfferNode?.DeletedNode?.FinalFields?.NFTokenID;
+            }
             console.log(
               "deatils of the offer",
               sellOfferId,
@@ -561,46 +585,60 @@ const MatrixClientProvider = () => {
             setCancelledOffer([sellOfferId, buyOfferId]);
 
             setMyNftData((prevData) => {
-              console.log("✅ Starting update for NFT transfer", { nftId, sellerWallet, buyerWallet });
-            
+              console.log("✅ Starting update for NFT transfer", {
+                nftId,
+                sellerWallet,
+                buyerWallet,
+              });
+
               // Step 1: Find the NFT to transfer BEFORE modifying anything
-              const sellerUser = prevData.find((u) => u.walletAddress === sellerWallet);
+              const sellerUser = prevData.find(
+                (u) => u.walletAddress === sellerWallet
+              );
               const nftToTransfer = sellerUser?.groupedNfts
                 .flatMap((group) => group.nfts)
                 .find((nft) => nft.nftokenID === nftId);
-            
+
               if (!nftToTransfer) {
                 console.warn("❌ NFT to transfer not found");
                 return prevData;
               }
-            
+
               console.log("🔄 NFT to transfer found:", nftToTransfer);
-            
+
               const updatedData = prevData.map((user) => {
                 // Step 2: Remove from seller
                 if (user.walletAddress === sellerWallet) {
                   const updatedGroups = user.groupedNfts
                     .map((group) => {
-                      const filteredNfts = group.nfts.filter((nft) => nft.nftokenID !== nftId);
+                      const filteredNfts = group.nfts.filter(
+                        (nft) => nft.nftokenID !== nftId
+                      );
                       if (filteredNfts.length === 0) {
-                        console.log(`🧹 Removing empty group from seller ${sellerWallet}`, group.collection);
+                        console.log(
+                          `🧹 Removing empty group from seller ${sellerWallet}`,
+                          group.collection
+                        );
                         return null;
                       }
                       return { ...group, nfts: filteredNfts };
                     })
                     .filter((group) => group !== null);
-            
-                  console.log(`✅ Updated groups for seller ${sellerWallet}:`, updatedGroups);
-            
+
+                  console.log(
+                    `✅ Updated groups for seller ${sellerWallet}:`,
+                    updatedGroups
+                  );
+
                   return { ...user, groupedNfts: updatedGroups };
                 }
-            
+
                 // Step 3: Add to buyer
                 else if (user.walletAddress === buyerWallet) {
                   const existingGroup = user.groupedNfts.find(
                     (group) => group.collection === nftToTransfer.collectionName
                   );
-            
+
                   let newGroupedNfts;
                   if (existingGroup) {
                     newGroupedNfts = user.groupedNfts.map((group) =>
@@ -608,7 +646,9 @@ const MatrixClientProvider = () => {
                         ? { ...group, nfts: [...group.nfts, nftToTransfer] }
                         : group
                     );
-                    console.log(`➕ Added NFT to existing group for buyer ${buyerWallet}`);
+                    console.log(
+                      `➕ Added NFT to existing group for buyer ${buyerWallet}`
+                    );
                   } else {
                     newGroupedNfts = [
                       ...user.groupedNfts,
@@ -617,20 +657,21 @@ const MatrixClientProvider = () => {
                         nfts: [nftToTransfer],
                       },
                     ];
-                    console.log(`✨ Created new group and added NFT for buyer ${buyerWallet}`);
+                    console.log(
+                      `✨ Created new group and added NFT for buyer ${buyerWallet}`
+                    );
                   }
-            
+
                   return { ...user, groupedNfts: newGroupedNfts };
                 }
-            
+
                 // Step 4: Unrelated users remain unchanged
                 return user;
               });
-            
+
               console.log("✅ Final updated NFT ownership data:", updatedData);
               return updatedData;
             });
-            
           }
         }
       }
