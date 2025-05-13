@@ -214,10 +214,10 @@ const OfferReceivedCard = ({
     let sellOfferOwnder = "";
     for (const offer of refreshedSellOffers) {
       console.log("offer--->", offer);
-      if (offer.nft.nftokenID === buyOffer.nft.nftokenID) {
+      if (offer.NFTokenID === buyOffer.nft.nftokenID) {
         isOfferFound = true;
-        sellOfferIndex = offer.offer.offerId;
-        sellOfferOwnder = offer.offer.offerOwner;
+        sellOfferIndex = offer.nft_offer_index;
+        sellOfferOwnder = offer.owner;
         brokerFee = (((buyOffer.offer.amount * 1 - 12) / 1.01) * 0.01).toFixed(
           0
         );
