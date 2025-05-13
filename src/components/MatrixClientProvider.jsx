@@ -512,7 +512,6 @@ const MatrixClientProvider = () => {
             if (!isSell && owner === myOwnWalletAddress) {
               console.log("Incoming Buy Offer detected");
               const offer = {
-                walletAddress: account,
                 offer: {
                   offerId: offerId,
                   amount: amount,
