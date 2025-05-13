@@ -469,32 +469,23 @@ const MatrixClientProvider = () => {
           const amount = tx?.tx_json?.Amount;
           const nftId = tx?.tx_json?.NFTokenID;
 
-          const selectedUser = myNftData.find(
-            (user) => user.walletAddress === seller
-          );
-          const selectedCollection = selectedUser?.groupedNfts.find((group) =>
-            group.nfts.some((nft) => nft.nftokenID === nftId)
-          );
-          const selectedNft = selectedCollection?.nfts.find(
-            (nft) => nft.nftokenID === nftId
-          );
+          // const selectedUser = myNftData.find(
+          //   (user) => user.walletAddress === seller
+          // );
+          // const selectedCollection = selectedUser?.groupedNfts.find((group) =>
+          //   group.nfts.some((nft) => nft.nftokenID === nftId)
+          // );
+          // const selectedNft = selectedCollection?.nfts.find(
+          //   (nft) => nft.nftokenID === nftId
+          // );
 
-          const nft = myNftData.forEach((user) => {
-            const selectedCollection = user.groupedNfts.find((group) =>
-              group.nfts.some((nft) => nft.nftokenID === nftId)
-            );
-            const selectedNft = selectedCollection?.nfts.find(
-              (nft) => nft.nftokenID === nftId
-            );
-            if (selectedNft) {
-              return {
-                ...selectedNft,
-              };
-            } else {
-              return null;
-            }
-          });
+          const nft = myNftData
+            .flatMap((user) => user.groupedNfts)
+            .flatMap((group) => group.nfts)
+            .find((nft) => nft.nftokenID === nftId);
           console.log("nft : ", nft);
+
+          console.log("isSell : ", isSell, "owner : ", owner);
 
           if (!isSell && owner === myOwnWalletAddress) {
             console.log("Incoming Buy Offer detected");
