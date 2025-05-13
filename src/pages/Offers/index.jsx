@@ -66,11 +66,13 @@ const Offers = ({
     if (cancelledOffer?.length > 0) {
       console.log("Offers->useEffect->cancelled offer", cancelledOffer);
 
+      const cancelledIds = new Set(cancelledOffer);
+
       setMadeOffers((prev) =>
-        prev.filter((offer) => !cancelledOffer.has(offer.offer.offerId))
+        prev.filter((offer) => !cancelledIds.has(offer.offer.offerId))
       );  
       setReceivedOffers((prev) =>
-        prev.filter((offer) => !cancelledOffer.has(offer.offer.offerId))
+        prev.filter((offer) => !cancelledIds.has(offer.offer.offerId))
       );
     }
   }, [cancelledOffer]);
