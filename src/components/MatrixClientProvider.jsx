@@ -106,6 +106,7 @@ const MatrixClientProvider = () => {
   const [myOwnWalletAddress, setMyWalletAddress] = useState("");
   const [isRefreshing, setIsRefreshing] = useState(0);
   const [incomingOffer, setIncomingOffer] = useState(null);
+  const [subscribedUsers, setSubscribedUsers] = useState([]);
   const xrpl = require("xrpl");
   const client = new xrpl.Client(API_URLS.xrplMainnetUrl);
 
@@ -137,9 +138,10 @@ const MatrixClientProvider = () => {
           member.userId.split(":")[0].replace("@", "")
         );
 
-        const subscribedUsers = userIds.filter(
+        const subscribedUsers_ = userIds.filter(
           (userId) => userId !== myOwnWalletAddress
         );
+        setSubscribedUsers(subscribedUsers_);
 
         console.log("userIds : ", userIds);
         const trustLinesArray = await getTrustLinesAsArray(userIds);
@@ -445,6 +447,7 @@ const MatrixClientProvider = () => {
     if (!client || !myNftData.length || !myOwnWalletAddress) return;
 
     console.log("------------------- client.on-------------------");
+    console.log("subscribedUsers : ", subscribedUsers);
 
     const subscribeToAccount = async () => {
       try {
