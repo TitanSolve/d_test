@@ -156,6 +156,7 @@ const OfferReceivedCard = ({
           throw new Error(`HTTP error! status: ${response.status}`);
         }
 
+        setIsLoading(false);
         const data = await response.json();
         console.log("Offer created:", response);
         if (data) {
@@ -309,6 +310,7 @@ const OfferReceivedCard = ({
           setTransactionStatus("Transaction signed");
           setIsQrModalVisible(false);
           refreshSellOfferAndAccept();
+          setIsLoading(true);
         } else if (data.rejected) {
           setTransactionStatus("Transaction rejected");
         }
