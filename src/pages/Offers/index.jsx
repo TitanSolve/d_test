@@ -46,9 +46,10 @@ const Offers = ({
         (!incomingOffer.offer.isSell && walletNftMap[myWalletAddress].has(incomingOffer.nft.nftokenID)) ||
         incomingOffer.offer.destination === myWalletAddress
       ) {
-        receivedOffers.push(incomingOffer);
-        console.log("incoming offer result : receivedOffers", receivedOffers);
-        setReceivedOffers(receivedOffers);
+        const receivedOffers_ = receivedOffers || [];
+        receivedOffers_.push(incomingOffer);
+        console.log("incoming offer result :receivedOffers_", receivedOffers_);
+        setReceivedOffers(receivedOffers_);
       }
     }
   }, [incomingOffer]);
@@ -343,7 +344,7 @@ const Offers = ({
 
       const sellOffers = [];
       const buyOffers = [];
-      const receivedOffers = [];
+      const receivedOffers_ = [];
 
       // Classify this wallet's own offers
       for (const offer of offers) {
@@ -363,7 +364,7 @@ const Offers = ({
             (!offer.isSell && nftSet.has(offer.nftId)) ||
             offer.destination === myWalletAddress
           ) {
-            receivedOffers.push({ offer, nft: nftMapById.get(offer.nftId) });
+            receivedOffers_.push({ offer, nft: nftMapById.get(offer.nftId) });
           }
         }
       }
@@ -371,7 +372,7 @@ const Offers = ({
       return {
         wallet,
         madeOffers: [...sellOffers, ...buyOffers],
-        receivedOffers,
+        receivedOffers: receivedOffers_,
       };
     });
 
