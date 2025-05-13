@@ -153,10 +153,6 @@ const MatrixClientProvider = () => {
 
         await client.connect();
         console.log("Connected to XRPL");
-        await client.request({
-          command: "subscribe",
-          accounts: subscribedUsers,
-        });
 
         const usersWithTrustLines = usersList.map((user) => {
           const walletAddress = user.userId.split(":")[0].replace("@", "");
@@ -450,7 +446,20 @@ const MatrixClientProvider = () => {
 
     console.log("------------------- client.on-------------------");
 
-    client.on("transaction", (tx) => {
+    const subscribeToAccount = async () => {
+      try {
+        await client.request({
+          command: "subscribe",
+          accounts: subscribedUsers,
+        });
+      } catch (err) {
+        console.warn("❌ Failed to subscribe:", err.message);
+      }
+    };
+
+    subscribeToAccount();
+
+    const listener = (tx) => {
       console.log("Transaction detected:", tx);
       const type = tx?.tx_json?.TransactionType;
       const validated = tx?.validated;
@@ -510,7 +519,9 @@ const MatrixClientProvider = () => {
           }
         }
       }
-    });
+    };
+
+    client.on("transaction", listener);
 
     // Clean up: remove listener when state changes or component unmounts
     return () => {
