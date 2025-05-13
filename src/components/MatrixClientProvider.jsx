@@ -544,6 +544,8 @@ const MatrixClientProvider = () => {
               .flatMap((group) => group.nfts)
               .find((nft) => nft.nftokenID === nftId);
 
+            console.log("account:", account, "destination : ", destination, "owner : ", owner ,"myOwnWalletAddress:", myOwnWalletAddress);
+
             if (
               account === myOwnWalletAddress ||
               destination === myOwnWalletAddress ||
