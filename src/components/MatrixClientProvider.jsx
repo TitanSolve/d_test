@@ -534,7 +534,6 @@ const MatrixClientProvider = () => {
             setCancelledOffer({
               offerIds: offerIds,
             });
-            }
           }
         }
       }
