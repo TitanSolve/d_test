@@ -561,32 +561,46 @@ const MatrixClientProvider = () => {
             setCancelledOffer([sellOfferId, buyOfferId]);
 
             setMyNftData((prevData) => {
+              console.log("✅ Starting update for NFT transfer", { nftId, sellerWallet, buyerWallet });
+            
+              // Step 1: Find the NFT to transfer BEFORE modifying anything
+              const sellerUser = prevData.find((u) => u.walletAddress === sellerWallet);
+              const nftToTransfer = sellerUser?.groupedNfts
+                .flatMap((group) => group.nfts)
+                .find((nft) => nft.nftokenID === nftId);
+            
+              if (!nftToTransfer) {
+                console.warn("❌ NFT to transfer not found");
+                return prevData;
+              }
+            
+              console.log("🔄 NFT to transfer found:", nftToTransfer);
+            
               const updatedData = prevData.map((user) => {
+                // Step 2: Remove from seller
                 if (user.walletAddress === sellerWallet) {
                   const updatedGroups = user.groupedNfts
                     .map((group) => {
-                      const updatedNfts = group.nfts.filter(
-                        (nft) => nft.nftokenID !== nftId
-                      );
-                      return updatedNfts.length > 0
-                        ? { ...group, nfts: updatedNfts }
-                        : null;
+                      const filteredNfts = group.nfts.filter((nft) => nft.nftokenID !== nftId);
+                      if (filteredNfts.length === 0) {
+                        console.log(`🧹 Removing empty group from seller ${sellerWallet}`, group.collection);
+                        return null;
+                      }
+                      return { ...group, nfts: filteredNfts };
                     })
-                    .filter((group) => group !== null);
+                    .filter((group) => group !== null) as typeof user.groupedNfts;
+            
+                  console.log(`✅ Updated groups for seller ${sellerWallet}:`, updatedGroups);
+            
                   return { ...user, groupedNfts: updatedGroups };
-                } else if (user.walletAddress === buyerWallet) {
-                  const sellerUser = prevData.find(
-                    (u) => u.walletAddress === sellerWallet
-                  );
-                  const nftToTransfer = sellerUser?.groupedNfts
-                    .flatMap((group) => group.nfts)
-                    .find((nft) => nft.nftokenID === nftId);
-                  console.log("nftToTransfer : ", nftToTransfer);
-                  if (!nftToTransfer) return user;
-
+                }
+            
+                // Step 3: Add to buyer
+                else if (user.walletAddress === buyerWallet) {
                   const existingGroup = user.groupedNfts.find(
                     (group) => group.collection === nftToTransfer.collectionName
                   );
+            
                   let newGroupedNfts;
                   if (existingGroup) {
                     newGroupedNfts = user.groupedNfts.map((group) =>
@@ -594,6 +608,7 @@ const MatrixClientProvider = () => {
                         ? { ...group, nfts: [...group.nfts, nftToTransfer] }
                         : group
                     );
+                    console.log(`➕ Added NFT to existing group for buyer ${buyerWallet}`);
                   } else {
                     newGroupedNfts = [
                       ...user.groupedNfts,
@@ -602,14 +617,20 @@ const MatrixClientProvider = () => {
                         nfts: [nftToTransfer],
                       },
                     ];
+                    console.log(`✨ Created new group and added NFT for buyer ${buyerWallet}`);
                   }
+            
                   return { ...user, groupedNfts: newGroupedNfts };
                 }
+            
+                // Step 4: Unrelated users remain unchanged
                 return user;
               });
-              console.log("updatedData : ", updatedData);
+            
+              console.log("✅ Final updated NFT ownership data:", updatedData);
               return updatedData;
             });
+            
           }
         }
       }
