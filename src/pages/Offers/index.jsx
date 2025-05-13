@@ -42,14 +42,15 @@ const Offers = ({
         walletNftMap[wallet] = new Set(nftIds);
       });
 
+      console.log("incomingOffer detail--->", !incomingOffer.offer.isSell, walletNftMap[myWalletAddress].has(incomingOffer.nft.nftokenID), 
+                  incomingOffer.offer.destination, myWalletAddress);   
+
       if (
         (!incomingOffer.offer.isSell && walletNftMap[myWalletAddress].has(incomingOffer.nft.nftokenID)) ||
         incomingOffer.offer.destination === myWalletAddress
       ) {
-        const receivedOffers_ = receivedOffers || [];
-        receivedOffers_.push(incomingOffer);
-        console.log("incoming offer result :receivedOffers_", receivedOffers_);
-        setReceivedOffers(receivedOffers_);
+        console.log("incomingOffer accepted-----");
+        setReceivedOffers((prev) => [...prev, incomingOffer]);
       }
     }
   }, [incomingOffer]);

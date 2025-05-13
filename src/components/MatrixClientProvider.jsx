@@ -494,7 +494,6 @@ const MatrixClientProvider = () => {
             const destination = tx?.tx_json?.Destination;
             const amount = tx?.tx_json?.Amount;
             const nftId = tx?.tx_json?.NFTokenID;
-            console.log("myNftData : ", myNftData);
             const nft = myNftData
               .flatMap((user) => user.groupedNfts)
               .flatMap((group) => group.nfts)
