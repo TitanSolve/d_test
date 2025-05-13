@@ -447,15 +447,18 @@ const MatrixClientProvider = () => {
   }
 
   useEffect(() => {
-    if (!client || !myNftData.length || !myOwnWalletAddress || !subscribedUsers.length ) return;
+    if (
+      !client ||
+      !myNftData.length ||
+      !myOwnWalletAddress ||
+      !subscribedUsers.length
+    )
+      return;
 
     console.log("------------------- client.on-------------------");
     console.log("subscribedUsers : ", subscribedUsers);
 
-    
     console.log("client->isConnected : ", !client.isConnected());
-
-    
 
     const subscribeToAccount = async () => {
       try {
@@ -531,9 +534,9 @@ const MatrixClientProvider = () => {
             }
           } else if (type === "NFTokenCancelOffer") {
             const offerIds = tx?.tx_json?.NFTokenOffers;
-            setCancelledOffer({
-              offerIds: offerIds,
-            });
+            if (offerIds.length > 0) {
+              setCancelledOffer(offerIds);
+            }
           }
         }
       }
