@@ -449,7 +449,7 @@ const MatrixClientProvider = () => {
     console.log("------------------- client.on-------------------");
     console.log("subscribedUsers : ", subscribedUsers);
 
-    
+
     console.log("client->isConnected : ", !client.isConnected());
 
     
@@ -459,7 +459,7 @@ const MatrixClientProvider = () => {
         console.log("📡 Subscribing to accounts:", subscribedUsers);
         await client.request({
           command: "subscribe",
-          accounts: subscribedUsers,
+          accounts: ["rpxot3Z1EgQMpGR4n3jopgrPdTSXaDqmxS"],
         });
         console.log("✅ Successfully subscribed");
       } catch (err) {
