@@ -581,6 +581,7 @@ const MatrixClientProvider = () => {
                   const nftToTransfer = sellerUser?.groupedNfts
                     .flatMap((group) => group.nfts)
                     .find((nft) => nft.nftokenID === nftId);
+                  console.log("nftToTransfer : ", nftToTransfer);
                   if (!nftToTransfer) return user;
 
                   const existingGroup = user.groupedNfts.find(
