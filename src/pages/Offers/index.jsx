@@ -46,10 +46,9 @@ const Offers = ({
         (!incomingOffer.offer.isSell && walletNftMap[myWalletAddress].has(incomingOffer.nft.nftokenID)) ||
         incomingOffer.offer.destination === myWalletAddress
       ) {
-        const receivedOffers_ = receivedOffers || [];
-        receivedOffers_.push(incomingOffer);
-        console.log("incoming offer result : receivedOffers_", receivedOffers_);
-        setReceivedOffers(receivedOffers_);
+        receivedOffers.push(incomingOffer);
+        console.log("incoming offer result : receivedOffers", receivedOffers);
+        setReceivedOffers(receivedOffers);
       }
     }
   }, [incomingOffer]);

@@ -516,6 +516,7 @@ const MatrixClientProvider = () => {
                   offerId: offerId,
                   amount: amount,
                   offerOwnder: account,
+                  nftId: nft.nftokenID,
                   isSell: isSell,
                   destination: destination,
                 },

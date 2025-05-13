@@ -19,6 +19,7 @@ const OfferReceivedToggle = ({
   const [count, setCount] = useState(0);
 
   useEffect(() => {
+    console.log("OfferReceivedToggle->receivedOffers-->", receivedOffers);
     if (receivedOffers.length > 0) {
       const filteredTransfers = receivedOffers.filter(
         (transfer) => transfer.offer.amount !== "0"
