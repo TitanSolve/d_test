@@ -451,6 +451,7 @@ const MatrixClientProvider = () => {
 
     const subscribeToAccount = async () => {
       try {
+        console.log("📡 Subscribing to accounts:", subscribedUsers);
         await client.request({
           command: "subscribe",
           accounts: subscribedUsers,
