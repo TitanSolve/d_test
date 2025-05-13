@@ -450,72 +450,67 @@ const MatrixClientProvider = () => {
 
     console.log("------------------- client.on-------------------");
 
-    const listener = (tx) => {
+    client.on("transaction", (tx) => {
+      console.log("Transaction detected:", tx);
       const type = tx?.tx_json?.TransactionType;
       const validated = tx?.validated;
+      if (validated === true) {
+        if (
+          (type === "NFTokenCreateOffer" ||
+            type === "NFTokenCancelOffer" ||
+            type === "NFTokenAcceptOffer") &&
+          tx?.meta?.TransactionResult === "tesSUCCESS"
+        ) {
+          console.log("📦 NFT TX Detected:", tx.tx_json);
+          if (type === "NFTokenCreateOffer") {
+            const offerId = extractOfferIdFromMeta(tx.meta);
+            const isSell =
+              (tx?.tx_json?.Flags &
+                xrpl.NFTokenCreateOfferFlags.tfSellNFToken) !==
+              0;
+            const account = tx?.tx_json?.Account;
+            const owner = tx?.tx_json?.Owner;
+            const destination = tx?.tx_json?.Destination;
+            const amount = tx?.tx_json?.Amount;
+            const nftId = tx?.tx_json?.NFTokenID;
+            console.log("myNftData : ", myNftData);
+            const nft = myNftData
+              .flatMap((user) => user.groupedNfts)
+              .flatMap((group) => group.nfts)
+              .find((nft) => nft.nftokenID === nftId);
+            console.log("nft : ", nft);
+            console.log(
+              "isSell : ",
+              isSell,
+              "owner : ",
+              owner,
+              "myOwnWalletAddress : ",
+              myOwnWalletAddress
+            );
 
-      console.log("tx : ", tx);
+            if (!isSell && owner === myOwnWalletAddress) {
+              console.log("Incoming Buy Offer detected");
+              const offer = {
+                walletAddress: account,
+                offer: {
+                  offerId: offerId,
+                  amount: amount,
+                  offerOwnder: account,
+                  isSell: isSell,
+                  destination: destination,
+                },
+                nft: {
+                  ...nft,
+                },
+              };
 
-      if (
-        validated &&
-        [
-          "NFTokenCreateOffer",
-          "NFTokenCancelOffer",
-          "NFTokenAcceptOffer",
-        ].includes(type) &&
-        tx?.meta?.TransactionResult === "tesSUCCESS"
-      ) {
-        console.log("📦 NFT TX Detected:", tx.tx_json);
-        if (type === "NFTokenCreateOffer") {
-          const offerId = extractOfferIdFromMeta(tx.meta);
-          const isSell =
-            (tx?.tx_json?.Flags &
-              xrpl.NFTokenCreateOfferFlags.tfSellNFToken) !==
-            0;
-          const account = tx?.tx_json?.Account;
-          const owner = tx?.tx_json?.Owner;
-          const destination = tx?.tx_json?.Destination;
-          const amount = tx?.tx_json?.Amount;
-          const nftId = tx?.tx_json?.NFTokenID;
-          console.log("myNftData : ", myNftData);
-          const nft = myNftData
-            .flatMap((user) => user.groupedNfts)
-            .flatMap((group) => group.nfts)
-            .find((nft) => nft.nftokenID === nftId);
-          console.log("nft : ", nft);
-          console.log(
-            "isSell : ",
-            isSell,
-            "owner : ",
-            owner,
-            "myOwnWalletAddress : ",
-            myOwnWalletAddress
-          );
-
-          if (!isSell && owner === myOwnWalletAddress) {
-            console.log("Incoming Buy Offer detected");
-            const offer = {
-              walletAddress: account,
-              offer: {
-                offerId: offerId,
-                amount: amount,
-                offerOwnder: account,
-                isSell: isSell,
-                destination: destination,
-              },
-              nft: {
-                ...nft,
-              },
-            };
-
-            console.log("Incoming Offer detected:", offer);
-            setIncomingOffer(offer);
+              console.log("Incoming Offer detected:", offer);
+              setIncomingOffer(offer);
+            }
           }
         }
       }
-    };
-
-    client.on("transaction", listener);
+    });
 
     // Clean up: remove listener when state changes or component unmounts
     return () => {
