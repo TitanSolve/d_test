@@ -100,7 +100,7 @@ const OfferMadeCard = ({ sellOffer, index, onAction, myWalletAddress }) => {
                 className="dark:bg-red-600 dark:hover:bg-red-500"
                 // className="w-full sm:w-auto bg-red-500 text-white px-4 sm:px-5 py-2 rounded-lg hover:bg-red-600 transition shadow-md text-center">
               >
-                Reject
+                Cancel
               </Button>
             </div>
           </div>

@@ -57,7 +57,7 @@ const OutgoingTransferToggle = ({
                   style={{ borderRadius: "6px", alignItems: "center" }}
                   className="dark:bg-red-600 dark:hover:bg-red-500"
                 >
-                  Reject All
+                  Cancel All
                 </Button>
               </div>
             ) : (

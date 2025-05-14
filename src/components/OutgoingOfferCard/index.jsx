@@ -102,7 +102,7 @@ const OutgoingOfferCard = ({
           className="dark:bg-green-600 dark:hover:bg-green-500"
           // className="w-full sm:w-auto bg-red-500 text-white px-4 sm:px-5 py-2 rounded-lg hover:bg-red-600 transition shadow-md text-center">
         >
-          Reject
+          Cancel
         </Button>
       </div>
       <TransactionModal
