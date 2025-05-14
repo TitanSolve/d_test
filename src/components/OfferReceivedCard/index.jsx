@@ -274,6 +274,19 @@ const OfferReceivedCard = ({
 
         const data = await response.json();
 
+        let strAmount = "";
+        let strCurrency = "";
+        if (typeof buyOffer.offer.amount === "string") {
+          strAmount = (
+            (buyOffer.offer.amount * 1 - 12) /
+            1.01 /
+            1000000
+          ).toString();
+          strCurrency = "XRP";
+        } else {
+          strAmount = buyOffer.offer.amount.amount;
+          strCurrency = buyOffer.offer.amount.currency;
+        }
         const msg = `🔔NFT Accept Offer Created\n${buyOffer.offer.offerOwnerName} purchased ${buyOffer.nft.metadata.name} from ${myDisplayName} for ${strAmount} ${strCurrency}`;
         console.log("msg-->", msg);
         setRommMessage(msg);
