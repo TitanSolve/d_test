@@ -433,7 +433,7 @@ const MatrixClientProvider = () => {
   function refreshOffers() {
     console.log("Refresh Offers--->");
     setIsRefreshing(isRefreshing === 0 ? 1 : isRefreshing === 1 ? 2 : 1);
-  };
+  }
 
   function extractOfferIdFromMeta(meta) {
     if (!meta?.AffectedNodes) return null;
@@ -609,6 +609,14 @@ const MatrixClientProvider = () => {
               if (!nftToTransfer) {
                 console.warn("❌ NFT to transfer not found");
                 return prevData;
+              }
+
+              const userName = allUserNamesByWalletAddress[buyerWallet];
+              if (userName !== undefined) {
+                nftToTransfer.userName = userName;
+                nftToTransfer.userId = buyerWallet;
+              } else {
+                console.error("Buyer wallet address not found in user names");
               }
 
               console.log("🔄 NFT to transfer found:", nftToTransfer);
