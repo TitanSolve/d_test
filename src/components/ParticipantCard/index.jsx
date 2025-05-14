@@ -440,7 +440,7 @@ const ParticipantCard = ({
         <LoadingOverlayForCard />
       ) : (
         <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-2xl shadow-lg w-full max-w-5xl bg-white dark:bg-[#15191E] text-black dark:text-white transition-colors duration-300">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="flex flex-col justify-between gap-4">
             <Typography
               variant="h6"
               className="font-bold text-black dark:text-white"
