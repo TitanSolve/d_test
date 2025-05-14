@@ -51,6 +51,36 @@ const OfferReceivedToggle = ({
   }, [madeOffers]);
 
   return (
+    <div className="max-w-3xl mx-auto space-y-6">
+      <h2 className="text-3xl font-extrabold text-center mb-6 dark:text-white text-black">
+        {title}
+      </h2>
+
+      {count === 0 ? (
+        <div className="text-center text-gray-500 dark:text-gray-400">
+          You have no outgoing NFT transfer offers.
+        </div>
+      ) : (
+        <div className="space-y-6">
+          <div className="space-y-4">
+            {buyOffers.map((offer, index) => (
+              <OfferReceivedCard
+                sellOffers={sellOffers}
+                buyOffer={offer}
+                key={index}
+                onAction={onAction}
+                myWalletAddress={myOwnWalletAddress}
+                myDisplayName={myDisplayName}
+                refreshSellOffers={refreshSellOffers}
+                updateUsersNFTs={updateUsersNFTs}
+                widgetApi={widgetApi}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+    /*
     <div className="w-full max-w-2xl mx-auto p-4">
       <button
         onClick={() => setIsVisible(!isVisible)}
@@ -112,6 +142,7 @@ const OfferReceivedToggle = ({
         </motion.div>
       )}
     </div>
+    */
   );
 };
 

@@ -373,6 +373,65 @@ const OfferReceivedCard = ({
       {isLoading ? (
         <LoadingOverlayForCard />
       ) : (
+        <div className="bg-white dark:bg-[#1a1d21] rounded-2xl shadow-lg p-4 md:p-6 transition hover:shadow-xl border dark:border-gray-700">
+          <div className="flex flex-col md:flex-row items-center gap-6">
+            <img
+              src={buyOffer.nft.imageURI}
+              alt={`NFT`}
+              className="w-full md:w-40 h-auto rounded-xl object-cover shadow-md border dark:border-gray-600"
+            />
+
+            <div className="flex-1 space-y-3 text-center md:text-left">
+              <p className="text-lg font-semibold dark:text-white">
+                NFT Name:{" "}
+                <span className="text-sm font-mono break-all">
+                  {buyOffer.nft.name}
+                </span>
+              </p>
+              <p className="text-gray-700 dark:text-gray-300">
+                Buyer's Name:{" "}
+                <span className="font-mono break-all">
+                  {buyOffer.offer.offerOwnerName}
+                </span>
+              </p>
+              <p className="text-lg font-medium text-indigo-600 dark:text-indigo-400">
+                Amount:{" "}
+                {((buyOffer.offer.amount * 1 - 12) / 1.01 / 1000000).toFixed(6)}
+              </p>
+              <p className="text-sm px-3 py-1 rounded-full bg-yellow-100 dark:bg-yellow-800 text-yellow-800 dark:text-yellow-100 w-fit mx-auto md:mx-0">
+                Pending
+              </p>
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <button
+                onClick={onAcceptOffer}
+                className="px-5 py-2 rounded-lg bg-green-600 hover:bg-green-700 text-white font-medium text-sm shadow-md"
+              >
+                Accept
+              </button>
+              <button
+                onClick={onCancelOffer}
+                className="px-5 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white font-medium text-sm shadow-md"
+              >
+                Reject
+              </button>
+            </div>
+          </div>
+          <TransactionModal
+            isOpen={isQrModalVisible}
+            onClose={() => setIsQrModalVisible(false)}
+            qrCodeUrl={qrCodeUrl}
+            transactionStatus={transactionStatus}
+          />
+          <NFTMessageBox
+            isOpen={isMessageBoxVisible}
+            onClose={handleCloseMessageBox}
+            type={messageBoxType}
+            message={messageBoxText}
+          />
+        </div>
+        /*
         <div className="flex flex-col sm:flex-row items-center bg-white dark:bg-[#1a1d21] p-5 rounded-2xl shadow-xl w-full max-w-3xl border border-gray-200 dark:border-gray-700 gap-1 transition-all duration-300">
           <div className="w-full sm:w-auto flex justify-center">
             <img
@@ -393,7 +452,6 @@ const OfferReceivedCard = ({
               <span className="text-xl font-bold text-gray-900 dark:text-white">
                 Amount:{" "}
                 {((buyOffer.offer.amount * 1 - 12) / 1.01 / 1000000).toFixed(6)}
-                {/* Amount: {(((buyOffer.amount * 1 - 12) * 0.99) / 1000000).toFixed(6)} */}
               </span>
               <p className="text-gray-500 dark:text-gray-400 text-sm">
                 From {buyOffer.offer.offerOwnerName}
@@ -425,19 +483,8 @@ const OfferReceivedCard = ({
               </Button>
             </div>
           </div>
-          <TransactionModal
-            isOpen={isQrModalVisible}
-            onClose={() => setIsQrModalVisible(false)}
-            qrCodeUrl={qrCodeUrl}
-            transactionStatus={transactionStatus}
-          />
-          <NFTMessageBox
-            isOpen={isMessageBoxVisible}
-            onClose={handleCloseMessageBox}
-            type={messageBoxType}
-            message={messageBoxText}
-          />
-        </div>
+          </div>
+          */
       )}
     </>
   );
