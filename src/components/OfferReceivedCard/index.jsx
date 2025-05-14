@@ -12,8 +12,10 @@ const OfferReceivedCard = ({
   index,
   onAction,
   myWalletAddress,
+  myDisplayName,
   refreshSellOffers,
   updateUsersNFTs,
+  widgetApi,
 }) => {
   const [qrCodeUrl, setQrCodeUrl] = useState("");
   const [websocketUrl, setWebsocketUrl] = useState("");
@@ -83,6 +85,24 @@ const OfferReceivedCard = ({
       };
       console.log("requestBody--->", requestBody);
 
+      let strAmount = "";
+      let strCurrency = "";
+      if (typeof buyOffer.offer.amount === "string") {
+        strAmount = (
+          (buyOffer.offer.amount * 1 - 12) /
+          1.01 /
+          1000000
+        ).toString();
+        strCurrency = "XRP";
+      } else {
+        strAmount = buyOffer.offer.amount.amount;
+        strCurrency = buyOffer.offer.amount.currency;
+      }
+
+      const msg = `🔔NFT Accept Offer Created\n${buyOffer.offer.offerOwnerName} purchased ${buyOffer.nft.metadata.name} from ${myDisplayName} for ${strAmount} ${strCurrency}`;
+      console.log("msg-->", msg);
+      setRommMessage(msg);
+
       try {
         const response = await fetch(
           `${API_URLS.backendUrl}/broker-accept-offer`,
@@ -104,11 +124,13 @@ const OfferReceivedCard = ({
 
         const data = await response.json();
         setIsLoading(false);
+        setSendRoomMsg(false);
         if (data) {
           console.log(data, "data");
           if (data.result.meta.TransactionResult === "tesSUCCESS") {
             setMessageBoxType("success");
             setMessageBoxText("Offer finished successfully");
+            setSendRoomMsg(true);
             onAction();
             updateUsersNFTs(
               buyOffer.nft.nftokenID,
@@ -251,11 +273,18 @@ const OfferReceivedCard = ({
         }
 
         const data = await response.json();
+
+        const msg = `🔔NFT Accept Offer Created\n${buyOffer.offer.offerOwnerName} purchased ${buyOffer.nft.metadata.name} from ${myDisplayName} for ${strAmount} ${strCurrency}`;
+        console.log("msg-->", msg);
+        setRommMessage(msg);
+
         if (data) {
           console.log(data, "data");
+          setSendRoomMsg(false);
           if (data.result.meta.TransactionResult === "tesSUCCESS") {
             setMessageBoxType("success");
             setMessageBoxText("Offer finished successfully");
+            setSendRoomMsg(true);
             onAction();
             updateUsersNFTs(
               buyOffer.nft.nftokenID,
@@ -353,6 +382,9 @@ const OfferReceivedCard = ({
                 {((buyOffer.offer.amount * 1 - 12) / 1.01 / 1000000).toFixed(6)}
                 {/* Amount: {(((buyOffer.amount * 1 - 12) * 0.99) / 1000000).toFixed(6)} */}
               </span>
+              <p className="text-gray-500 dark:text-gray-400 text-sm">
+                From {buyOffer.offer.offerOwnerName}
+              </p>
               <p className="text-gray-500 dark:text-gray-400 text-sm">
                 Received Offer
               </p>

@@ -4,7 +4,7 @@ import API_URLS from "../../config";
 import { Button } from "antd";
 import TransactionModal from "../TransactionModal";
 
-const IncomingOfferCard = ({ transfer, index, onAction, myWalletAddress, updateUsersNFTs }) => {
+const IncomingOfferCard = ({ transfer, index, onAction, myWalletAddress, updateUsersNFTs, widgetApi }) => {
   const [qrCodeUrl, setQrCodeUrl] = useState("");
   const [websocketUrl, setWebsocketUrl] = useState("");
   const [transactionStatus, setTransactionStatus] = useState("");

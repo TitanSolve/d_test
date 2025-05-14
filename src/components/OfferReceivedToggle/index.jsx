@@ -9,14 +9,27 @@ const OfferReceivedToggle = ({
   madeOffers,
   receivedOffers,
   onAction,
+  myDisplayName,
   myOwnWalletAddress,
   refreshSellOffers,
   updateUsersNFTs,
+  widgetApi,
 }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [buyOffers, setBuyOffers] = useState([]);
   const [sellOffers, setSellOffers] = useState([]);
   const [count, setCount] = useState(0);
+  const [roomMessage, setRommMessage] = useState("");
+  const [sendRoomMsg, setSendRoomMsg] = useState(false);
+
+  useEffect(() => {
+    if (sendRoomMsg && roomMessage !== "") {
+      console.log("sendRoomMsg", sendRoomMsg);
+      widgetApi.sendRoomEvent("m.room.message", {
+        body: roomMessage,
+      });
+    }
+  }, [sendRoomMsg]);
 
   useEffect(() => {
     console.log("OfferReceivedToggle->receivedOffers-->", receivedOffers);
@@ -88,8 +101,10 @@ const OfferReceivedToggle = ({
                   key={index}
                   onAction={onAction}
                   myWalletAddress={myOwnWalletAddress}
+                  myDisplayName={myDisplayName}
                   refreshSellOffers={refreshSellOffers}
                   updateUsersNFTs={updateUsersNFTs}
+                  widgetApi={widgetApi}
                 />
               ))}
             </div>

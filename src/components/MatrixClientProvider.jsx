@@ -821,6 +821,7 @@ const MatrixClientProvider = () => {
                 >
                   <Offers
                     myWalletAddress={myOwnWalletAddress}
+                    myDisplayName={widgetApi.widgetParameters.displayName}
                     membersList={membersList}
                     myNftData={myNftData}
                     widgetApi={widgetApi}

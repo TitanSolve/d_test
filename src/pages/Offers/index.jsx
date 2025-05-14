@@ -8,6 +8,7 @@ import LoadingOverlay from "../../components/LoadingOverlay";
 
 const Offers = ({
   membersList,
+  myDisplayName,
   myWalletAddress,
   myNftData,
   widgetApi,
@@ -70,7 +71,7 @@ const Offers = ({
 
       setMadeOffers((prev) =>
         prev.filter((offer) => !cancelledIds.has(offer.offer.offerId))
-      );  
+      );
       setReceivedOffers((prev) =>
         prev.filter((offer) => !cancelledIds.has(offer.offer.offerId))
       );
@@ -328,6 +329,14 @@ const Offers = ({
     const usersWalletAddresses = membersList.map((member) =>
       member.userId.split(":")[0].replace("@", "")
     );
+    const allUserNamesByWalletAddress = membersList.reduce((acc, member) => {
+      const wallet = member.userId.split(":")[0].replace("@", "");
+      const name = member.name;
+      acc[wallet] = name;
+      return acc;
+    }, {});
+    console.log("allUserNamesByWalletAddress", allUserNamesByWalletAddress);
+
     const payload = {
       wallets: usersWalletAddresses,
     };
@@ -371,10 +380,17 @@ const Offers = ({
 
       // Classify this wallet's own offers
       for (const offer of offers) {
+        const offerOwnerName = allUserNamesByWalletAddress[offer.offerOwner];
         if (offer.isSell && nftSet.has(offer.nftId)) {
-          sellOffers.push({ offer, nft: nftMapById.get(offer.nftId) });
+          sellOffers.push({
+            offer: { ...offer, offerOwnerName: offerOwnerName },
+            nft: nftMapById.get(offer.nftId),
+          });
         } else if (!offer.isSell && !nftSet.has(offer.nftId)) {
-          buyOffers.push({ offer, nft: nftMapById.get(offer.nftId) });
+          buyOffers.push({
+            offer: { ...offer, offerOwnerName: offerOwnerName },
+            nft: nftMapById.get(offer.nftId),
+          });
         }
       }
 
@@ -383,11 +399,15 @@ const Offers = ({
         if (other.wallet === wallet) continue;
 
         for (const offer of other.offers) {
+          const offerOwnerName = allUserNamesByWalletAddress[offer.offerOwner];
           if (
             (!offer.isSell && nftSet.has(offer.nftId)) ||
             offer.destination === myWalletAddress
           ) {
-            receivedOffers_.push({ offer, nft: nftMapById.get(offer.nftId) });
+            receivedOffers_.push({
+              offer: { ...offer, offerOwnerName: offerOwnerName },
+              nft: nftMapById.get(offer.nftId),
+            });
           }
         }
       }
@@ -472,6 +492,7 @@ const Offers = ({
             onAction={refreshOffers}
             myOwnWalletAddress={myWalletAddress}
             updateUsersNFTs={updateUsersNFTs}
+            widgetApi={widgetApi}
           />
           <OutgoingTransferToggle
             title="Outgoing transfers"
@@ -483,6 +504,7 @@ const Offers = ({
             title="Offers Received"
             madeOffers={madeOffers}
             receivedOffers={receivedOffers}
+            myDisplayName={myDisplayName}
             myOwnWalletAddress={myWalletAddress}
             onAction={refreshOffers}
             refreshSellOffers={fetchSellOffers}
@@ -494,7 +516,6 @@ const Offers = ({
             madeOffers={madeOffers}
             myOwnWalletAddress={myWalletAddress}
             onAction={refreshOffers}
-            widgetApi={widgetApi}
           />
         </div>
       )}

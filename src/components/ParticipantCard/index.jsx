@@ -388,6 +388,7 @@ const ParticipantCard = ({
     if (websocketUrl) {
       console.log("websocketUrl in user card", websocketUrl);
       const ws = new WebSocket(websocketUrl);
+      setSendRoomMsg(false);
 
       ws.onmessage = (event) => {
         const data = JSON.parse(event.data);

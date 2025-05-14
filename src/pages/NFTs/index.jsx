@@ -26,8 +26,8 @@ const NFTs = ({ membersList, myNftData, wgtParameters, getImageData, refreshOffe
               membersList={membersList}
               myNftData={nft}
               wgtParameters={wgtParameters}
-              refreshOffers={refreshOffers}
               getImageData={getImageData}
+              refreshOffers={refreshOffers}
               widgetApi={widgetApi}
             />
           ))}
