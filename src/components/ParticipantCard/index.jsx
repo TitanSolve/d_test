@@ -404,8 +404,13 @@ const ParticipantCard = ({
           ws.close();
 
           //update Offer List
-          refreshOffers();
-        } else if( data.signed === false ){
+          // refreshOffers();
+          if (typeof refreshOffers === "function") {
+            refreshOffers();
+          } else {
+            console.warn("refreshOffers is not a function", refreshOffers);
+          }
+        } else if (data.signed === false) {
           setIsQrModalVisible(false);
           ws.close();
         } else if (data.rejected) {

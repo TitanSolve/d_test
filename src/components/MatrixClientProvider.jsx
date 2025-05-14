@@ -430,7 +430,7 @@ const MatrixClientProvider = () => {
     exit: { opacity: 0, x: -50 },
   };
 
-  const refreshOffers = () => {
+  function refreshOffers() {
     console.log("Refresh Offers--->");
     setIsRefreshing(isRefreshing === 0 ? 1 : isRefreshing === 1 ? 2 : 1);
   };

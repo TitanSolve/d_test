@@ -35,14 +35,14 @@ const widgetApiPromise = WidgetApiImpl.create({
       EventDirection.Send,
       'm.room.name'
     ),
-    WidgetEventCapability.forStateEvent(
-      EventDirection.Receive,
-      'org.matrix.msc2871.theme'
-    ),
-    WidgetEventCapability.forStateEvent(
-      EventDirection.Receive,
-      '*'
-    ),
+    // WidgetEventCapability.forStateEvent(
+    //   EventDirection.Receive,
+    //   'org.matrix.msc2871.theme'
+    // ),
+    // WidgetEventCapability.forStateEvent(
+    //   EventDirection.Receive,
+    //   '*'
+    // ),
   ],
 });
 

@@ -23,6 +23,10 @@ const OfferMadeToggle = ({
       setCount(filteredTransfers.length);
       console.log("OfferMadeToggle-->sellOffer-->", filteredTransfers);
     }
+    else {
+      setSellOffers([]);
+      setCount(0);
+    }
   }, [madeOffers]);
 
   return (
