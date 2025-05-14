@@ -457,8 +457,14 @@ const MatrixClientProvider = () => {
 
     console.log("------------------- client.on-------------------");
     console.log("subscribedUsers : ", subscribedUsers);
-
     console.log("client->isConnected : ", !client.isConnected());
+
+    const allUserNamesByWalletAddress = membersList.reduce((acc, member) => {
+      const wallet = member.userId.split(":")[0].replace("@", "");
+      const name = member.name;
+      acc[wallet] = name;
+      return acc;
+    }, {});
 
     const subscribeToAccount = async () => {
       try {
@@ -520,6 +526,7 @@ const MatrixClientProvider = () => {
                   offerId: offerId,
                   amount: amount,
                   offerOwnder: account,
+                  offerOwnderName: allUserNamesByWalletAddress[account],
                   nftId: nft.nftokenID,
                   isSell: isSell,
                   destination: destination,
