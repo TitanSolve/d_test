@@ -199,10 +199,9 @@ const MatrixClientProvider = () => {
             const enrichedNfts = await Promise.all(
               nfts.map(async (nft) => {
                 const imageURI =
-                  nft.metadata?.image?.replace(
-                    "ipfs://",
-                    "https://ipfs.io/ipfs/"
-                  ) || "";
+                  nft.metadata?.image
+                    ?.replace("ipfs://", "https://ipfs.io/ipfs/")
+                    .replace("#", "%23") || "";
                 return {
                   ...nft,
                   imageURI,

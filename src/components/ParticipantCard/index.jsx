@@ -116,6 +116,7 @@ const ParticipantCard = ({
   const openPreviewModal = (group) => {
     if (group.nfts.length > 1) {
       setSelectedNFTGroup(group);
+      console.log("selectedGroup--->", group);
       setPreviewModalOpen(true);
     } else {
       openOfferModal(group.nfts[0]);
