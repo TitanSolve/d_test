@@ -82,15 +82,14 @@ const OfferMadeCard = ({ sellOffer, index, onAction, myWalletAddress }) => {
               <p className="text-lg font-semibold dark:text-white">
                 NFT Name:{" "}
                 <span className="text-sm font-mono break-all">
-                  {sellOffer.nft.meta.name}
+                  {sellOffer.nft.metadata.name ? sellOffer.nft.metadata.name : ""}
                 </span>
               </p>
               <p className="text-lg font-medium text-indigo-600 dark:text-indigo-400">
-                Amount:{" "}
-                {(sellOffer.offer.amount * 1) / 1000000}
+                Amount: {(sellOffer.offer.amount * 1) / 1000000}
               </p>
               <p className="text-sm px-3 py-1 rounded-full bg-yellow-100 dark:bg-yellow-800 text-yellow-800 dark:text-yellow-100 w-fit mx-auto md:mx-0">
-                { sellOffer.offer.isSell ? "My Sell Offer" : "My Buy Offer" }
+                {sellOffer.offer.isSell ? "My Sell Offer" : "My Buy Offer"}
               </p>
             </div>
 

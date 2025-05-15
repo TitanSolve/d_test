@@ -80,7 +80,7 @@ const OutgoingOfferCard = ({ transfer, index, onAction, myWalletAddress }) => {
           <p className="text-lg font-semibold dark:text-white">
             NFT Name:{" "}
             <span className="text-sm font-mono break-all">
-              {transfer.nft.name}
+              {transfer.nft.metadata.name ? transfer.nft.metadata.name : ""}
             </span>
           </p>
           <p className="text-sm px-3 py-1 rounded-full bg-yellow-100 dark:bg-yellow-800 text-yellow-800 dark:text-yellow-100 w-fit mx-auto md:mx-0">

@@ -141,7 +141,11 @@ const IncomingOfferCard = ({
           <p className="text-lg font-semibold dark:text-white">
             NFT Name:{" "}
             <span className="text-sm font-mono break-all">
-              {transfer.nft.meta.name}
+              {
+                transfer.nft.metadata.name ?
+                  transfer.nft.metadata.name
+                  : ""
+              }
             </span>
           </p>
           <p className="text-gray-700 dark:text-gray-300">

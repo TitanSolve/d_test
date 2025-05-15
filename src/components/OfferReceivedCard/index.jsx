@@ -385,7 +385,7 @@ const OfferReceivedCard = ({
               <p className="text-lg font-semibold dark:text-white">
                 NFT Name:{" "}
                 <span className="text-sm font-mono break-all">
-                  {buyOffer.nft.meta.name}
+                  {buyOffer.nft.metadata.name ? buyOffer.nft.metadata.name : ""}
                 </span>
               </p>
               <p className="text-gray-700 dark:text-gray-300">
