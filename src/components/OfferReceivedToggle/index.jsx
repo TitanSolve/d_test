@@ -58,7 +58,7 @@ const OfferReceivedToggle = ({
 
       {count === 0 ? (
         <div className="text-center text-gray-500 dark:text-gray-400">
-          You have no outgoing NFT transfer offers.
+          You have no received offers.
         </div>
       ) : (
         <div className="space-y-6">

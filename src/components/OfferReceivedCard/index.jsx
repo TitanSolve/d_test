@@ -385,7 +385,7 @@ const OfferReceivedCard = ({
               <p className="text-lg font-semibold dark:text-white">
                 NFT Name:{" "}
                 <span className="text-sm font-mono break-all">
-                  {buyOffer.nft.name}
+                  {buyOffer.nft.meta.name}
                 </span>
               </p>
               <p className="text-gray-700 dark:text-gray-300">
@@ -399,7 +399,7 @@ const OfferReceivedCard = ({
                 {((buyOffer.offer.amount * 1 - 12) / 1.01 / 1000000).toFixed(6)}
               </p>
               <p className="text-sm px-3 py-1 rounded-full bg-yellow-100 dark:bg-yellow-800 text-yellow-800 dark:text-yellow-100 w-fit mx-auto md:mx-0">
-                Pending
+                Received Offer
               </p>
             </div>
 
