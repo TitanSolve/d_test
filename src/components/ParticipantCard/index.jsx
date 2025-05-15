@@ -548,7 +548,7 @@ const ParticipantCard = ({
                 className="font-bold overflow-hidden text-black dark:text-white"
               >
                 {selectedNFTGroup &&
-                  "Issuer : " + selectedNFTGroup.nfts[0].Issuer}
+                  "Issuer : " + selectedNFTGroup.nfts[0].issuer}
               </Typography>
               <div className="relative">
                 <Carousel
