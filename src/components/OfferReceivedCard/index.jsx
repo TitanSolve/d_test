@@ -57,7 +57,7 @@ const OfferReceivedCard = ({
     let brokerFee = (((buyOffer.offer.amount * 1 - 12) / 1.01) * 0.01).toFixed(
       0
     );
-    let sellOfferOwnder = "";
+    let sellOfferOwner = "";
     for (const offer of madeOffers) {
       console.log("offer--->", offer);
       if (offer.nft.nftokenID === buyOffer.nft.nftokenID) {
@@ -66,7 +66,7 @@ const OfferReceivedCard = ({
         brokerFee = (((buyOffer.offer.amount * 1 - 12) / 1.01) * 0.01).toFixed(
           0
         );
-        sellOfferOwnder = offer.offer.offerOwner;
+        sellOfferOwner = offer.offer.offerOwner;
         console.log(
           "brokerFee--->",
           brokerFee,
@@ -134,7 +134,7 @@ const OfferReceivedCard = ({
             onAction();
             updateUsersNFTs(
               buyOffer.nft.nftokenID,
-              sellOfferOwnder,
+              sellOfferOwner,
               buyOffer.offer.offerOwner
             );
           } else {
@@ -233,13 +233,13 @@ const OfferReceivedCard = ({
     let isOfferFound = false;
     let sellOfferIndex = "";
     let brokerFee = (parseFloat(buyOffer.amount) * 1.01).toString();
-    let sellOfferOwnder = "";
+    let sellOfferOwner = "";
     for (const offer of refreshedSellOffers) {
       console.log("offer--->", offer);
       if (offer.NFTokenID === buyOffer.nft.nftokenID) {
         isOfferFound = true;
         sellOfferIndex = offer.nft_offer_index;
-        sellOfferOwnder = offer.owner;
+        sellOfferOwner = offer.owner;
         brokerFee = (((buyOffer.offer.amount * 1 - 12) / 1.01) * 0.01).toFixed(
           0
         );
@@ -301,7 +301,7 @@ const OfferReceivedCard = ({
             onAction();
             updateUsersNFTs(
               buyOffer.nft.nftokenID,
-              sellOfferOwnder,
+              sellOfferOwner,
               buyOffer.offer.offerOwner
             );
           } else {

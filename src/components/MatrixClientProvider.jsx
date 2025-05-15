@@ -525,8 +525,8 @@ const MatrixClientProvider = () => {
                 offer: {
                   offerId: offerId,
                   amount: amount,
-                  offerOwnder: account,
-                  offerOwnderName: allUserNamesByWalletAddress[account],
+                  offerOwner: account,
+                  offerOwnerName: allUserNamesByWalletAddress[account],
                   nftId: nft.nftokenID,
                   isSell: isSell,
                   destination: destination,
