@@ -22,6 +22,7 @@ const IncomingOfferCard = ({
   const [sendRoomMsg, setSendRoomMsg] = useState(false);
 
   useEffect(() => {
+    console.log("sendRoomMsg useEffect triggered", sendRoomMsg, roomMessage);
     if (sendRoomMsg && roomMessage !== "") {
       console.log("sendRoomMsg", sendRoomMsg);
       widgetApi.sendRoomEvent("m.room.message", {
@@ -59,6 +60,7 @@ const IncomingOfferCard = ({
       const msg = `🔔NFT Accept Transfer Offer Created\n${myDisplayName} accepted transfer offer from ${transfer.offer.offerOwnerName} for ${transfer.nft.metadata.name}`;
       console.log("msg-->", msg);
       setRommMessage(msg);
+      setSendRoomMsg(false);
 
       const data = await response.json();
       if (data) {
@@ -114,7 +116,6 @@ const IncomingOfferCard = ({
   useEffect(() => {
     if (websocketUrl) {
       const ws = new WebSocket(websocketUrl);
-      setSendRoomMsg(false);
 
       ws.onmessage = (event) => {
         const data = JSON.parse(event.data);
