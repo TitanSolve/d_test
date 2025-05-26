@@ -8,6 +8,7 @@ const IncomingListToggle = ({
   title,
   incomingTransfers,
   onAction,
+  myDisplayName,
   myOwnWalletAddress,
   updateUsersNFTs,
   widgetApi,
@@ -50,6 +51,7 @@ const IncomingListToggle = ({
                 myWalletAddress={myOwnWalletAddress}
                 updateUsersNFTs={updateUsersNFTs}
                 widgetApi={widgetApi}
+                myDisplayName={myDisplayName}
               />
             ))}
           </div>

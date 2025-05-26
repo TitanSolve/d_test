@@ -6,6 +6,7 @@ import TransactionModal from "../TransactionModal";
 
 const IncomingOfferCard = ({
   transfer,
+  myDisplayName,
   index,
   onAction,
   myWalletAddress,
@@ -17,6 +18,17 @@ const IncomingOfferCard = ({
   const [transactionStatus, setTransactionStatus] = useState("");
   const [isQrModalVisible, setIsQrModalVisible] = useState(false);
   const [pendingOfferAction, setPendingOfferAction] = useState(null);
+  const [roomMessage, setRommMessage] = useState("");
+  const [sendRoomMsg, setSendRoomMsg] = useState(false);
+
+  useEffect(() => {
+    if (sendRoomMsg && roomMessage !== "") {
+      console.log("sendRoomMsg", sendRoomMsg);
+      widgetApi.sendRoomEvent("m.room.message", {
+        body: roomMessage,
+      });
+    }
+  }, [sendRoomMsg]);
 
   async function onAcceptTransfer() {
     console.log("Accept clicked for item:", transfer);
@@ -43,6 +55,10 @@ const IncomingOfferCard = ({
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
+
+      const msg = `🔔NFT Accept Transfer Offer Created\n${myDisplayName} accepted transfer offer from ${transfer.offer.offerOwnerName} for ${transfer.nft.metadata.name}`;
+      console.log("msg-->", msg);
+      setRommMessage(msg);
 
       const data = await response.json();
       if (data) {
@@ -98,6 +114,7 @@ const IncomingOfferCard = ({
   useEffect(() => {
     if (websocketUrl) {
       const ws = new WebSocket(websocketUrl);
+      setSendRoomMsg(false);
 
       ws.onmessage = (event) => {
         const data = JSON.parse(event.data);
@@ -105,6 +122,7 @@ const IncomingOfferCard = ({
           setTransactionStatus("Transaction signed");
           setIsQrModalVisible(false);
           console.log("pendingOfferAction-->", pendingOfferAction.type);
+          setSendRoomMsg(true);
           onAction();
           if (pendingOfferAction.type === "accept") {
             updateUsersNFTs(
@@ -141,11 +159,7 @@ const IncomingOfferCard = ({
           <p className="text-lg font-semibold dark:text-white">
             NFT Name:{" "}
             <span className="text-sm font-mono break-all">
-              {
-                transfer.nft.metadata.name ?
-                  transfer.nft.metadata.name
-                  : ""
-              }
+              {transfer.nft.metadata.name ? transfer.nft.metadata.name : ""}
             </span>
           </p>
           <p className="text-gray-700 dark:text-gray-300">
@@ -161,7 +175,7 @@ const IncomingOfferCard = ({
 
         <div className="flex flex-col gap-2">
           <button
-            onClick={onRejectTransfer}
+            onClick={onAcceptTransfer}
             className="px-5 py-2 rounded-lg bg-green-600 hover:bg-green-700 text-white font-medium text-sm shadow-md"
           >
             Accept

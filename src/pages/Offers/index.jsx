@@ -493,6 +493,7 @@ const Offers = ({
             myOwnWalletAddress={myWalletAddress}
             updateUsersNFTs={updateUsersNFTs}
             widgetApi={widgetApi}
+            myDisplayName={myDisplayName}
           />
           <OutgoingTransferToggle
             title="Outgoing transfers"
