@@ -518,25 +518,52 @@ const MatrixClientProvider = () => {
               myOwnWalletAddress
             );
 
-            if (!isSell && owner === myOwnWalletAddress) {
-              console.log("Incoming Buy Offer detected");
-              const offer = {
-                offer: {
-                  offerId: offerId,
-                  amount: amount,
-                  offerOwner: account,
-                  offerOwnerName: allUserNamesByWalletAddress[account],
-                  nftId: nft.nftokenID,
-                  isSell: isSell,
-                  destination: destination,
-                },
-                nft: {
-                  ...nft,
-                },
-              };
+            if (amount === "0") {
+              //transfer offer
+              console.log("Incoming Transfer Offer detected", isSell, destination, myOwnWalletAddress );
+              if (isSell && destination === myOwnWalletAddress) {
+                //buy, sell offer
+                console.log("Incoming Transfer Offer detected");
+                const offer = {
+                  offer: {
+                    offerId: offerId,
+                    amount: amount,
+                    offerOwner: account,
+                    offerOwnerName: allUserNamesByWalletAddress[account],
+                    nftId: nft.nftokenID,
+                    isSell: isSell,
+                    destination: destination,
+                  },
+                  nft: {
+                    ...nft,
+                  },
+                };
 
-              console.log("Incoming Offer detected:", offer);
-              setIncomingOffer(offer);
+                console.log("Incoming Offer detected:", offer);
+                setIncomingOffer(offer);
+              }
+            } else {
+              if (!isSell && owner === myOwnWalletAddress) {
+                //buy, sell offer
+                console.log("Incoming Buy Offer detected");
+                const offer = {
+                  offer: {
+                    offerId: offerId,
+                    amount: amount,
+                    offerOwner: account,
+                    offerOwnerName: allUserNamesByWalletAddress[account],
+                    nftId: nft.nftokenID,
+                    isSell: isSell,
+                    destination: destination,
+                  },
+                  nft: {
+                    ...nft,
+                  },
+                };
+
+                console.log("Incoming Offer detected:", offer);
+                setIncomingOffer(offer);
+              }
             }
           } else if (type === "NFTokenCancelOffer") {
             const offerIds = tx?.tx_json?.NFTokenOffers;
