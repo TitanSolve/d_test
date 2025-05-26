@@ -118,6 +118,7 @@ const IncomingOfferCard = ({
     if (websocketUrl) {
       const ws = new WebSocket(websocketUrl);
 
+      
       ws.onmessage = (event) => {
         const data = JSON.parse(event.data);
         if (data.signed) {
