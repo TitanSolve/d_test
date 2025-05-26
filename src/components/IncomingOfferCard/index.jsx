@@ -22,14 +22,14 @@ const IncomingOfferCard = ({
   const [sendRoomMsg, setSendRoomMsg] = useState(false);
 
   useEffect(() => {
-    console.log("sendRoomMsg useEffect triggered", sendRoomMsg, roomMessage);
+    console.log("IncomingOfferCard->sendRoomMsg useEffect triggered", sendRoomMsg, roomMessage);
     if (sendRoomMsg && roomMessage !== "") {
       console.log("sendRoomMsg", sendRoomMsg);
       widgetApi.sendRoomEvent("m.room.message", {
         body: roomMessage,
       });
     }
-  }, [sendRoomMsg, roomMessage]);
+  }, [sendRoomMsg]);
 
   async function onAcceptTransfer() {
     console.log("Accept clicked for item:", transfer);
