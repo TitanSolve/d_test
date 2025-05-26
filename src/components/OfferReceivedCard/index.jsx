@@ -32,6 +32,8 @@ const OfferReceivedCard = ({
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
+    console.log("OfferReceivedCard->sendRoomMsg useEffect triggered", sendRoomMsg, roomMessage);
+    
     if (sendRoomMsg && roomMessage !== "") {
       console.log("sendRoomMsg", sendRoomMsg);
       widgetApi.sendRoomEvent("m.room.message", {

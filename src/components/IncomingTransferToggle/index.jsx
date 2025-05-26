@@ -18,6 +18,7 @@ const IncomingListToggle = ({
   const [count, setCount] = useState(0);
 
   useEffect(() => {
+    console.log("IncomingListToggle useEffect triggered", incomingTransfers);
     if (incomingTransfers.length > 0) {
       const filteredTransfers = incomingTransfers.filter(
         (transfer) => transfer.offer.amount === "0"

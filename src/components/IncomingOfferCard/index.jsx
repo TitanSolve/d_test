@@ -29,7 +29,7 @@ const IncomingOfferCard = ({
         body: roomMessage,
       });
     }
-  }, [sendRoomMsg]);
+  }, [sendRoomMsg, roomMessage]);
 
   async function onAcceptTransfer() {
     console.log("Accept clicked for item:", transfer);
@@ -100,6 +100,7 @@ const IncomingOfferCard = ({
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
+      setRommMessage("");
 
       const data = await response.json();
       if (data) {
