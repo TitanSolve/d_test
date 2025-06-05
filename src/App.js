@@ -76,6 +76,9 @@ function App({ widgetApiPromise }) {
   //         //   JSON.stringify(offerResponse, null, 2)
   //         // );
 
+
+  //
+
   //         if (!offerResponse?.result?.account_objects) {
   //           results.push({ wallet: account, offers: [] });
   //           continue;
