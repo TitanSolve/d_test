@@ -51,7 +51,7 @@ const OfferMadeCard = ({ sellOffer, index, onAction, myWalletAddress }) => {
         setMessageBoxType("success");
         setMessageBoxText("Offer cancelled successfully.");
         setIsMessageBoxVisible(true);
-        onAction();
+        // onAction();
       } else {
         console.log("No data received from the server.");
         setMessageBoxType("error");
