@@ -259,6 +259,9 @@ const ParticipantCard = ({
           );
           setIsLoading(false);
 
+          console.log("res=", response);
+          console.log( typeof(response) );
+
           if (response.data) {
             console.log("Offer created:", response.data);
 
