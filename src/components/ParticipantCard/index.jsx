@@ -394,9 +394,12 @@ const ParticipantCard = ({
       ws.onmessage = (event) => {
         const data = JSON.parse(event.data);
         console.log(data, "data aman in user card qr code");
+        const myName = wgtParameters.displayName;
+        const own = membersList.find((u) => u.name === myName /*"This Guy"*/);
+        const ownWalletAddress = own?.userId?.split(":")[0].replace("@", "");
         if (data.signed === true) {
           const requestBody = {
-            account: myWalletAddress,
+            account: ownWalletAddress,
           };
           const response = fetch(`${API_URLS.backendUrl}/deduct-mCredit`, {
             method: "POST",
