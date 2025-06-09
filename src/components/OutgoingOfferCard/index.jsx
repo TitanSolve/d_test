@@ -34,6 +34,7 @@ const OutgoingOfferCard = ({ transfer, index, onAction, myWalletAddress }) => {
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
+      setIsQrModalVisible(false);
 
       const data = await response.json();
       if (data) {
@@ -41,7 +42,7 @@ const OutgoingOfferCard = ({ transfer, index, onAction, myWalletAddress }) => {
         setQrCodeUrl(data.refs.qr_png);
         setWebsocketUrl(data.refs.websocket_status);
         setIsQrModalVisible(true);
-        onAction();
+        // onAction();
       }
     } catch (error) {
       console.error("Error during fetch:", error);
