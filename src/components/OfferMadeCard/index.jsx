@@ -25,6 +25,7 @@ const OfferMadeCard = ({ sellOffer, index, onAction, myWalletAddress }) => {
   async function onCancelOffer() {
     console.log("Cancel clicked for item:", sellOffer);
     const requestBody = {
+      owner: myWalletAddress,
       account: sellOffer.offer.offerOwner,
       offerId: sellOffer.offer.offerId,
     };

@@ -80,6 +80,7 @@ const OfferReceivedCard = ({
     }
     if (isOfferFound) {
       const requestBody = {
+        owner: myWalletAddress,
         nftId: buyOffer.nft.nftokenID,
         buyOfferId: buyOffer.offer.offerId,
         sellOfferId: sellOfferIndex,
@@ -250,6 +251,7 @@ const OfferReceivedCard = ({
     }
     if (isOfferFound) {
       const requestBody = {
+        owner: myWalletAddress,
         nftId: buyOffer.nft.nftokenID,
         buyOfferId: buyOffer.offer.offerId,
         sellOfferId: sellOfferIndex,

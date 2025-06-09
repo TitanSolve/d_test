@@ -78,6 +78,7 @@ const IncomingOfferCard = ({
     console.log("Cancel clicked for item:", transfer);
     setTransactionStatus("");
     const requestBody = {
+      owner: myWalletAddress,
       account: transfer.offer.offerOwner,
       offerId: transfer.offer.offerId,
     };

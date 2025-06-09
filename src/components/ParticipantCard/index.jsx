@@ -835,8 +835,7 @@ const ParticipantCard = ({
                       variant="subtitle2"
                       className="text-center font-semibold text-black dark:text-white"
                     >
-                      Total : {state.amount} + 1% Fee ={" "}
-                      {(state.amount * 1 * 1.01).toFixed(4)} {state.token}
+                      Total : {state.amount} {state.token}
                     </Typography>
                   ) : (
                     ""
