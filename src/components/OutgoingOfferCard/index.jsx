@@ -17,6 +17,7 @@ const OutgoingOfferCard = ({ transfer, index, onAction, myWalletAddress }) => {
       offerId: transfer.offer.offerId,
       buyOrSell: 0,
     };
+    console.log("requestBody:", requestBody)
     try {
       const response = await fetch(
         `${API_URLS.backendUrl}/cancel-nft-offer-with-sign`,
