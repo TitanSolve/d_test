@@ -32,8 +32,12 @@ const OfferReceivedCard = ({
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    console.log("OfferReceivedCard->sendRoomMsg useEffect triggered", sendRoomMsg, roomMessage);
-    
+    console.log(
+      "OfferReceivedCard->sendRoomMsg useEffect triggered",
+      sendRoomMsg,
+      roomMessage
+    );
+
     if (sendRoomMsg && roomMessage !== "") {
       console.log("sendRoomMsg", sendRoomMsg);
       widgetApi.sendRoomEvent("m.room.message", {
@@ -334,6 +338,17 @@ const OfferReceivedCard = ({
       ws.onmessage = (event) => {
         const data = JSON.parse(event.data);
         if (data.signed) {
+          const requestBody = {
+            account: myWalletAddress,
+          };
+          const response = fetch(`${API_URLS.backendUrl}/deduct-mCredit`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(requestBody),
+          });
+          console.log("deduction result:", response);
           setTransactionStatus("Transaction signed");
           setIsQrModalVisible(false);
           onAction(); //refresh
@@ -353,6 +368,17 @@ const OfferReceivedCard = ({
       ws.onmessage = (event) => {
         const data = JSON.parse(event.data);
         if (data.signed) {
+          const requestBody = {
+            account: myWalletAddress,
+          };
+          const response = fetch(`${API_URLS.backendUrl}/deduct-mCredit`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(requestBody),
+          });
+          console.log("deduction result:", response);
           setTransactionStatus("Transaction signed");
           setIsQrModalVisible(false);
           refreshSellOfferAndAccept();

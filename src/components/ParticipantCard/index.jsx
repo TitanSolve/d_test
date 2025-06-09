@@ -395,6 +395,18 @@ const ParticipantCard = ({
         const data = JSON.parse(event.data);
         console.log(data, "data aman in user card qr code");
         if (data.signed === true) {
+          const requestBody = {
+            account: myWalletAddress,
+          };
+          const response = fetch(`${API_URLS.backendUrl}/deduct-mCredit`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(requestBody),
+          });
+          console.log("deduction result:", response);
+
           setTransactionStatus("Transaction signed.");
           setIsQrModalVisible(false);
           setMessageBoxType("success");
