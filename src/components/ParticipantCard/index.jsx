@@ -208,7 +208,7 @@ const ParticipantCard = ({
     console.log("isSell : ", isSell);
     console.log("selectedNftForOffer : ", selectedNftForOffer);
     const myName = wgtParameters.displayName;
-    const own = membersList.find((u) => u.name === myName /*"This Guy"*/);
+    const own = membersList.find((u) => u.name === myName);
     const ownWalletAddress = own?.userId?.split(":")[0].replace("@", "");
     let destination = state.selectedUser;
     let decodedCurrency = state.token;
