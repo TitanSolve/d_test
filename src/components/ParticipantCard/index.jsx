@@ -259,7 +259,7 @@ const ParticipantCard = ({
           );
           setIsLoading(false);
 
-          if( response.data?.result === 'NotEnoughCredit' ) {
+          if (response.data?.result === "NotEnoughCredit") {
             setMessageBoxType("error");
             setMessageBoxText(
               "You don't have enough mCredits to create this offer.\nPlease buy more mCredits."
@@ -333,6 +333,15 @@ const ParticipantCard = ({
           const data = await response.json();
           console.log("Success:", data);
           if (data) {
+            if (data?.result === "NotEnoughCredit") {
+              setMessageBoxType("error");
+              setMessageBoxText(
+                "You don't have enough mCredits to create this offer.\nPlease buy more mCredits."
+              );
+              setIsMessageBoxVisible(true);
+              return;
+            }
+
             const msg = `🔔NFT Buy Offer Created\n${wgtParameters.displayName} has offered ${state.amount} ${state.token} for ${selectedNftForOffer.metadata.name} to ${selectedNftForOffer.userName}`;
             console.log("msg-->", msg);
             setRommMessage(msg);
@@ -378,6 +387,15 @@ const ParticipantCard = ({
         );
         setIsLoading(false);
         console.log(response, "response aman in user card");
+
+        if (response.data?.result === "NotEnoughCredit") {
+          setMessageBoxType("error");
+          setMessageBoxText(
+            "You don't have enough mCredits to create this offer.\nPlease buy more mCredits."
+          );
+          setIsMessageBoxVisible(true);
+          return;
+        }
 
         const msg = `🔔NFT Transfer Offer Created\n${wgtParameters.displayName} has offered ${selectedNftForOffer.metadata.name} to ${state.selectedUser}`;
         console.log("msg-->", msg);
