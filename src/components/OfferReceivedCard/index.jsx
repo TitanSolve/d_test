@@ -134,6 +134,16 @@ const OfferReceivedCard = ({
         setSendRoomMsg(false);
         if (data) {
           console.log(data, "data");
+
+          if (data?.result === "NotEnoughCredit") {
+            setMessageBoxType("error");
+            setMessageBoxText(
+              "You don't have enough mCredits to create this offer.\nPlease buy more mCredits."
+            );
+            setIsMessageBoxVisible(true);
+            return;
+          }
+
           if (data.result.meta.TransactionResult === "tesSUCCESS") {
             setMessageBoxType("success");
             setMessageBoxText("Offer finished successfully");
@@ -189,6 +199,15 @@ const OfferReceivedCard = ({
         const data = await response.json();
         console.log("Offer created:", response);
         if (data) {
+          if (data?.result === "NotEnoughCredit") {
+            setMessageBoxType("error");
+            setMessageBoxText(
+              "You don't have enough mCredits to create this offer.\nPlease buy more mCredits."
+            );
+            setIsMessageBoxVisible(true);
+            return;
+          }
+
           console.log(data.refs, "data refs");
           setQrCodeUrl(data.refs.qr_png);
           setIsQrModalVisible(true);
@@ -226,6 +245,15 @@ const OfferReceivedCard = ({
       const data = await response.json();
       setIsLoading(false);
       if (data) {
+        if (data?.result === "NotEnoughCredit") {
+          setMessageBoxType("error");
+          setMessageBoxText(
+            "You don't have enough mCredits to create this offer.\nPlease buy more mCredits."
+          );
+          setIsMessageBoxVisible(true);
+          return;
+        }
+
         console.log(data.refs, "data refs");
         onAction();
       }
@@ -282,6 +310,15 @@ const OfferReceivedCard = ({
         }
 
         const data = await response.json();
+
+        if (data?.result === "NotEnoughCredit") {
+          setMessageBoxType("error");
+          setMessageBoxText(
+            "You don't have enough mCredits to create this offer.\nPlease buy more mCredits."
+          );
+          setIsMessageBoxVisible(true);
+          return;
+        }
 
         let strAmount = "";
         let strCurrency = "";

@@ -45,6 +45,16 @@ const OfferMadeCard = ({ sellOffer, index, onAction, myWalletAddress }) => {
       }
       const data = await response.json();
       console.log(data, "data received from server");
+
+      if (data?.result === "NotEnoughCredit") {
+        setMessageBoxType("error");
+        setMessageBoxText(
+          "You don't have enough mCredits to create this offer.\nPlease buy more mCredits."
+        );
+        setIsMessageBoxVisible(true);
+        return;
+      }
+
       setIsLoading(false);
       if (data.result.meta.TransactionResult === "tesSUCCESS") {
         console.log(data, "returned data");
@@ -83,7 +93,9 @@ const OfferMadeCard = ({ sellOffer, index, onAction, myWalletAddress }) => {
               <p className="text-lg font-semibold dark:text-white">
                 NFT Name:{" "}
                 <span className="text-sm font-mono break-all">
-                  {sellOffer.nft.metadata.name ? sellOffer.nft.metadata.name : ""}
+                  {sellOffer.nft.metadata.name
+                    ? sellOffer.nft.metadata.name
+                    : ""}
                 </span>
               </p>
               <p className="text-lg font-medium text-indigo-600 dark:text-indigo-400">

@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import API_URLS from "../../config";
 import { Button } from "antd";
 import TransactionModal from "../TransactionModal";
+import NFTMessageBox from "../NFTMessageBox";
 
 const IncomingOfferCard = ({
   transfer,
@@ -20,6 +21,9 @@ const IncomingOfferCard = ({
   const [pendingOfferAction, setPendingOfferAction] = useState(null);
   const [roomMessage, setRommMessage] = useState("");
   const [sendRoomMsg, setSendRoomMsg] = useState(false);
+  const [isMessageBoxVisible, setIsMessageBoxVisible] = useState(false);
+  const [messageBoxType, setMessageBoxType] = useState("success");
+  const [messageBoxText, setMessageBoxText] = useState("");
 
   useEffect(() => {
     console.log(
@@ -68,6 +72,15 @@ const IncomingOfferCard = ({
 
       const data = await response.json();
       if (data) {
+        if (data?.result === "NotEnoughCredit") {
+          setMessageBoxType("error");
+          setMessageBoxText(
+            "You don't have enough mCredits to create this offer.\nPlease buy more mCredits."
+          );
+          setIsMessageBoxVisible(true);
+          return;
+        }
+
         console.log(data.refs, "data refs");
         setQrCodeUrl(data.refs.qr_png);
         setWebsocketUrl(data.refs.websocket_status);
@@ -109,6 +122,15 @@ const IncomingOfferCard = ({
 
       const data = await response.json();
       if (data) {
+        if (data?.result === "NotEnoughCredit") {
+          setMessageBoxType("error");
+          setMessageBoxText(
+            "You don't have enough mCredits to create this offer.\nPlease buy more mCredits."
+          );
+          setIsMessageBoxVisible(true);
+          return;
+        }
+
         console.log(data.refs, "data refs");
         setQrCodeUrl(data.refs.qr_png);
         setWebsocketUrl(data.refs.websocket_status);
@@ -214,6 +236,12 @@ const IncomingOfferCard = ({
         onClose={() => setIsQrModalVisible(false)}
         qrCodeUrl={qrCodeUrl}
         transactionStatus={transactionStatus}
+      />
+      <NFTMessageBox
+        isOpen={isMessageBoxVisible}
+        onClose={() => setIsMessageBoxVisible(false)}
+        type={messageBoxType}
+        message={messageBoxText}
       />
     </div>
     // <motion.div
