@@ -259,8 +259,14 @@ const ParticipantCard = ({
           );
           setIsLoading(false);
 
-          console.log("res=", response);
-          console.log( typeof(response) );
+          if( response.data?.result === 'NotEnoughCredit' ) {
+            setMessageBoxType("error");
+            setMessageBoxText(
+              "You don't have enough mCredits to create this offer.\nPlease buy more mCredits."
+            );
+            setIsMessageBoxVisible(true);
+            return;
+          }
 
           if (response.data) {
             console.log("Offer created:", response.data);
