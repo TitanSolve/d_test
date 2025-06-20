@@ -60,18 +60,14 @@ const OfferReceivedCard = ({
 
     let isOfferFound = false;
     let sellOfferIndex = "";
-    let brokerFee = (((buyOffer.offer.amount * 1 - 12) ) * 0.01).toFixed(
-      0
-    );
+    let brokerFee = "0";
     let sellOfferOwner = "";
     for (const offer of madeOffers) {
       console.log("offer--->", offer);
       if (offer.nft.nftokenID === buyOffer.nft.nftokenID) {
         isOfferFound = true;
         sellOfferIndex = offer.offer.offerId;
-        brokerFee = (((buyOffer.offer.amount * 1 - 12) ) * 0.01).toFixed(
-          0
-        );
+        brokerFee = "0";
         sellOfferOwner = offer.offer.offerOwner;
         console.log(
           "brokerFee--->",
@@ -95,11 +91,7 @@ const OfferReceivedCard = ({
       let strAmount = "";
       let strCurrency = "";
       if (typeof buyOffer.offer.amount === "string") {
-        strAmount = (
-          (buyOffer.offer.amount * 1 - 12) /
-          1 /
-          1000000
-        ).toString();
+        strAmount = buyOffer.offer.amount;
         strCurrency = "XRP";
       } else {
         strAmount = buyOffer.offer.amount.amount;
@@ -166,11 +158,7 @@ const OfferReceivedCard = ({
     } else {
       console.log("No matching offer found for the selected NFT.");
       let sellAmount = "0";
-      sellAmount = (
-        (buyOffer.offer.amount * 1 - 12) /
-        1 /
-        1000000
-      ).toString();
+      sellAmount = buyOffer.offer.amount;
 
       const payload = {
         nft: buyOffer.nft.nftokenID,
@@ -276,9 +264,7 @@ const OfferReceivedCard = ({
         isOfferFound = true;
         sellOfferIndex = offer.nft_offer_index;
         sellOfferOwner = offer.owner;
-        brokerFee = (((buyOffer.offer.amount * 1 - 12) / 1) * 0.01).toFixed(
-          0
-        );
+        brokerFee = buyOffer.offer.amount;
         break;
       }
     }
@@ -323,11 +309,7 @@ const OfferReceivedCard = ({
         let strAmount = "";
         let strCurrency = "";
         if (typeof buyOffer.offer.amount === "string") {
-          strAmount = (
-            (buyOffer.offer.amount * 1 - 12) /
-            1 /
-            1000000
-          ).toString();
+          strAmount = buyOffer.offer.amount;
           strCurrency = "XRP";
         } else {
           strAmount = buyOffer.offer.amount.amount;
