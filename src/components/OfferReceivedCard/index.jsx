@@ -60,7 +60,7 @@ const OfferReceivedCard = ({
 
     let isOfferFound = false;
     let sellOfferIndex = "";
-    let brokerFee = (((buyOffer.offer.amount * 1 - 12) / 1.01) * 0.01).toFixed(
+    let brokerFee = (((buyOffer.offer.amount * 1 - 12) ) * 0.01).toFixed(
       0
     );
     let sellOfferOwner = "";
@@ -69,7 +69,7 @@ const OfferReceivedCard = ({
       if (offer.nft.nftokenID === buyOffer.nft.nftokenID) {
         isOfferFound = true;
         sellOfferIndex = offer.offer.offerId;
-        brokerFee = (((buyOffer.offer.amount * 1 - 12) / 1.01) * 0.01).toFixed(
+        brokerFee = (((buyOffer.offer.amount * 1 - 12) ) * 0.01).toFixed(
           0
         );
         sellOfferOwner = offer.offer.offerOwner;
@@ -97,7 +97,7 @@ const OfferReceivedCard = ({
       if (typeof buyOffer.offer.amount === "string") {
         strAmount = (
           (buyOffer.offer.amount * 1 - 12) /
-          1.01 /
+          1 /
           1000000
         ).toString();
         strCurrency = "XRP";
@@ -168,7 +168,7 @@ const OfferReceivedCard = ({
       let sellAmount = "0";
       sellAmount = (
         (buyOffer.offer.amount * 1 - 12) /
-        1.01 /
+        1 /
         1000000
       ).toString();
 
@@ -276,7 +276,7 @@ const OfferReceivedCard = ({
         isOfferFound = true;
         sellOfferIndex = offer.nft_offer_index;
         sellOfferOwner = offer.owner;
-        brokerFee = (((buyOffer.offer.amount * 1 - 12) / 1.01) * 0.01).toFixed(
+        brokerFee = (((buyOffer.offer.amount * 1 - 12) / 1) * 0.01).toFixed(
           0
         );
         break;
@@ -325,7 +325,7 @@ const OfferReceivedCard = ({
         if (typeof buyOffer.offer.amount === "string") {
           strAmount = (
             (buyOffer.offer.amount * 1 - 12) /
-            1.01 /
+            1 /
             1000000
           ).toString();
           strCurrency = "XRP";
@@ -464,7 +464,7 @@ const OfferReceivedCard = ({
               </p>
               <p className="text-lg font-medium text-indigo-600 dark:text-indigo-400">
                 Amount:{" "}
-                {((buyOffer.offer.amount * 1 - 12) / 1.01 / 1000000).toFixed(6)}
+                {((buyOffer.offer.amount * 1 - 12) / 1 / 1000000).toFixed(6)}
               </p>
               <p className="text-sm px-3 py-1 rounded-full bg-yellow-100 dark:bg-yellow-800 text-yellow-800 dark:text-yellow-100 w-fit mx-auto md:mx-0">
                 Received Offer
