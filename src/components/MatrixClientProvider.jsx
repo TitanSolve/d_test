@@ -111,12 +111,6 @@ const MatrixClientProvider = () => {
   const [client, setClient] = useState(null);
   const xrpl = require("xrpl");
 
-  // useEffect(() => {
-  //   return () => {
-  //     client.disconnect();
-  //   };
-  // }, []);
-
   useEffect(() => {
     const loadData = async () => {
       setLoading(true);
@@ -222,23 +216,6 @@ const MatrixClientProvider = () => {
 
         console.log("Grouped NFT list by wallet:", nft_list);
 
-        // const response = await fetch(`${API_URLS.backendUrl}/get-users-nfts`, {
-        //   method: "POST",
-        //   headers: {
-        //     "Content-Type": "application/json",
-        //   },
-        //   body: JSON.stringify({
-        //     addresses: userIds
-        //   }),
-        // });
-
-        // if (!response.ok) {
-        //   throw new Error("Failed to fetch NFT data");
-        // }
-        // const data = await response.json();
-
-        // console.log("NFT data:----------------->", data);
-
         const mergedMembers = await Promise.all(
           usersList.map(async (member) => {
             const walletAddress = member.userId.split(":")[0].replace("@", "");
@@ -284,135 +261,6 @@ const MatrixClientProvider = () => {
         );
         console.log("Merged members with NFT data:", mergedMembers);
         setMyNftData(mergedMembers);
-
-        // load Offer data
-        // const xrpl = require("xrpl");
-
-        // const client = new xrpl.Client("wss://s2.ripple.com");
-        // await client.connect();
-
-        // const account = "rnPoaP9Hb2YZ1hj6JyYbHGRvUS69cyfqry";
-        // const destinationAddress = "r9syfthWEycVKuy9bz2awsxrTNK3NBBT6h";
-
-        // // Step 1: Get all NFTs currently owned by the account
-        // const nftResponse = await client.request({
-        //   command: "account_nfts",
-        //   account,
-        //   ledger_index: "validated",
-        // });
-
-        // const ownedNftIds = new Set(
-        //   nftResponse.result.account_nfts.map((nft) => nft.NFTokenID)
-        // );
-
-        // // Step 2: Get all NFT offers created by this account
-        // const response = await client.request({
-        //   command: "account_objects",
-        //   account,
-        //   type: "nft_offer",
-        //   ledger_index: "validated",
-        // });
-
-        // const allOffers = response.result.account_objects;
-        // console.log("allOffers : ", allOffers);
-
-        // // Step 3: Split into ≤ 4 chunks for batch verification
-        // const chunks = [];
-        // const chunkSize = Math.ceil(allOffers.length / 4);
-        // for (let i = 0; i < allOffers.length; i += chunkSize) {
-        //   chunks.push(allOffers.slice(i, i + chunkSize));
-        // }
-
-        // const confirmedOffers = [];
-        // const rippleEpoch = 946684800;
-        // const now = Math.floor(Date.now() / 1000);
-
-        // // Step 4: Check each offer still exists and is valid
-        // for (const chunk of chunks) {
-        //   const subrequests = await Promise.allSettled(
-        //     chunk.map((offer) =>
-        //       client
-        //         .request({ command: "ledger_entry", index: offer.index })
-        //         .then((res) => res.result.node)
-        //         .catch(() => null)
-        //     )
-        //   );
-
-        //   for (const result of subrequests) {
-        //     if (result.status === "fulfilled" && result.value) {
-        //       const offer = result.value;
-
-        //       const isSell =
-        //         (offer.Flags & xrpl.NFTokenCreateOfferFlags.tfSellNFToken) !==
-        //         0;
-
-        //       const isValid =
-        //         typeof offer.Amount === "string" &&
-        //         offer.NFTokenID &&
-        //         offer.Owner === account &&
-        //         offer.Destination === destinationAddress &&
-        //         (!offer.Expiration || offer.Expiration > now - rippleEpoch) &&
-        //         ownedNftIds.has(offer.NFTokenID); // ✅ You still own the NFT
-
-        //       if (isValid) {
-        //         confirmedOffers.push({
-        //           offerId: offer.index,
-        //           nftId: offer.NFTokenID,
-        //           amount: offer.Amount,
-        //           isSell,
-        //           destination: offer.Destination,
-        //           owner: offer.Owner,
-        //         });
-        //       }
-        //     }
-        //   }
-        // }
-
-        // await client.disconnect();
-
-        // // Step 5: Split offers
-        // const sellOffers = confirmedOffers.filter((o) => o.isSell);
-        // const buyOffers = confirmedOffers.filter((o) => !o.isSell);
-
-        // // ✅ Output
-        // console.log(
-        //   `✅ VALID SELL OFFERS owned by ${account} (you still hold the NFT):`
-        // );
-        // console.log(sellOffers);
-
-        // console.log(`✅ VALID BUY OFFERS owned by ${account} (for your NFTs):`);
-        // console.log(buyOffers);
-
-        // const incomingNFTs = [];
-        // for (const tx of allTxs) {
-        //   const meta = tx.meta
-        //   const nodes = meta?.AffectedNodes || [];
-
-        //   let receivedNFTId = null;
-        //   let sender = null;
-
-        //   for (const node of nodes) {
-        //     // Look for DeletedNode of type NFTokenOffer
-        //     if (
-        //       node.DeletedNode?.LedgerEntryType === "NFTokenOffer" &&
-        //       node.DeletedNode?.FinalFields?.Destination === "r34VdeAwi8qs1KF3DTn5T3Y5UAPmbBNWpX"
-        //     ) {
-        //       receivedNFTId = node.DeletedNode.FinalFields.NFTokenID
-        //       sender = node.DeletedNode.FinalFields.Owner
-        //     }
-        //   }
-
-        //   if (receivedNFTId) {
-        //     incomingNFTs.push({
-        //       tokenId: receivedNFTId,
-        //       from: sender,
-        //       txHash: tx.hash,
-        //       date: tx.close_time_iso
-        //     })
-        //   }
-        // }
-
-        // console.log("incomingNFTs----->", incomingNFTs);
       } catch (error) {
         console.error("Error loading data:", error);
       } finally {
