@@ -91,6 +91,10 @@ const OfferReceivedCard = ({
       let strAmount = "";
       let strCurrency = "";
       if (typeof buyOffer.offer.amount === "string") {
+        strAmount = (
+          (buyOffer.offer.amount * 1 ) /
+          1000000
+        ).toString();
         strAmount = buyOffer.offer.amount;
         strCurrency = "XRP";
       } else {
@@ -158,7 +162,10 @@ const OfferReceivedCard = ({
     } else {
       console.log("No matching offer found for the selected NFT.");
       let sellAmount = "0";
-      sellAmount = buyOffer.offer.amount;
+      sellAmount = (
+        (buyOffer.offer.amount * 1 ) /
+        1000000
+      ).toString();
 
       const payload = {
         nft: buyOffer.nft.nftokenID,
@@ -309,7 +316,10 @@ const OfferReceivedCard = ({
         let strAmount = "";
         let strCurrency = "";
         if (typeof buyOffer.offer.amount === "string") {
-          strAmount = buyOffer.offer.amount;
+          strAmount = (
+            (buyOffer.offer.amount * 1) /
+            1000000
+          ).toString();
           strCurrency = "XRP";
         } else {
           strAmount = buyOffer.offer.amount.amount;
