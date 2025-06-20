@@ -256,7 +256,7 @@ const OfferReceivedCard = ({
 
     let isOfferFound = false;
     let sellOfferIndex = "";
-    let brokerFee = (parseFloat(buyOffer.amount) * 1.01).toString();
+    let brokerFee = "0";
     let sellOfferOwner = "";
     for (const offer of refreshedSellOffers) {
       console.log("offer--->", offer);
@@ -446,7 +446,7 @@ const OfferReceivedCard = ({
               </p>
               <p className="text-lg font-medium text-indigo-600 dark:text-indigo-400">
                 Amount:{" "}
-                {((buyOffer.offer.amount * 1 - 12) / 1 / 1000000).toFixed(6)}
+                {((buyOffer.offer.amount * 1) / 1 / 1000000).toFixed(6)}
               </p>
               <p className="text-sm px-3 py-1 rounded-full bg-yellow-100 dark:bg-yellow-800 text-yellow-800 dark:text-yellow-100 w-fit mx-auto md:mx-0">
                 Received Offer
