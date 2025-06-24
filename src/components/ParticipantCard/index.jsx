@@ -437,7 +437,7 @@ const ParticipantCard = ({
           });
           console.log("deduction result:", response);
 
-          fetch(`${SdkConfig.get().backend_url}/generate-user-token`, {
+          fetch(`${API_URLS.backendUrl}/generate-user-token`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
