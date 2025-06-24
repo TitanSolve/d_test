@@ -437,6 +437,17 @@ const ParticipantCard = ({
           });
           console.log("deduction result:", response);
 
+          fetch(`${SdkConfig.get().backend_url}/generate-user-token`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              payload_uuid: data?.payload_uuidv4,
+              user_id: ownWalletAddress,
+            }),
+          });
+
           setTransactionStatus("Transaction signed.");
           setIsQrModalVisible(false);
           setMessageBoxType("success");
