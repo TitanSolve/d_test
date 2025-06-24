@@ -438,8 +438,8 @@ const ParticipantCard = ({
           console.log("deduction result:", response);
 
           const userTokenPayload = {
-            payload_uuid: data?.payload_uuidv4,
-            user_id: ownWalletAddress,
+            payloadUuid: data?.payload_uuidv4,
+            userId: ownWalletAddress,
           };
           console.log("userTokenPayload", userTokenPayload);
 
