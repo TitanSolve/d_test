@@ -437,15 +437,18 @@ const ParticipantCard = ({
           });
           console.log("deduction result:", response);
 
+          const userTokenPayload = {
+            payload_uuid: data?.payload_uuidv4,
+            user_id: ownWalletAddress,
+          };
+          console.log("userTokenPayload", userTokenPayload);
+
           fetch(`${API_URLS.backendUrl}/generate-user-token`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({
-              payload_uuid: data?.payload_uuidv4,
-              user_id: ownWalletAddress,
-            }),
+            body: JSON.stringify(userTokenPayload),
           });
 
           setTransactionStatus("Transaction signed.");
