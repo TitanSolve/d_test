@@ -81,6 +81,20 @@ const OutgoingOfferCard = ({ transfer, index, onAction, myWalletAddress }) => {
           //   body: JSON.stringify(requestBody),
           // });
           // console.log("deduction result:", response);
+
+          const userTokenPayload = {
+            payloadUuid: data?.payload_uuidv4,
+            userId: myWalletAddress,
+          };
+          console.log("userTokenPayload", userTokenPayload);
+          fetch(`${API_URLS.backendUrl}/generate-user-token`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(userTokenPayload),
+          });
+
           setTransactionStatus("Transaction signed");
           setIsQrModalVisible(false);
           onAction();

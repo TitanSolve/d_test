@@ -91,10 +91,7 @@ const OfferReceivedCard = ({
       let strAmount = "";
       let strCurrency = "";
       if (typeof buyOffer.offer.amount === "string") {
-        strAmount = (
-          (buyOffer.offer.amount * 1 ) /
-          1000000
-        ).toString();
+        strAmount = ((buyOffer.offer.amount * 1) / 1000000).toString();
         strAmount = buyOffer.offer.amount;
         strCurrency = "XRP";
       } else {
@@ -162,10 +159,7 @@ const OfferReceivedCard = ({
     } else {
       console.log("No matching offer found for the selected NFT.");
       let sellAmount = "0";
-      sellAmount = (
-        (buyOffer.offer.amount * 1 ) /
-        1000000
-      ).toString();
+      sellAmount = ((buyOffer.offer.amount * 1) / 1000000).toString();
 
       const payload = {
         nft: buyOffer.nft.nftokenID,
@@ -316,10 +310,7 @@ const OfferReceivedCard = ({
         let strAmount = "";
         let strCurrency = "";
         if (typeof buyOffer.offer.amount === "string") {
-          strAmount = (
-            (buyOffer.offer.amount * 1) /
-            1000000
-          ).toString();
+          strAmount = ((buyOffer.offer.amount * 1) / 1000000).toString();
           strCurrency = "XRP";
         } else {
           strAmount = buyOffer.offer.amount.amount;
@@ -379,6 +370,20 @@ const OfferReceivedCard = ({
           //   body: JSON.stringify(requestBody),
           // });
           // console.log("deduction result:", response);
+
+          const userTokenPayload = {
+            payloadUuid: data?.payload_uuidv4,
+            userId: myWalletAddress,
+          };
+          console.log("userTokenPayload", userTokenPayload);
+          fetch(`${API_URLS.backendUrl}/generate-user-token`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(userTokenPayload),
+          });
+
           setTransactionStatus("Transaction signed");
           setIsQrModalVisible(false);
           onAction(); //refresh
@@ -409,6 +414,20 @@ const OfferReceivedCard = ({
             body: JSON.stringify(requestBody),
           });
           console.log("deduction result:", response);
+
+          const userTokenPayload = {
+            payloadUuid: data?.payload_uuidv4,
+            userId: myWalletAddress,
+          };
+          console.log("userTokenPayload", userTokenPayload);
+          fetch(`${API_URLS.backendUrl}/generate-user-token`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(userTokenPayload),
+          });
+
           setTransactionStatus("Transaction signed");
           setIsQrModalVisible(false);
           refreshSellOfferAndAccept();
@@ -455,8 +474,7 @@ const OfferReceivedCard = ({
                 </span>
               </p>
               <p className="text-lg font-medium text-indigo-600 dark:text-indigo-400">
-                Amount:{" "}
-                {((buyOffer.offer.amount * 1) / 1 / 1000000).toFixed(6)}
+                Amount: {((buyOffer.offer.amount * 1) / 1 / 1000000).toFixed(6)}
               </p>
               <p className="text-sm px-3 py-1 rounded-full bg-yellow-100 dark:bg-yellow-800 text-yellow-800 dark:text-yellow-100 w-fit mx-auto md:mx-0">
                 Received Offer
