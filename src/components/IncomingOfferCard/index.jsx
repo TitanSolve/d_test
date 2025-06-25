@@ -24,6 +24,7 @@ const IncomingOfferCard = ({
   const [isMessageBoxVisible, setIsMessageBoxVisible] = useState(false);
   const [messageBoxType, setMessageBoxType] = useState("success");
   const [messageBoxText, setMessageBoxText] = useState("");
+  const [offerType, setOfferType] = useState("accept_transfer_offer");
 
   useEffect(() => {
     console.log(
@@ -149,6 +150,7 @@ const IncomingOfferCard = ({
         if (data.signed) {
           const requestBody = {
             account: myWalletAddress,
+            offerType: offerType,
           };
           const response = fetch(`${API_URLS.backendUrl}/deduct-mCredit`, {
             method: "POST",

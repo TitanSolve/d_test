@@ -30,6 +30,7 @@ const OfferReceivedCard = ({
   const [roomMessage, setRommMessage] = useState("");
   const [sendRoomMsg, setSendRoomMsg] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [offerType, setOfferType] = useState("accept_transfer_offer");
 
   useEffect(() => {
     console.log(
@@ -405,6 +406,7 @@ const OfferReceivedCard = ({
         if (data.signed) {
           const requestBody = {
             account: myWalletAddress,
+            offerType: offerType,
           };
           const response = fetch(`${API_URLS.backendUrl}/deduct-mCredit`, {
             method: "POST",

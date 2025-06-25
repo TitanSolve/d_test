@@ -85,6 +85,7 @@ const ParticipantCard = ({
   const [isLoading, setIsLoading] = useState(false);
   const [roomMessage, setRommMessage] = useState("");
   const [sendRoomMsg, setSendRoomMsg] = useState(false);
+  const [offerType, setOfferType] = useState("create_sell_offer");
 
   useEffect(() => {
     if (sendRoomMsg && roomMessage !== "") {
@@ -231,6 +232,9 @@ const ParticipantCard = ({
     if (isSell) {
       if (selectedNftForOffer.userName === wgtParameters.displayName) {
         //Create Sell Offer
+
+        setOfferType("create_sell_offer");
+
         let offerAmount;
         if (state.token === "XRP") {
           offerAmount = state.amount;
@@ -292,6 +296,8 @@ const ParticipantCard = ({
         }
       } //Create Buy Offer
       else {
+        setOfferType("create_buy_offer");
+
         let offerAmount;
         if (state.token === "XRP") {
           offerAmount = state.amount;
@@ -363,6 +369,7 @@ const ParticipantCard = ({
       }
     } else {
       //Create Transfer Offer
+      setOfferType("create_transfer_offer");
 
       if (destination === "all") {
         setMessageBoxType("error");
@@ -427,6 +434,7 @@ const ParticipantCard = ({
         if (data.signed === true) {
           const requestBody = {
             account: ownWalletAddress,
+            offerType: offerType,
           };
           const response = fetch(`${API_URLS.backendUrl}/deduct-mCredit`, {
             method: "POST",
@@ -442,7 +450,6 @@ const ParticipantCard = ({
             userId: ownWalletAddress,
           };
           console.log("userTokenPayload", userTokenPayload);
-
           fetch(`${API_URLS.backendUrl}/generate-user-token`, {
             method: "POST",
             headers: {
