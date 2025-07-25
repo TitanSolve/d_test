@@ -174,7 +174,7 @@ const MatrixClientProvider = () => {
         for (const walletAddress of userIds) {
           try {
             const response = await fetch(
-              `${API_URLS.marketPlace}/api/v2/nfts?owner=${walletAddress}?assets=true`,
+              `${API_URLS.marketPlace}/api/v2/nfts?owner=${walletAddress}`, //?assets=true`,
               {
                 method: "GET",
                 headers: {
